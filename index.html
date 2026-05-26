@@ -51,7 +51,7 @@
         .menu-item-info p { font-size: 13px; color: var(--text-muted); margin: 0; }
         .arrow { font-size: 18px; font-weight: 600; color: #000000; }
 
-        /* ПРОФИЛЬ ДИЗАЙН ИЗ СКРИНШОТА */
+        /* ПРОФИЛЬ */
         .profile-header {
             display: flex; flex-direction: column; align-items: center;
             margin-top: 20px; margin-bottom: 24px; text-align: center;
@@ -66,7 +66,7 @@
         .profile-header h2 { font-size: 24px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: -0.5px; }
         .profile-header p { font-size: 14px; color: var(--text-muted); margin: 0; }
 
-        /* ПЛАШКА СТАТИСТИКИ */
+        /* СТАТИСТИКА */
         .stats-container {
             background: #ffffff; border: 1px solid var(--border-color);
             border-radius: 24px; padding: 12px 20px; margin-bottom: 20px;
@@ -81,7 +81,7 @@
         .stats-value { font-size: 16px; color: var(--text-muted); font-weight: 600; }
         .stats-value.highlight { color: #000000; font-weight: 700; }
 
-        /* КНОПКА РЕДАКТИРОВАНИЯ И ИНПУТЫ */
+        /* КНОПКИ И ИНПУТЫ */
         .edit-btn {
             background: #000000; color: #ffffff; border: none; border-radius: 16px;
             padding: 12px 24px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%;
@@ -96,7 +96,7 @@
             border-radius: 12px; font-size: 14px; font-family: inherit; outline: none;
         }
 
-        /* ЭКРАН РЕЙТИНГА */
+        /* РЕЙТИНГ */
         .leaderboard-list {
             background: #ffffff; border: 1px solid var(--border-color);
             border-radius: 24px; padding: 8px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.01);
@@ -130,9 +130,34 @@
             font-size: 11px; font-weight: 600; cursor: pointer;
             display: flex; flex-direction: column; align-items: center; gap: 5px;
         }
-        .tab-item.active { color: #000000; }
+        .tab-item.active { color: #000000; font-weight: 700; }
         .tab-icon { font-size: 22px; }
     </style>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDnWQw-EMU94XXjo02QyvFC6zmGj78Vi8I",
+            authDomain: "physics-ege-rating.firebaseapp.com",
+            databaseURL: "https://physics-ege-rating-default-rtdb.firebaseio.com",
+            projectId: "physics-ege-rating",
+            storageBucket: "physics-ege-rating.firebasestorage.app",
+            messagingSenderId: "969771916707",
+            appId: "1:969771916707:web:867ccfa3d8a7e20ba2ce16"
+        };
+
+        // Запуск базы данных и прокидывание методов в глобальное окно window
+        const app = initializeApp(firebaseConfig);
+        window.db = getDatabase(app);
+        window.fbRef = ref;
+        window.fbSet = set;
+        window.fbOnValue = onValue;
+
+        // Как только база данных готова, выполняем первичную загрузку интерфейса
+        window.dispatchEvent(new Event('firebaseReady'));
+    </script>
 </head>
 <body>
 
@@ -191,7 +216,7 @@
             <div class="stats-container">
                 <div class="stats-row">
                     <span class="stats-label">Текущий уровень</span>
-                    <span class="stats-value highlight" id="profile-level">2 Уровень</span>
+                    <span class="stats-value highlight" id="profile-level">1 Уровень</span>
                 </div>
                 <div class="stats-row">
                     <span class="stats-label">Набрано опыта</span>
@@ -305,8 +330,8 @@
                 }
             }
 
-            // Отправляем данные текущего игрока в облако Telegram, чтобы другие его увидели
-            saveUserToTelegramCloud();
+            // Автоматически шлём актуальные очки в общую базу данных Firebase
+            saveUserToCloud();
         }
 
         function toggleEdit() {
@@ -337,110 +362,71 @@
             }
         }
 
-        // Запись своего прогресса в глобальное облако Telegram WebApp
-        function saveUserToTelegramCloud() {
-            if (!tg || !tg.CloudStorage) return;
+        // Новая функция отправки данных в Firebase Realtime Database
+        function saveUserToCloud() {
+            if (!window.db) return; // Ждём готовности базы данных
 
-            let myId = (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) ? tg.initDataUnsafe.user.id : "local_user";
+            let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
             let myName = localStorage.getItem('user_custom_name') || document.getElementById('user-name').innerText;
-            let myXp = localStorage.getItem('global_physics_xp') || "180";
+            let myXp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
 
-            let userData = JSON.stringify({ name: myName, xp: parseInt(myXp), id: myId });
-            
-            // Записываем данные под уникальным ключом пользователя
-            tg.CloudStorage.setItem(`user_leaderboard_${myId}`, userData, (error, success) => {
-                if (success) console.log("Прогресс синхронизирован с Telegram Cloud");
+            window.fbSet(window.fbRef(window.db, 'users/' + myId), {
+                id: myId,
+                name: myName,
+                xp: myXp
             });
         }
 
-        // Чтение всех пользователей из облака и генерация таблицы лидеров
+        // Новая функция чтения и генерации таблицы из Firebase Realtime Database
         function syncAndRenderLeaderboard() {
             const container = document.getElementById('leaderboard-container');
-
-            if (!tg || !tg.CloudStorage) {
-                // Если запущено просто в обычном браузере без ТГ — показываем только себя
-                let myXp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
-                let myName = localStorage.getItem('user_custom_name') || document.getElementById('user-name').innerText;
-                
-                container.innerHTML = `
-                    <div class="leaderboard-item">
-                        <div class="user-rank-info">
-                            <span class="rank-number top-three">1</span>
-                            <span class="rank-name">${myName} <span class="me-badge">Вы</span></span>
-                        </div>
-                        <span class="rank-xp">${myXp} XP</span>
-                    </div>
-                    <div class="empty-hint">Запусти приложение внутри Telegram, чтобы увидеть других участников!</div>
-                `;
+            if (!window.db) {
+                container.innerHTML = `<div class="empty-hint">Инициализация базы данных...</div>`;
                 return;
             }
 
-            // Получаем список всех ключей из облака Telegram
-            tg.CloudStorage.getKeys((error, keys) => {
-                if (error || !keys) {
-                    container.innerHTML = `<div class="empty-hint">Ошибка загрузки рейтинга.</div>`;
+            let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+
+            window.fbOnValue(window.fbRef(window.db, 'users/'), (snapshot) => {
+                const data = snapshot.val();
+                if (!data) {
+                    container.innerHTML = `<div class="empty-hint">Вы первый участник! Начните учить темы.</div>`;
                     return;
                 }
 
-                // Фильтруем только ключи нашего приложения
-                let appKeys = keys.filter(k => k.startsWith('user_leaderboard_'));
+                // Переводим объект базы данных в чистый сортируемый массив
+                let players = Object.values(data);
+                players.sort((a, b) => b.xp - a.xp);
 
-                if (appKeys.length === 0) {
-                    container.innerHTML = `<div class="empty-hint">Вы первый участник! Рейтинг обнулен.</div>`;
-                    return;
-                }
+                container.innerHTML = "";
+                players.forEach((player, index) => {
+                    let rank = index + 1;
+                    let isTopThree = rank <= 3 ? "top-three" : "";
+                    let isMe = player.id == myId ? `<span class="me-badge">Вы</span>` : "";
 
-                // Загружаем значения для всех найденных игроков
-                tg.CloudStorage.getItems(appKeys, (err, items) => {
-                    if (err || !items) {
-                        container.innerHTML = `<div class="empty-hint">Не удалось получить данные.</div>`;
-                        return;
-                    }
-
-                    let players = [];
-                    let myId = (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : null;
-
-                    for (let key in items) {
-                        try {
-                            let parsed = JSON.parse(items[key]);
-                            if (parsed && parsed.name) {
-                                if (myId && parsed.id == myId) {
-                                    parsed.isMe = true;
-                                }
-                                players.push(parsed);
-                            }
-                        } catch(e) {}
-                    }
-
-                    // Сортируем топ по убыванию реального опыта XP
-                    players.sort((a, b) => b.xp - a.xp);
-
-                    container.innerHTML = "";
-                    players.forEach((player, index) => {
-                        let rank = index + 1;
-                        let isTopThree = rank <= 3 ? "top-three" : "";
-                        let meBadge = player.isMe ? `<span class="me-badge">Вы</span>` : "";
-
-                        container.innerHTML += `
-                            <div class="leaderboard-item">
-                                <div class="user-rank-info">
-                                    <span class="rank-number ${isTopThree}">${rank}</span>
-                                    <span class="rank-name">${player.name} ${meBadge}</span>
-                                </div>
-                                <span class="rank-xp">${player.xp} XP</span>
+                    container.innerHTML += `
+                        <div class="leaderboard-item">
+                            <div class="user-rank-info">
+                                <span class="rank-number ${isTopThree}">${rank}</span>
+                                <span class="rank-name">${player.name} ${isMe}</span>
                             </div>
-                        `;
-                    });
+                            <span class="rank-xp">${player.xp} XP</span>
+                        </div>
+                    `;
                 });
             });
         }
+
+        // Ждем сигнала, что Firebase запущен, и только тогда обновляем UI
+        window.addEventListener('firebaseReady', () => {
+            updateUI();
+        });
 
         document.addEventListener("DOMContentLoaded", () => {
             if (tg) {
                 tg.ready();
                 tg.expand();
             }
-            updateUI();
         });
     </script>
 </body>
