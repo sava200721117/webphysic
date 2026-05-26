@@ -70,7 +70,7 @@
         }
 
         .formula-text {
-            font-size: 34px; font-weight: 500; font-family: 'Inter', sans-serif;
+            font-size: 30px; font-weight: 500; font-family: 'Inter', sans-serif;
             font-style: italic; text-align: center;
         }
 
@@ -105,11 +105,47 @@
             text-align: center; font-size: 13px;
             color: var(--text-muted); font-weight: 500;
         }
+
+        /* ИТОГОВОЕ ОКНО СТАТИСТИКИ */
+        .stats-screen {
+            display: none; text-align: center; width: 100%;
+            background: var(--bg-secondary); border: 1px solid var(--border-color);
+            border-radius: 32px; padding: 40px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+        }
+        .stats-screen h2 { font-size: 26px; font-weight: 700; margin: 0 0 8px 0; }
+        .stats-screen p { font-size: 15px; color: var(--text-muted); margin: 0 0 24px 0; }
+        .stat-badge {
+            background: #f2f2f7; border-radius: 20px; padding: 16px;
+            margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .stat-label { font-size: 15px; font-weight: 500; }
+        .stat-value { font-size: 16px; font-weight: 700; }
     </style>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDnWQw-EMU94XXjo02QyvFC6zmGj78Vi8I",
+            authDomain: "physics-ege-rating.firebaseapp.com",
+            databaseURL: "https://physics-ege-rating-default-rtdb.firebaseio.com",
+            projectId: "physics-ege-rating",
+            storageBucket: "physics-ege-rating.firebasestorage.app",
+            messagingSenderId: "969771916707",
+            appId: "1:969771916707:web:867ccfa3d8a7e20ba2ce16",
+            measurementId: "G-J7SR7GH8NR"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        window.db = getDatabase(app);
+        window.fbRef = ref;
+        window.fbSet = set;
+    </script>
 </head>
 <body>
-    <div class="app-container">
-        <div class="back-btn" onclick="location.href='index.html'">← К ТЕМАМ МАГНЕТИЗМА</div>
+    <div class="app-container" id="main-game-flow">
+        <div class="back-btn" onclick="location.href='index.html'">← К ТЕМАМ</div>
 
         <div class="card-container">
             <div id="card" class="card" onclick="flipCard()">
@@ -120,7 +156,7 @@
                 </div>
                 <div class="card-face card-back">
                     <div></div>
-                    <div id="card-formula" class="card-content formula-text">F_A = B · I · L · sin(α)</div>
+                    <div id="card-formula" class="card-content formula-text">$$F_A = B \cdot I \cdot L \cdot \sin(\alpha)$$</div>
                     <div class="card-hint">НАЖМИ, ЧТОБЫ ВЕРНУТЬ ОБРАТНО</div>
                 </div>
             </div>
@@ -134,21 +170,40 @@
         <div id="card-counter" class="counter">Карточка 1 из 6</div>
     </div>
 
+    <div class="app-container">
+        <div id="stats-screen" class="stats-screen">
+            <h2>Отличная работа!</h2>
+            <p>Раздел «Магнетизм» успешно пройден</p>
+            
+            <div class="stat-badge">
+                <span class="stat-label">Получено за раунд</span>
+                <span class="stat-value" id="earned-xp-display">+0 XP</span>
+            </div>
+            <div class="stat-badge">
+                <span class="stat-label">Всего вашего опыта</span>
+                <span class="stat-value" id="total-xp-display">0 XP</span>
+            </div>
+
+            <button class="btn btn-filled" style="margin-top: 16px; width: 100%;" onclick="location.href='index.html'">На главную</button>
+        </div>
+    </div>
+
     <script>
         const tg = window.Telegram ? window.Telegram.WebApp : null;
 
         const cards = [
-            { t: "Сила Ампера", f: "F_A = B · I · L · sin(α)" },
-            { t: "Сила Лоренца", f: "F_Л = q · v · B · sin(α)" },
-            { t: "Магнитный поток", f: "Ф = B · S · cos(α)" },
-            { t: "Закон эл.-магн. индукции (Фарадея)", f: "ЭДС = - ΔФ / Δt" },
-            { t: "ЭДС индукции в движущемся проводнике", f: "ЭДС = B · l · v · sin(α)" },
-            { t: "Энергия магнитного поля катушки", f: "W = (L · I²) / 2" }
+            { t: "Сила Ампера", f: "$$F_A = B \cdot I \cdot L \cdot \\sin(\\alpha)$$" },
+            { t: "Сила Лоренца", f: "$$F_Л = q \cdot v \cdot B \cdot \\sin(\\alpha)$$" },
+            { t: "Магнитный поток", f: "$$\\Phi = B \cdot S \cdot \\cos(\\alpha)$$" },
+            { t: "Закон эл.-магн. индукции (Фарадея)", f: "$$\\mathcal{E} = - \\frac{\\Delta\\Phi}{\\Delta t}$$" },
+            { t: "ЭДС индукции в движущемся проводнике", f: "$$\\mathcal{E} = B \cdot l \cdot v \cdot \\sin(\\alpha)$$" },
+            { t: "Энергия магнитного поля катушки", f: "$$W = \\frac{L \cdot I^2}{2}$$" }
         ];
 
         let index = 0;
         let isFlipped = false;
         let xpEarnedOnThisCard = false;
+        let totalEarnedInSession = 0;
 
         function updateCounter() {
             document.getElementById('card-counter').innerText = `Карточка ${index + 1} из ${cards.length}`;
@@ -166,6 +221,7 @@
             
             if (remembered && !xpEarnedOnThisCard) {
                 addXP(10);
+                totalEarnedInSession += 10;
                 xpEarnedOnThisCard = true;
             }
 
@@ -180,7 +236,13 @@
         }
 
         function nextCard() {
-            index = (index + 1) % cards.length;
+            // Если это была последняя карточка — завершаем игру
+            if (index === cards.length - 1) {
+                showStats();
+                return;
+            }
+
+            index++;
             xpEarnedOnThisCard = false;
             
             document.getElementById('card-title').innerText = cards[index].t;
@@ -189,10 +251,35 @@
         }
 
         function addXP(val) {
-            let xp = parseInt(localStorage.getItem('global_physics_xp')) || 0;
-            localStorage.setItem('global_physics_xp', xp + val);
-            let count = parseInt(localStorage.getItem('global_cards_viewed')) || 0;
+            let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
+            let newXp = xp + val;
+            localStorage.setItem('global_physics_xp', newXp);
+            
+            let count = parseInt(localStorage.getItem('global_cards_viewed')) || 16;
             localStorage.setItem('global_cards_viewed', count + 1);
+
+            // Мгновенный пуш в Firebase Realtime Database
+            if (window.db && window.fbSet && window.fbRef) {
+                let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+                let savedName = localStorage.getItem('user_custom_name');
+                let myName = savedName || (tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Пользователь");
+
+                window.fbSet(window.fbRef(window.db, 'users/' + myId), {
+                    id: myId,
+                    name: myName,
+                    xp: newXp
+                });
+            }
+        }
+
+        function showStats() {
+            document.getElementById('main-game-flow').style.display = 'none';
+            document.getElementById('stats-screen').style.display = 'block';
+            
+            let finalXp = localStorage.getItem('global_physics_xp') || 180;
+            
+            document.getElementById('earned-xp-display').innerText = `+${totalEarnedInSession} XP`;
+            document.getElementById('total-xp-display').innerText = `${finalXp} XP`;
         }
 
         document.addEventListener("DOMContentLoaded", () => {
