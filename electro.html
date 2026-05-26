@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Физика Карточки — Электричество</title>
+    <title>Раздел: Электричество</title>
+    
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
         :root {
             --bg-main: #ffffff;
-            --bg-secondary: #fdfdfd;
+            --bg-secondary: #f9f9f9;
             --text-main: #000000;
-            --text-muted: #8e8e93;
+            --text-muted: #666666;
             --border-color: #e5e5e5;
         }
 
@@ -19,112 +24,89 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            margin: 0; padding: 20px;
+            margin: 0;
+            padding: 20px;
             background-color: var(--bg-main);
             color: var(--text-main);
-            display: flex; flex-direction: column; align-items: center;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .app-container { width: 100%; max-width: 440px; margin: 0 auto; display: flex; flex-direction: column; }
+        .app-container { width: 100%; max-width: 440px; margin: 0 auto; }
 
         .back-btn {
-            display: inline-flex; align-items: center;
-            color: var(--text-muted); cursor: pointer;
-            font-weight: 600; margin-bottom: 24px; font-size: 13px;
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
-
-        .card-container {
-            perspective: 1000px;
-            width: 100%; height: 380px;
-            margin-bottom: 24px;
-        }
-
-        .card {
-            width: 100%; height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            color: var(--text-muted);
             cursor: pointer;
+            font-weight: 500;
+            margin-bottom: 24px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .card.is-flipped { transform: rotateY(180deg); }
+        .screen { display: none; }
+        .screen.active { display: block; }
 
-        .card-face {
-            position: absolute; width: 100%; height: 100%;
-            backface-visibility: hidden;
-            border-radius: 32px; border: 1px solid var(--border-color);
+        .list-container { display: flex; flex-direction: column; gap: 12px; }
+        
+        .list-item {
             background: var(--bg-secondary);
-            display: flex; flex-direction: column;
-            justify-content: space-between; align-items: center;
-            padding: 40px 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.01);
-        }
-
-        .card-back { transform: rotateY(180deg); }
-
-        .card-content {
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; font-weight: 700; text-align: center;
-            line-height: 1.4; padding: 0 10px;
-        }
-
-        .formula-text {
-            font-size: 30px; font-weight: 500; font-family: 'Inter', sans-serif;
-            font-style: italic; text-align: center;
-        }
-
-        .card-hint {
-            font-size: 11px; color: var(--text-muted);
-            text-transform: uppercase; letter-spacing: 1px; font-weight: 500;
-        }
-
-        .buttons-group {
-            display: flex; gap: 12px; width: 100%; margin-bottom: 16px;
-        }
-
-        .btn {
-            flex: 1; border-radius: 20px; padding: 18px;
-            font-size: 15px; font-weight: 700; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 0.5px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            cursor: pointer;
             transition: transform 0.1s;
         }
+        .list-item:active { transform: scale(0.98); }
+        .list-item h3 { margin: 0 0 4px 0; font-size: 18px; font-weight: 600; }
+        .list-item p { margin: 0; color: var(--text-muted); font-size: 14px; }
+
+        /* КАРТОЧКА */
+        .card-container { perspective: 1000px; width: 100%; height: 380px; margin-bottom: 24px; }
+        .flashcard {
+            width: 100%; height: 100%; position: relative;
+            transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .flashcard.flipped { transform: rotateY(180deg); }
+
+        .card-face {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            border: 1px solid var(--border-color); border-radius: 24px; padding: 24px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            background: var(--bg-main); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+        }
+        .card-face.back { transform: rotateY(180deg); background: var(--bg-secondary); }
+
+        .card-hint { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); position: absolute; bottom: 20px; }
+        .card-question { font-size: 20px; font-weight: 600; }
+        .card-formula { font-size: 28px; margin: 0; }
+
+        .controls { display: flex; gap: 12px; }
+        .btn {
+            flex: 1; background: var(--bg-main); border: 1px solid #000000; border-radius: 16px;
+            padding: 16px; font-family: inherit; font-size: 13px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: transform 0.1s;
+        }
         .btn:active { transform: scale(0.97); }
+        .btn.black { background: #000000; color: #ffffff; }
+        
+        .progress-text { text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 14px; }
 
-        .btn-outline {
-            background: #ffffff; color: #000000;
-            border: 2px solid #000000;
-        }
-
-        .btn-filled {
-            background: #000000; color: #ffffff;
-            border: 2px solid #000000;
-        }
-
-        .counter {
-            text-align: center; font-size: 13px;
-            color: var(--text-muted); font-weight: 500;
-        }
-
-        /* ИТОГОВОЕ ОКНО СТАТИСТИКИ */
-        .stats-screen {
-            display: none; text-align: center; width: 100%;
-            background: var(--bg-secondary); border: 1px solid var(--border-color);
-            border-radius: 32px; padding: 40px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.02);
-        }
-        .stats-screen h2 { font-size: 26px; font-weight: 700; margin: 0 0 8px 0; }
-        .stats-screen p { font-size: 15px; color: var(--text-muted); margin: 0 0 24px 0; }
-        .stat-badge {
-            background: #f2f2f7; border-radius: 20px; padding: 16px;
-            margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
-        }
-        .stat-label { font-size: 15px; font-weight: 500; }
-        .stat-value { font-size: 16px; font-weight: 700; }
+        .results-grid { display: flex; gap: 16px; margin-bottom: 24px; margin-top: 20px; }
+        .result-block { flex: 1; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 24px; padding: 24px; text-align: center; }
+        .result-value { font-size: 32px; font-weight: 700; letter-spacing: -1px; margin-bottom: 4px; color: #000000; }
+        .result-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+        .xp-earned-text { text-align: center; font-size: 15px; font-weight: 600; margin-bottom: 24px; }
     </style>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDnWQw-EMU94XXjo02QyvFC6zmGj78Vi8I",
@@ -141,153 +123,242 @@
         window.db = getDatabase(app);
         window.fbRef = ref;
         window.fbSet = set;
+        window.fbGet = get;
     </script>
 </head>
 <body>
-    <div class="app-container" id="main-game-flow">
-        <div class="back-btn" onclick="location.href='index.html'">← К ТЕМАМ</div>
-
-        <div class="card-container">
-            <div id="card" class="card" onclick="flipCard()">
-                <div class="card-face card-front">
-                    <div></div>
-                    <div id="card-title" class="card-content">Закон Кулона</div>
-                    <div class="card-hint">НАЖМИ, ЧТОБЫ ПЕРЕВЕРНУТЬ</div>
-                </div>
-                <div class="card-face card-back">
-                    <div></div>
-                    <div id="card-formula" class="card-content formula-text">$$F = k \cdot \frac{|q_1| \cdot |q_2|}{r^2}$$</div>
-                    <div class="card-hint">НАЖМИ, ЧТОБЫ ВЕРНУТЬ ОБРАТНО</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="buttons-group">
-            <button class="btn btn-outline" onclick="handleAction(false)">НЕ ПОМНЮ</button>
-            <button class="btn btn-filled" onclick="handleAction(true)">ПОМНЮ</button>
-        </div>
-
-        <div id="card-counter" class="counter">Карточка 1 из 8</div>
-    </div>
 
     <div class="app-container">
-        <div id="stats-screen" class="stats-screen">
-            <h2>Отличная работа!</h2>
-            <p>Раздел «Электричество» успешно пройден</p>
+
+        <div id="screen-topics" class="screen active">
+            <div class="back-btn" onclick="goBackToMain()">← Главное меню</div>
+            <h2 style="font-size: 26px; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.5px;">Электричество</h2>
+            <div id="topics-list" class="list-container"></div>
+        </div>
+
+        <div id="screen-cards" class="screen">
+            <div class="back-btn" onclick="navigateTo('screen-topics')">← К темам электричества</div>
             
-            <div class="stat-badge">
-                <span class="stat-label">Получено за раунд</span>
-                <span class="stat-value" id="earned-xp-display">+0 XP</span>
-            </div>
-            <div class="stat-badge">
-                <span class="stat-label">Всего вашего опыта</span>
-                <span class="stat-value" id="total-xp-display">0 XP</span>
+            <div class="card-container">
+                <div id="flashcard" class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="card-face front">
+                        <div id="card-front-text" class="card-question">Загрузка...</div>
+                        <div class="card-hint">Нажми, чтобы перевернуть</div>
+                    </div>
+                    <div class="card-face back">
+                        <div id="card-back-formula" class="card-formula">$$$$</div>
+                        <div class="card-hint">Нажми, чтобы вернуть обратно</div>
+                    </div>
+                </div>
             </div>
 
-            <button class="btn btn-filled" style="margin-top: 16px; width: 100%;" onclick="location.href='index.html'">На главную</button>
+            <div class="controls">
+                <button class="btn" onclick="handleScore(false)">НЕ ПОМНЮ</button>
+                <button class="btn black" onclick="handleScore(true)">ПОМНЮ</button>
+            </div>
+            <div id="progress" class="progress-text">Карточка 1 из 1</div>
         </div>
+
+        <div id="screen-results" class="screen">
+            <h2 style="font-size: 24px; font-weight: 700; text-align: center; margin-bottom: 8px;">Тема пройдена</h2>
+            <p style="text-align: center; color: var(--text-muted); margin: 0 0 20px 0; font-size: 15px;">Ваш результат фиксации формул:</p>
+            
+            <div class="results-grid">
+                <div class="result-block">
+                    <div id="res-percent" class="result-value">0%</div>
+                    <div class="result-label">Точность</div>
+                </div>
+                <div class="result-block">
+                    <div id="res-count" class="result-value">0 / 0</div>
+                    <div class="result-label">Вспомнил</div>
+                </div>
+            </div>
+
+            <div id="xp-earned" class="xp-earned-text">Загрузка и сохранение опыта...</div>
+
+            <div class="controls">
+                <button class="btn" onclick="navigateTo('screen-topics')">К темам</button>
+                <button class="btn black" onclick="restartCurrentTopic()">Заново</button>
+            </div>
+        </div>
+
     </div>
 
     <script>
         const tg = window.Telegram ? window.Telegram.WebApp : null;
-
-        const cards = [
-            { t: "Закон Кулона", f: "$$F = k \cdot \\frac{|q_1| \\cdot |q_2|}{r^2}$$" },
-            { t: "Напряженность поля", f: "$$E = \\frac{F}{q}$$" },
-            { t: "Потенциал электростат. поля", f: "$$\\varphi = \\frac{W}{q}$$" },
-            { t: "Электроемкость конденсатора", f: "$$C = \\frac{q}{U}$$" },
-            { t: "Сила тока", f: "$$I = \\frac{q}{t}$$" },
-            { t: "Закон Ома для участка цепи", f: "$$I = \\frac{U}{R}$$" },
-            { t: "Сопротивление проводника", f: "$$R = \\rho \cdot \\frac{l}{S}$$" },
-            { t: "Закон Джоуля-Ленца", f: "$$Q = I^2 \cdot R \cdot t$$" }
+        
+        // Исправленный массив формул электричества с двойными слэшами
+        const electroData = [
+            {
+                id: "electrostatics",
+                title: "Электростатика",
+                cards: [
+                    { q: "Закон Кулона (в вакууме)", f: "$$F = k\\frac{|q_1 q_2|}{r^2}$$" },
+                    { q: "Напряженность электрического поля", f: "$$E = \\frac{F}{q}$$" },
+                    { q: "Напряженность поля точечного заряда", f: "$$E = k\\frac{|q|}{r^2}$$" },
+                    { q: "Потенциальная энергия заряда в поле", f: "$$W_п = q\\phi$$" },
+                    { q: "Связь напряженности и разности потенциалов (U)", f: "$$E = \\frac{U}{d}$$" },
+                    { q: "Электроемкость конденсатора (общая)", f: "$$C = \\frac{q}{U}$$" },
+                    { q: "Емкость плоского конденсатора", f: "$$C = \\frac{\\varepsilon \\varepsilon_0 S}{d}$$" },
+                    { q: "Энергия заряженного конденсатора", f: "$$W = \\frac{qU}{2} = \\frac{CU^2}{2} = \\frac{q^2}{2C}$$" }
+                ]
+            },
+            {
+                id: "dc_current",
+                title: "Постоянный ток",
+                cards: [
+                    { q: "Сила тока (определение)", f: "$$I = \\frac{\\Delta q}{\\Delta t}$$" },
+                    { q: "Закон Ома для однородного участка цепи", f: "$$I = \\frac{U}{R}$$" },
+                    { q: "Сопротивление проводника через размеры", f: "$$R = \\rho \\frac{l}{S}$$" },
+                    { q: "Закон Ома для полной (замкнутой) цепи", f: "$$I = \\frac{\\mathcal{E}}{R + r}$$" },
+                    { q: "Закон Джоуля-Ленца (мощность/тепло)", f: "$$P = UI = I^2 R = \\frac{U^2}{R}$$" },
+                    { q: "Работа сторонних сил (ЭДС)", f: "$$\\mathcal{E} = \\frac{A_{ст}}{q}$$" }
+                ]
+            }
         ];
 
-        let index = 0;
-        let isFlipped = false;
-        let xpEarnedOnThisCard = false;
-        let totalEarnedInSession = 0;
+        let currentCards = [];
+        let currentCardIndex = 0;
+        let correctAnswersCount = 0;
+        let rawActiveCardsClone = [];
 
-        function updateCounter() {
-            document.getElementById('card-counter').innerText = `Карточка ${index + 1} из ${cards.length}`;
+        function goBackToMain() {
+            window.location.href = "index.html";
         }
 
-        function flipCard() {
-            if (tg) tg.HapticFeedback.impactOccurred('light');
-            const c = document.getElementById('card');
-            c.classList.toggle('is-flipped');
-            isFlipped = c.classList.contains('is-flipped');
+        function navigateTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            window.scrollTo(0, 0);
         }
 
-        function handleAction(remembered) {
-            if (tg) tg.HapticFeedback.impactOccurred('medium');
-            
-            if (remembered && !xpEarnedOnThisCard) {
-                addXP(10);
-                totalEarnedInSession += 10;
-                xpEarnedOnThisCard = true;
+        function initTopicsList() {
+            const list = document.getElementById('topics-list');
+            list.innerHTML = '';
+            electroData.forEach(topic => {
+                const item = document.createElement('div');
+                item.className = 'list-item';
+                item.onclick = () => {
+                    rawActiveCardsClone = topic.cards;
+                    startCards(topic.cards);
+                };
+                item.innerHTML = `<h3>${topic.title}</h3><p>Формул для повторения: ${topic.cards.length}</p>`;
+                list.appendChild(item);
+            });
+        }
+
+        function startCards(cardsArray) {
+            currentCards = shuffleArray(cardsArray);
+            currentCardIndex = 0;
+            correctAnswersCount = 0;
+            renderCard();
+            navigateTo('screen-cards');
+        }
+
+        function restartCurrentTopic() {
+            startCards(rawActiveCardsClone);
+        }
+
+        function shuffleArray(array) {
+            let shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function renderCard() {
+            document.getElementById('flashcard').classList.remove('flipped');
+            const cardData = currentCards[currentCardIndex];
+            document.getElementById('card-front-text').innerText = cardData.q;
+            document.getElementById('card-back-formula').innerText = cardData.f;
+            document.getElementById('progress').innerText = `Карточка ${currentCardIndex + 1} из ${currentCards.length}`;
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function handleScore(remembered) {
+            if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+            if (remembered) {
+                correctAnswersCount++;
+                let viewed = parseInt(localStorage.getItem('global_cards_viewed')) || 0;
+                localStorage.setItem('global_cards_viewed', viewed + 1);
             }
 
-            const c = document.getElementById('card');
-            if (isFlipped) {
-                c.classList.remove('is-flipped');
-                isFlipped = false;
-                setTimeout(nextCard, 200);
+            if (currentCardIndex < currentCards.length - 1) {
+                currentCardIndex++;
+                renderCard();
             } else {
-                nextCard();
+                showResults();
             }
         }
 
-        function nextCard() {
-            // Если дошли до конца массива карточек — фиксируем финиш раунда
-            if (index === cards.length - 1) {
-                showStats();
-                return;
-            }
-
-            index++;
-            xpEarnedOnThisCard = false;
+        // АНТИЧИТ: Скачиваем актуальный баланс из базы данных перед сохранением
+        function showResults() {
+            const percent = Math.round((correctAnswersCount / currentCards.length) * 100);
+            const xpGained = correctAnswersCount * 10;
             
-            document.getElementById('card-title').innerText = cards[index].t;
-            document.getElementById('card-formula').innerText = cards[index].f;
-            updateCounter();
-        }
-
-        function addXP(val) {
-            let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
-            let newXp = xp + val;
-            localStorage.setItem('global_physics_xp', newXp);
+            document.getElementById('res-percent').innerText = `${percent}%`;
+            document.getElementById('res-count').innerText = `${correctAnswersCount} / ${currentCards.length}`;
+            document.getElementById('xp-earned').innerText = `Синхронизация с сервером...`;
             
-            let count = parseInt(localStorage.getItem('global_cards_viewed')) || 16;
-            localStorage.setItem('global_cards_viewed', count + 1);
+            navigateTo('screen-results');
 
-            // Синхронизация с облаком базы Firebase
-            if (window.db && window.fbSet && window.fbRef) {
-                let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
-                let savedName = localStorage.getItem('user_custom_name');
-                let myName = savedName || (tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Пользователь");
+            let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+            let myName = localStorage.getItem('user_custom_name') || (tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Пользователь");
 
-                window.fbSet(window.fbRef(window.db, 'users/' + myId), {
-                    id: myId,
-                    name: myName,
-                    xp: newXp
+            if (window.db && window.fbGet && window.fbRef && window.fbSet) {
+                const userRef = window.fbRef(window.db, 'users/' + myId);
+                
+                // Читаем ОФИЦИАЛЬНОЕ количество очков из Firebase
+                window.fbGet(userRef).then((snapshot) => {
+                    let cloudXp = 180; // дефолт, если юзера почему-то нет в базе
+                    let currentData = null;
+                    if (snapshot.exists()) {
+                        currentData = snapshot.val();
+                        if (currentData.xp !== undefined) cloudXp = parseInt(currentData.xp);
+                    }
+
+                    // Прибавляем очки к серверному числу, а не к локальному кэшу телефона!
+                    let finalXP = cloudXp + xpGained;
+                    
+                    // Перезаписываем и локальную память, и сервер синхронно
+                    localStorage.setItem('global_physics_xp', finalXP);
+                    
+                    window.fbSet(userRef, {
+                        id: myId,
+                        name: currentData && currentData.name ? currentData.name : myName,
+                        xp: finalXP
+                    }).then(() => {
+                        document.getElementById('xp-earned').innerText = `+${xpGained} XP ДОБАВЛЕНО В ПРОФИЛЬ`;
+                    });
+
+                }).catch((error) => {
+                    console.error(error);
+                    fallbackLocalSave(xpGained);
                 });
+            } else {
+                fallbackLocalSave(xpGained);
             }
         }
 
-        function showStats() {
-            document.getElementById('main-game-flow').style.display = 'none';
-            document.getElementById('stats-screen').style.display = 'block';
-            
-            let finalXp = localStorage.getItem('global_physics_xp') || 180;
-            
-            document.getElementById('earned-xp-display').innerText = `+${totalEarnedInSession} XP`;
-            document.getElementById('total-xp-display').innerText = `${finalXp} XP`;
+        function fallbackLocalSave(xpGained) {
+            let totalXP = parseInt(localStorage.getItem('global_physics_xp')) || 180;
+            localStorage.setItem('global_physics_xp', totalXP + xpGained);
+            document.getElementById('xp-earned').innerText = `+${xpGained} XP НАЧИСЛЕНО ЛОКАЛЬНО`;
         }
 
+        initTopicsList();
+        
         document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById('card-title').innerText = cards[0].t;
-            document.getElementById('card-formula').innerText = cards[0].f;
-            updateCounter();
+            if (tg) {
+                tg.ready();
+                tg.expand();
+            }
         });
     </script>
 </body>
