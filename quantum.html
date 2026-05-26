@@ -2,33 +2,69 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Кванты</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Квантовая физика</title>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* Используем те же стили, что в механике */
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #fff; }
+        .card-container { perspective: 1000px; width: 90%; max-width: 400px; height: 350px; }
+        .flashcard { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.5s; cursor: pointer; }
+        .flashcard.flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border: 1px solid #e5e5e5; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; background: #fff; }
+        .card-face.back { transform: rotateY(180deg); background: #f9f9f9; }
+        .controls { display: flex; gap: 10px; margin-top: 20px; width: 90%; max-width: 400px; }
+        .btn { flex: 1; padding: 15px; border-radius: 12px; border: 1px solid #000; cursor: pointer; font-weight: bold; }
+    </style>
 </head>
 <body>
 
-    <div id="flashcard">
-        <div id="card-front-text">Загрузка...</div>
-        <div id="card-back-formula"></div>
+    <div class="card-container">
+        <div id="flashcard" class="flashcard" onclick="this.classList.toggle('flipped')">
+            <div class="card-face front">
+                <div id="card-front-text" style="font-size: 20px; font-weight: 600;">Загрузка...</div>
+            </div>
+            <div class="card-face back">
+                <div id="card-back-formula" style="font-size: 28px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="nextCard()">СЛЕДУЮЩАЯ</button>
     </div>
 
     <script>
+        // ДАННЫЕ КВАНТОВОГО РАЗДЕЛА
         const quantumData = [ 
-            { 
-                id: "quantum_physics", 
-                title: "Кванты и Атом", 
-                cards: [ 
-                    { q: "Энергия фотона", f: "$$E = h\\nu = \\frac{hc}{\\lambda}$$" }, 
-                    { q: "Уравнение Эйнштейна для фотоэффекта", f: "$$h\\nu = A_{вых} + E_{к,max}$$" }, 
-                    { q: "Закон радиоактивного распада", f: "$$N = N_0 2^{-\\frac{t}{T}}$$" }, 
-                    { q: "Энергия связи ядра", f: "$$E_{св} = \\Delta m c^2$$" }, 
-                    { q: "Связь массы и энергии (СТО)", f: "$$E = mc^2$$" } 
-                ] 
-            } 
+            { q: "Энергия фотона", f: "$$E = h\\nu = \\frac{hc}{\\lambda}$$" }, 
+            { q: "Уравнение Эйнштейна для фотоэффекта", f: "$$h\\nu = A_{вых} + E_{к,max}$$" }, 
+            { q: "Закон радиоактивного распада", f: "$$N = N_0 2^{-\\frac{t}{T}}$$" }, 
+            { q: "Энергия связи ядра", f: "$$E_{св} = \\Delta m c^2$$" }, 
+            { q: "Связь массы и энергии (СТО)", f: "$$E = mc^2$$" } 
         ];
 
-        // Дальше у тебя идет остальная логика (функции рендера и т.д.)
-        console.log("Данные загружены:", quantumData);
+        let index = 0;
+
+        function renderCard() {
+            document.getElementById('flashcard').classList.remove('flipped');
+            const card = quantumData[index];
+            document.getElementById('card-front-text').innerText = card.q;
+            document.getElementById('card-back-formula').innerText = card.f;
+
+            // Принудительный рендер
+            if (window.MathJax) {
+                MathJax.typesetClear();
+                MathJax.typesetPromise();
+            }
+        }
+
+        function nextCard() {
+            index = (index + 1) % quantumData.length;
+            renderCard();
+        }
+
+        renderCard();
     </script>
 </body>
 </html>
