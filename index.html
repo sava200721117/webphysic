@@ -295,9 +295,6 @@
             let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
             let cardsViewed = parseInt(localStorage.getItem('global_cards_viewed')) || 16;
             
-            localStorage.setItem('global_physics_xp', xp);
-            localStorage.setItem('global_cards_viewed', cardsViewed);
-
             let level = Math.floor(xp / 100) + 1;
 
             document.getElementById('profile-xp').innerText = `${xp} XP`;
@@ -330,7 +327,29 @@
                 }
             }
 
-            saveUserToCloud();
+            // БАГФИКС: Сверяемся с Firebase принудительно
+            if (window.db && window.fbOnValue && window.fbRef) {
+                let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+                const userRef = window.fbRef(window.db, 'users/' + myId);
+                
+                window.fbOnValue(userRef, (snapshot) => {
+                    const cloudData = snapshot.val();
+                    if (cloudData && cloudData.xp !== undefined) {
+                        // Если админ обнулил или изменил XP, перезаписываем локальную память телефона
+                        if (cloudData.xp !== xp) {
+                            localStorage.setItem('global_physics_xp', cloudData.xp);
+                            let newLevel = Math.floor(cloudData.xp / 100) + 1;
+                            document.getElementById('profile-xp').innerText = `${cloudData.xp} XP`;
+                            document.getElementById('profile-level').innerText = `${newLevel} Уровень`;
+                        }
+                    } else {
+                        // Если в облаке пусто (первый запуск), заливаем базовые данные
+                        saveUserToCloud();
+                    }
+                }, { onlyOnce: true });
+            } else {
+                saveUserToCloud();
+            }
         }
 
         function toggleEdit() {
@@ -357,7 +376,33 @@
                 editBox.style.display = 'none';
                 btn.innerText = "Редактировать профиль";
                 isEditing = false;
-                updateUI();
+                
+                // Сначала обновляем локальный интерфейс и сливаем новые имя/ник в Firebase
+                updateUI_and_Push();
+            }
+        }
+
+        // Отдельный хелпер для безопасного изменения имени
+        function updateUI_and_Push() {
+            let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
+            let savedName = localStorage.getItem('user_custom_name') || document.getElementById('user-name').innerText;
+            let savedUsername = localStorage.getItem('user_custom_username');
+
+            if (savedName) {
+                document.getElementById('user-name').innerText = savedName;
+                document.getElementById('user-avatar').innerText = savedName.charAt(0).toUpperCase();
+                document.getElementById('user-avatar').style.backgroundImage = 'none';
+            }
+            if (savedUsername) document.getElementById('user-username').innerText = savedUsername;
+
+            // Сливаем в облако именно ту инфу об очках, которая актуальна в данный момент
+            if (window.db && window.fbSet && window.fbRef) {
+                let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+                window.fbSet(window.fbRef(window.db, 'users/' + myId), {
+                    id: myId,
+                    name: savedName,
+                    xp: xp
+                });
             }
         }
 
@@ -426,7 +471,6 @@
                 tg.ready();
                 tg.expand();
             }
-            // Если Firebase загрузился быстрее, чем DOM
             if (window.db) {
                 updateUI();
             }
