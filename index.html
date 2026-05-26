@@ -29,7 +29,6 @@
             padding: 20px 20px 90px 20px;
         }
 
-        /* ЭКРАНЫ */
         .screen { display: none; }
         .screen.active { display: block; }
 
@@ -37,7 +36,6 @@
         .header h1 { font-size: 28px; font-weight: 700; margin: 0 0 8px 0; letter-spacing: -0.5px; }
         .header p { font-size: 15px; color: var(--text-muted); margin: 0; }
 
-        /* СПИСОК РАЗДЕЛОВ */
         .menu-list { display: flex; flex-direction: column; gap: 16px; width: 100%; }
         .menu-item {
             width: 100%; background: var(--bg-secondary);
@@ -51,7 +49,6 @@
         .menu-item-info p { font-size: 13px; color: var(--text-muted); margin: 0; }
         .arrow { font-size: 18px; font-weight: 600; color: #000000; }
 
-        /* ПРОФИЛЬ */
         .profile-header {
             display: flex; flex-direction: column; align-items: center;
             margin-top: 20px; margin-bottom: 24px; text-align: center;
@@ -66,7 +63,6 @@
         .profile-header h2 { font-size: 24px; font-weight: 700; margin: 0 0 4px 0; letter-spacing: -0.5px; }
         .profile-header p { font-size: 14px; color: var(--text-muted); margin: 0; }
 
-        /* СТАТИСТИКА */
         .stats-container {
             background: #ffffff; border: 1px solid var(--border-color);
             border-radius: 24px; padding: 12px 20px; margin-bottom: 20px;
@@ -81,7 +77,6 @@
         .stats-value { font-size: 16px; color: var(--text-muted); font-weight: 600; }
         .stats-value.highlight { color: #000000; font-weight: 700; }
 
-        /* КНОПКИ И ИНПУТЫ */
         .edit-btn {
             background: #000000; color: #ffffff; border: none; border-radius: 16px;
             padding: 12px 24px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%;
@@ -96,7 +91,6 @@
             border-radius: 12px; font-size: 14px; font-family: inherit; outline: none;
         }
 
-        /* РЕЙТИНГ */
         .leaderboard-list {
             background: #ffffff; border: 1px solid var(--border-color);
             border-radius: 24px; padding: 8px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.01);
@@ -117,7 +111,6 @@
         }
         .empty-hint { text-align: center; color: var(--text-muted); padding: 30px 10px; font-size: 14px; }
 
-        /* ТАББАР */
         .tab-bar {
             position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
             width: 100%; max-width: 440px; height: 75px;
@@ -154,8 +147,6 @@
         window.fbRef = ref;
         window.fbSet = set;
         window.fbOnValue = onValue;
-
-        // Оповещаем систему, что база готова, и запускаем интерфейс
         window.dispatchEvent(new Event('firebaseReady'));
     </script>
 </head>
@@ -198,6 +189,20 @@
                     </div>
                     <div class="arrow">→</div>
                 </div>
+                <div class="menu-item" onclick="openSectionPage('optics.html')">
+                    <div class="menu-item-info">
+                        <h2>Оптика</h2>
+                        <p>Отражение, преломление, линзы</p>
+                    </div>
+                    <div class="arrow">→</div>
+                </div>
+                <div class="menu-item" onclick="openSectionPage('quantum.html')">
+                    <div class="menu-item-info">
+                        <h2>Квантовая физика</h2>
+                        <p>Фотоэффект, атомная и ядерная физика</p>
+                    </div>
+                    <div class="arrow">→</div>
+                </div>
             </div>
         </div>
 
@@ -224,11 +229,11 @@
                 </div>
                 <div class="stats-row">
                     <span class="stats-label">Посмотрено карточек</span>
-                    <span class="stats-value" id="profile-cards">16 шт.</span>
+                    <span class="stats-value" id="profile-cards">0 шт.</span>
                 </div>
                 <div class="stats-row">
                     <span class="stats-label">Изучено тем</span>
-                    <span class="stats-value" id="profile-themes">4 / 4 разделов</span>
+                    <span class="stats-value" id="profile-themes">6 разделов</span>
                 </div>
             </div>
 
@@ -273,10 +278,8 @@
 
         function navigateTo(screenId) {
             if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-
             document.getElementById(screenId).classList.add('active');
             
             if (screenId === 'screen-cards') document.getElementById('tab-cards').classList.add('active');
@@ -293,8 +296,7 @@
 
         function updateUI() {
             let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
-            let cardsViewed = parseInt(localStorage.getItem('global_cards_viewed')) || 16;
-            
+            let cardsViewed = parseInt(localStorage.getItem('global_cards_viewed')) || 0;
             let level = Math.floor(xp / 100) + 1;
 
             document.getElementById('profile-xp').innerText = `${xp} XP`;
@@ -307,48 +309,18 @@
             if (savedName) {
                 document.getElementById('user-name').innerText = savedName;
                 document.getElementById('user-avatar').innerText = savedName.charAt(0).toUpperCase();
-                document.getElementById('user-avatar').style.backgroundImage = 'none';
             }
-            if (savedUsername) {
-                document.getElementById('user-username').innerText = savedUsername;
-            }
+            if (savedUsername) document.getElementById('user-username').innerText = savedUsername;
 
-            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && !savedName) {
-                const user = tg.initDataUnsafe.user;
-                let fullName = user.first_name + (user.last_name ? " " + user.last_name : "");
-                document.getElementById('user-name').innerText = fullName;
-                document.getElementById('user-username').innerText = user.username ? `@${user.username}` : "";
-                
-                if (user.photo_url) {
-                    document.getElementById('user-avatar').innerText = "";
-                    document.getElementById('user-avatar').style.backgroundImage = `url('${user.photo_url}')`;
-                } else {
-                    document.getElementById('user-avatar').innerText = user.first_name.charAt(0).toUpperCase();
-                }
-            }
-
-            // БАГФИКС: Сверяемся с Firebase принудительно
             if (window.db && window.fbOnValue && window.fbRef) {
                 let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
-                const userRef = window.fbRef(window.db, 'users/' + myId);
-                
-                window.fbOnValue(userRef, (snapshot) => {
+                window.fbOnValue(window.fbRef(window.db, 'users/' + myId), (snapshot) => {
                     const cloudData = snapshot.val();
-                    if (cloudData && cloudData.xp !== undefined) {
-                        // Если админ обнулил или изменил XP, перезаписываем локальную память телефона
-                        if (cloudData.xp !== xp) {
-                            localStorage.setItem('global_physics_xp', cloudData.xp);
-                            let newLevel = Math.floor(cloudData.xp / 100) + 1;
-                            document.getElementById('profile-xp').innerText = `${cloudData.xp} XP`;
-                            document.getElementById('profile-level').innerText = `${newLevel} Уровень`;
-                        }
-                    } else {
-                        // Если в облаке пусто (первый запуск), заливаем базовые данные
-                        saveUserToCloud();
+                    if (cloudData && cloudData.xp !== undefined && cloudData.xp !== xp) {
+                        localStorage.setItem('global_physics_xp', cloudData.xp);
+                        updateUI();
                     }
                 }, { onlyOnce: true });
-            } else {
-                saveUserToCloud();
             }
         }
 
@@ -366,114 +338,56 @@
             } else {
                 let newName = document.getElementById('input-name').value.trim();
                 let newUsername = document.getElementById('input-username').value.trim();
-
                 if (newName) localStorage.setItem('user_custom_name', newName);
-                if (newUsername) {
-                    if (!newUsername.startsWith('@')) newUsername = '@' + newUsername;
-                    localStorage.setItem('user_custom_username', newUsername);
-                }
-
+                if (newUsername) localStorage.setItem('user_custom_username', newUsername);
                 editBox.style.display = 'none';
                 btn.innerText = "Редактировать профиль";
                 isEditing = false;
-                
-                // Сначала обновляем локальный интерфейс и сливаем новые имя/ник в Firebase
                 updateUI_and_Push();
             }
         }
 
-        // Отдельный хелпер для безопасного изменения имени
         function updateUI_and_Push() {
-            let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
-            let savedName = localStorage.getItem('user_custom_name') || document.getElementById('user-name').innerText;
-            let savedUsername = localStorage.getItem('user_custom_username');
-
-            if (savedName) {
-                document.getElementById('user-name').innerText = savedName;
-                document.getElementById('user-avatar').innerText = savedName.charAt(0).toUpperCase();
-                document.getElementById('user-avatar').style.backgroundImage = 'none';
-            }
-            if (savedUsername) document.getElementById('user-username').innerText = savedUsername;
-
-            // Сливаем в облако именно ту инфу об очках, которая актуальна в данный момент
+            updateUI();
             if (window.db && window.fbSet && window.fbRef) {
                 let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
                 window.fbSet(window.fbRef(window.db, 'users/' + myId), {
                     id: myId,
-                    name: savedName,
-                    xp: xp
+                    name: localStorage.getItem('user_custom_name') || "Пользователь",
+                    xp: parseInt(localStorage.getItem('global_physics_xp')) || 180
                 });
             }
         }
 
-        function saveUserToCloud() {
-            if (!window.db || !window.fbSet || !window.fbRef) return;
-
-            let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
-            let myName = localStorage.getItem('user_custom_name') || document.getElementById('user-name').innerText;
-            let myXp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
-
-            window.fbSet(window.fbRef(window.db, 'users/' + myId), {
-                id: myId,
-                name: myName,
-                xp: myXp
-            });
-        }
-
         function syncAndRenderLeaderboard() {
             const container = document.getElementById('leaderboard-container');
-            if (!window.db || !window.fbOnValue || !window.fbRef) {
-                container.innerHTML = `<div class="empty-hint">Инициализация базы данных...</div>`;
-                return;
-            }
-
-            let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+            if (!window.db) return;
 
             window.fbOnValue(window.fbRef(window.db, 'users'), (snapshot) => {
                 const data = snapshot.val();
-                if (!data) {
-                    container.innerHTML = `<div class="empty-hint">Рейтинг пока пуст. Будьте первым!</div>`;
-                    return;
-                }
+                if (!data) return;
 
                 let players = Object.values(data);
                 players.sort((a, b) => (b.xp || 0) - (a.xp || 0));
 
                 container.innerHTML = "";
                 players.forEach((player, index) => {
-                    let rank = index + 1;
-                    let medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
-                    let isTopThree = rank <= 3 ? "top-three" : "";
-                    let isMe = player.id == myId ? `<span class="me-badge">Вы</span>` : "";
-
                     container.innerHTML += `
                         <div class="leaderboard-item">
                             <div class="user-rank-info">
-                                <span class="rank-number ${isTopThree}">${medal}</span>
-                                <span class="rank-name">${player.name || 'Аноним'} ${isMe}</span>
+                                <span class="rank-number ${index < 3 ? 'top-three' : ''}">${index + 1}</span>
+                                <span class="rank-name">${player.name || 'Аноним'}</span>
                             </div>
                             <span class="rank-xp">${player.xp || 0} XP</span>
                         </div>
                     `;
                 });
-            }, (error) => {
-                console.error("Ошибка при чтении базы данных:", error);
-                container.innerHTML = `<div class="empty-hint" style="color: red;">Ошибка доступа к рейтингу</div>`;
             });
         }
 
-        window.addEventListener('firebaseReady', () => {
-            updateUI();
-        });
-
+        window.addEventListener('firebaseReady', updateUI);
         document.addEventListener("DOMContentLoaded", () => {
-            if (tg) {
-                tg.ready();
-                tg.expand();
-            }
-            if (window.db) {
-                updateUI();
-            }
+            if (tg) { tg.ready(); tg.expand(); }
         });
     </script>
 </body>
