@@ -6,9 +6,7 @@
     <title>Раздел: Механика</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-    
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
@@ -103,6 +101,28 @@
         .result-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
         .xp-earned-text { text-align: center; font-size: 15px; font-weight: 600; margin-bottom: 24px; }
     </style>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDnWQw-EMU94XXjo02QyvFC6zmGj78Vi8I",
+            authDomain: "physics-ege-rating.firebaseapp.com",
+            databaseURL: "https://physics-ege-rating-default-rtdb.firebaseio.com",
+            projectId: "physics-ege-rating",
+            storageBucket: "physics-ege-rating.firebasestorage.app",
+            messagingSenderId: "969771916707",
+            appId: "1:969771916707:web:867ccfa3d8a7e20ba2ce16",
+            measurementId: "G-J7SR7GH8NR"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        window.db = getDatabase(app);
+        window.fbRef = ref;
+        window.fbSet = set;
+        window.fbGet = get;
+    </script>
 </head>
 <body>
 
@@ -152,7 +172,7 @@
                 </div>
             </div>
 
-            <div id="xp-earned" class="xp-earned-text">+0 XP ДОБАВЛЕНО В ПРОФИЛЬ</div>
+            <div id="xp-earned" class="xp-earned-text">Загрузка и сохранение опыта...</div>
 
             <div class="controls">
                 <button class="btn" onclick="navigateTo('screen-topics')">К темам</button>
@@ -163,9 +183,8 @@
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
+        const tg = window.Telegram ? window.Telegram.WebApp : null;
         
-        // Массив всех формул механики
         const mechanicsData = [
             {
                 id: "kinematics",
@@ -221,8 +240,8 @@
                 cards: [
                     { q: "Период колебаний математического маятника", f: "$$T = 2\\pi\\sqrt{\\frac{l}{g}}$$" },
                     { q: "Период колебаний пружинного маятника", f: "$$T = 2\\pi\\sqrt{\\frac{m}{k}}$$" },
-                    { q: "Связь периода и циклической частоты", f: "$$\\omega = \\frac{2\\pi}{T} = 2\\pi \\nu$$" },
-                    { q: "Длина волны через скорость и период", f: "$$\\lambda = v T = \\frac{v}{\\nu}$$" }
+                    { q: "Связь периода и циклической частоты", f: "$$\\omega = \\frac{2\\pi}{T} = 2\\pi \\ну$$" },
+                    { q: "Длина волны через скорость и период", f: "$$\\lambda = v T = \\frac{v}{\\ну}$$" }
                 ]
             }
         ];
@@ -291,7 +310,7 @@
         }
 
         function handleScore(remembered) {
-            if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+            if(tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
             if (remembered) {
                 correctAnswersCount++;
@@ -307,21 +326,68 @@
             }
         }
 
+        // АНТИЧИТ: Скачиваем актуальный баланс из базы данных перед сохранением
         function showResults() {
             const percent = Math.round((correctAnswersCount / currentCards.length) * 100);
             const xpGained = correctAnswersCount * 10;
             
-            let totalXP = parseInt(localStorage.getItem('global_physics_xp')) || 0;
-            localStorage.setItem('global_physics_xp', totalXP + xpGained);
-            
             document.getElementById('res-percent').innerText = `${percent}%`;
             document.getElementById('res-count').innerText = `${correctAnswersCount} / ${currentCards.length}`;
-            document.getElementById('xp-earned').innerText = `+${xpGained} XP ДОБАВЛЕНО В ПРОФИЛЬ`;
+            document.getElementById('xp-earned').innerText = `Синхронизация с сервером...`;
             
             navigateTo('screen-results');
+
+            let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+            let myName = localStorage.getItem('user_custom_name') || (tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Пользователь");
+
+            if (window.db && window.fbGet && window.fbRef && window.fbSet) {
+                const userRef = window.fbRef(window.db, 'users/' + myId);
+                
+                // Читаем ОФИЦИАЛЬНОЕ количество очков из Firebase
+                window.fbGet(userRef).then((snapshot) => {
+                    let cloudXp = 180; // дефолт
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        if (data.xp !== undefined) cloudXp = parseInt(data.xp);
+                    }
+
+                    // Прибавляем очки к серверному числу, а не к локальному кэшу телефона!
+                    let finalXP = cloudXp + xpGained;
+                    
+                    // Перезаписываем и локальную память, и сервер синхронно
+                    localStorage.setItem('global_physics_xp', finalXP);
+                    
+                    window.fbSet(userRef, {
+                        id: myId,
+                        name: data && data.name ? data.name : myName,
+                        xp: finalXP
+                    }).then(() => {
+                        document.getElementById('xp-earned').innerText = `+${xpGained} XP ДОБАВЛЕНО В ПРОФИЛЬ`;
+                    });
+
+                }).catch((error) => {
+                    console.error(error);
+                    fallbackLocalSave(xpGained);
+                });
+            } else {
+                fallbackLocalSave(xpGained);
+            }
+        }
+
+        function fallbackLocalSave(xpGained) {
+            let totalXP = parseInt(localStorage.getItem('global_physics_xp')) || 180;
+            localStorage.setItem('global_physics_xp', totalXP + xpGained);
+            document.getElementById('xp-earned').innerText = `+${xpGained} XP НАЧИСЛЕНО ЛОКАЛЬНО`;
         }
 
         initTopicsList();
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            if (tg) {
+                tg.ready();
+                tg.expand();
+            }
+        });
     </script>
 </body>
 </html>
