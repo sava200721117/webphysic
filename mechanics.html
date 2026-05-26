@@ -6,7 +6,9 @@
     <title>Раздел: Механика</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
@@ -185,6 +187,7 @@
     <script>
         const tg = window.Telegram ? window.Telegram.WebApp : null;
         
+        // Массив всех формул механики
         const mechanicsData = [
             {
                 id: "kinematics",
@@ -240,8 +243,8 @@
                 cards: [
                     { q: "Период колебаний математического маятника", f: "$$T = 2\\pi\\sqrt{\\frac{l}{g}}$$" },
                     { q: "Период колебаний пружинного маятника", f: "$$T = 2\\pi\\sqrt{\\frac{m}{k}}$$" },
-                    { q: "Связь периода и циклической частоты", f: "$$\\omega = \\frac{2\\pi}{T} = 2\\pi \\ну$$" },
-                    { q: "Длина волны через скорость и период", f: "$$\\lambda = v T = \\frac{v}{\\ну}$$" }
+                    { q: "Связь периода и циклической частоты", f: "$$\\omega = \\frac{2\\pi}{T} = 2\\pi \\nu$$" },
+                    { q: "Длина волны через скорость и период", f: "$$\\lambda = v T = \\frac{v}{\\nu}$$" }
                 ]
             }
         ];
@@ -345,10 +348,11 @@
                 
                 // Читаем ОФИЦИАЛЬНОЕ количество очков из Firebase
                 window.fbGet(userRef).then((snapshot) => {
-                    let cloudXp = 180; // дефолт
+                    let cloudXp = 180; // дефолт, если юзера почему-то нет в базе
+                    let currentData = null;
                     if (snapshot.exists()) {
-                        const data = snapshot.val();
-                        if (data.xp !== undefined) cloudXp = parseInt(data.xp);
+                        currentData = snapshot.val();
+                        if (currentData.xp !== undefined) cloudXp = parseInt(currentData.xp);
                     }
 
                     // Прибавляем очки к серверному числу, а не к локальному кэшу телефона!
@@ -359,7 +363,7 @@
                     
                     window.fbSet(userRef, {
                         id: myId,
-                        name: data && data.name ? data.name : myName,
+                        name: currentData && currentData.name ? currentData.name : myName,
                         xp: finalXP
                     }).then(() => {
                         document.getElementById('xp-earned').innerText = `+${xpGained} XP ДОБАВЛЕНО В ПРОФИЛЬ`;
