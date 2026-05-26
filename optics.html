@@ -84,13 +84,32 @@
     <script>
         const tg = window.Telegram ? window.Telegram.WebApp : null;
         const opticsData = [
-            { id: "optics_base", title: "Геометрическая и волновая оптика", cards: [
-                { q: "Закон преломления света", f: "$$n_1 \\sin\\alpha = n_2 \\sin\\gamma$$" },
-                { q: "Формула тонкой линзы", f: "$$\\frac{1}{F} = \\frac{1}{d} + \\frac{1}{f}$$" },
-                { q: "Оптическая сила линзы", f: "$$D = \\frac{1}{F}$$" },
-                { q: "Условие максимумов интерференции", f: "$$\\Delta d = k\\lambda$$" }
-            ]}
-        ];
+    { 
+        id: "optics_geom", 
+        title: "Геометрическая оптика", 
+        cards: [
+            { q: "Закон отражения света", f: "$$\\alpha = \\beta$$" },
+            { q: "Закон преломления света (Снеллиуса)", f: "$$n_1 \\sin\\alpha = n_2 \\sin\\gamma$$" },
+            { q: "Абсолютный показатель преломления", f: "$$n = \\frac{c}{v}$$" },
+            { q: "Формула тонкой линзы", f: "$$\\frac{1}{F} = \\frac{1}{d} + \\frac{1}{f}$$" },
+            { q: "Оптическая сила линзы", f: "$$D = \\frac{1}{F}$$" },
+            { q: "Линейное увеличение линзы", f: "$$\\Gamma = \\frac{H}{h} = \\frac{f}{d}$$" }
+        ]
+    },
+    { 
+        id: "optics_wave", 
+        title: "Волновая оптика и Кванты", 
+        cards: [
+            { q: "Условие максимумов интерференции", f: "$$\\Delta d = k\\lambda$$" },
+            { q: "Условие минимумов интерференции", f: "$$\\Delta d = (2k+1)\\frac{\\lambda}{2}$$" },
+            { q: "Формула дифракционной решетки", f: "$$d \\sin\\varphi = k\\lambda$$" },
+            { q: "Энергия фотона", f: "$$E = h\\nu = \\frac{hc}{\\lambda}$$" },
+            { q: "Уравнение Эйнштейна для фотоэффекта", f: "$$h\\nu = A_{вых} + E_{к,max}$$" },
+            { q: "Красная граница фотоэффекта", f: "$$A_{вых} = h\\nu_{min} = \\frac{hc}{\\lambda_{max}}$$" },
+            { q: "Импульс фотона", f: "$$p = \\frac{E}{c} = \\frac{h}{\\lambda}$$" }
+        ]
+    }
+];
 
         let currentCards = [], currentCardIndex = 0, correctAnswersCount = 0, rawActiveCardsClone = [];
 

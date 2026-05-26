@@ -52,12 +52,22 @@
 
     <script>
         const quantumData = [
-            { id: "quantum", title: "Кванты и Атом", cards: [
-                { q: "Энергия фотона", f: "$$E = h\\nu = \\frac{hc}{\\lambda}$$" },
-                { q: "Уравнение Эйнштейна для фотоэффекта", f: "$$h\\nu = A_{вых} + E_{к}$$" },
-                { q: "Энергия связи", f: "$$E_{св} = \\Delta m c^2$$" }
-            ]}
-        ];
+    { 
+        id: "quantum", 
+        title: "Кванты и Атом", 
+        cards: [
+            { q: "Энергия фотона", f: "$$E = h\\nu = \\frac{hc}{\\lambda}$$" },
+            { q: "Импульс фотона", f: "$$p = \\frac{h}{\\lambda} = \\frac{E}{c}$$" },
+            { q: "Уравнение Эйнштейна для фотоэффекта", f: "$$h\\nu = A_{вых} + \\frac{mv^2}{2}$$" },
+            { q: "Красная граница фотоэффекта", f: "$$\\lambda_{max} = \\frac{hc}{A_{вых}}$$" },
+            { q: "Первый постулат Бора (излучение)", f: "$$h\\nu = E_m - E_n$$" },
+            { q: "Дефект массы", f: "$$\\Delta m = Z m_p + N m_n - M_{ядра}$$" },
+            { q: "Энергия связи ядра", f: "$$E_{св} = \\Delta m c^2$$" },
+            { q: "Закон радиоактивного распада", f: "$$N = N_0 2^{-\\frac{t}{T}}$$" },
+            { q: "Активность радиоактивного элемента", f: "$$A = \\lambda N = \\frac{\\ln 2}{T} N$$" }
+        ]
+    }
+];
         // (Логика идентична Optics и Mechanics)
         function initTopics() { const list = document.getElementById('topics-list'); quantumData.forEach(t => { const el = document.createElement('div'); el.className = 'list-item'; el.innerHTML = `<h3>${t.title}</h3>`; el.onclick = () => { start(t.cards); }; list.appendChild(el); }); }
         function start(cards) { currentCards = [...cards].sort(() => Math.random() - 0.5); currentCardIndex = 0; correctAnswersCount = 0; render(); navigateTo('screen-cards'); }
