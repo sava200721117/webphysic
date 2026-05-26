@@ -138,14 +138,16 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
+        // Точный конфиг со скриншота настроек и верным адресом европейского сервера базы данных
         const firebaseConfig = {
             apiKey: "AIzaSyDnWQw-EMU94XXjo02QyvFC6zmGj78Vi8I",
             authDomain: "physics-ege-rating.firebaseapp.com",
-            databaseURL: "https://physics-ege-rating-default-rtdb.firebaseio.com",
+            databaseURL: "https://physics-ege-rating-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "physics-ege-rating",
             storageBucket: "physics-ege-rating.firebasestorage.app",
             messagingSenderId: "969771916707",
-            appId: "1:969771916707:web:867ccfa3d8a7e20ba2ce16"
+            appId: "1:969771916707:web:867ccfa3d8a7e20ba2ce16",
+            measurementId: "G-J7SR7GH8NR"
         };
 
         // Запуск базы данных и прокидывание методов в глобальное окно window
