@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Физика Карточки — Магнетизм</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <style>
+        :root {
+            --bg-main: #ffffff;
+            --bg-secondary: #fdfdfd;
+            --text-main: #000000;
+            --text-muted: #8e8e93;
+            --border-color: #e5e5e5;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0; padding: 20px;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .app-container { width: 100%; max-width: 440px; margin: 0 auto; display: flex; flex-direction: column; }
+
+        .back-btn {
+            display: inline-flex; align-items: center;
+            color: var(--text-muted); cursor: pointer;
+            font-weight: 600; margin-bottom: 24px; font-size: 13px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .card-container {
+            perspective: 1000px;
+            width: 100%; height: 380px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            width: 100%; height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .card.is-flipped { transform: rotateY(180deg); }
+
+        .card-face {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden;
+            border-radius: 32px; border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            display: flex; flex-direction: column;
+            justify-content: space-between; align-items: center;
+            padding: 40px 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.01);
+        }
+
+        .card-back { transform: rotateY(180deg); }
+
+        .card-content {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; font-weight: 700; text-align: center;
+            line-height: 1.4; padding: 0 10px;
+        }
+
+        .formula-text {
+            font-size: 34px; font-weight: 500; font-family: 'Inter', sans-serif;
+            font-style: italic; text-align: center;
+        }
+
+        .card-hint {
+            font-size: 11px; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 1px; font-weight: 500;
+        }
+
+        .buttons-group {
+            display: flex; gap: 12px; width: 100%; margin-bottom: 16px;
+        }
+
+        .btn {
+            flex: 1; border-radius: 20px; padding: 18px;
+            font-size: 15px; font-weight: 700; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.97); }
+
+        .btn-outline {
+            background: #ffffff; color: #000000;
+            border: 2px solid #000000;
+        }
+
+        .btn-filled {
+            background: #000000; color: #ffffff;
+            border: 2px solid #000000;
+        }
+
+        .counter {
+            text-align: center; font-size: 13px;
+            color: var(--text-muted); font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="back-btn" onclick="location.href='index.html'">← К ТЕМАМ МАГНЕТИЗМА</div>
+
+        <div class="card-container">
+            <div id="card" class="card" onclick="flipCard()">
+                <div class="card-face card-front">
+                    <div></div>
+                    <div id="card-title" class="card-content">Сила Ампера</div>
+                    <div class="card-hint">НАЖМИ, ЧТОБЫ ПЕРЕВЕРНУТЬ</div>
+                </div>
+                <div class="card-face card-back">
+                    <div></div>
+                    <div id="card-formula" class="card-content formula-text">F_A = B · I · L · sin(α)</div>
+                    <div class="card-hint">НАЖМИ, ЧТОБЫ ВЕРНУТЬ ОБРАТНО</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons-group">
+            <button class="btn btn-outline" onclick="handleAction(false)">НЕ ПОМНЮ</button>
+            <button class="btn btn-filled" onclick="handleAction(true)">ПОМНЮ</button>
+        </div>
+
+        <div id="card-counter" class="counter">Карточка 1 из 6</div>
+    </div>
+
+    <script>
+        const tg = window.Telegram ? window.Telegram.WebApp : null;
+
+        const cards = [
+            { t: "Сила Ампера", f: "F_A = B · I · L · sin(α)" },
+            { t: "Сила Лоренца", f: "F_Л = q · v · B · sin(α)" },
+            { t: "Магнитный поток", f: "Ф = B · S · cos(α)" },
+            { t: "Закон эл.-магн. индукции (Фарадея)", f: "ЭДС = - ΔФ / Δt" },
+            { t: "ЭДС индукции в движущемся проводнике", f: "ЭДС = B · l · v · sin(α)" },
+            { t: "Энергия магнитного поля катушки", f: "W = (L · I²) / 2" }
+        ];
+
+        let index = 0;
+        let isFlipped = false;
+        let xpEarnedOnThisCard = false;
+
+        function updateCounter() {
+            document.getElementById('card-counter').innerText = `Карточка ${index + 1} из ${cards.length}`;
+        }
+
+        function flipCard() {
+            if (tg) tg.HapticFeedback.impactOccurred('light');
+            const c = document.getElementById('card');
+            c.classList.toggle('is-flipped');
+            isFlipped = c.classList.contains('is-flipped');
+        }
+
+        function handleAction(remembered) {
+            if (tg) tg.HapticFeedback.impactOccurred('medium');
+            
+            if (remembered && !xpEarnedOnThisCard) {
+                addXP(10);
+                xpEarnedOnThisCard = true;
+            }
+
+            const c = document.getElementById('card');
+            if (isFlipped) {
+                c.classList.remove('is-flipped');
+                isFlipped = false;
+                setTimeout(nextCard, 200);
+            } else {
+                nextCard();
+            }
+        }
+
+        function nextCard() {
+            index = (index + 1) % cards.length;
+            xpEarnedOnThisCard = false;
+            
+            document.getElementById('card-title').innerText = cards[index].t;
+            document.getElementById('card-formula').innerText = cards[index].f;
+            updateCounter();
+        }
+
+        function addXP(val) {
+            let xp = parseInt(localStorage.getItem('global_physics_xp')) || 0;
+            localStorage.setItem('global_physics_xp', xp + val);
+            let count = parseInt(localStorage.getItem('global_cards_viewed')) || 0;
+            localStorage.setItem('global_cards_viewed', count + 1);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('card-title').innerText = cards[0].t;
+            document.getElementById('card-formula').innerText = cards[0].f;
+            updateCounter();
+        });
+    </script>
+</body>
+</html>
