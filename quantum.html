@@ -3,67 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Квантовая физика</title>
+    <title>Раздел: Квантовая физика</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
     <style>
-        /* Стили, идентичные механике */
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #fff; }
-        .card-container { perspective: 1000px; width: 90%; max-width: 400px; height: 380px; margin-bottom: 24px; }
+        :root { --bg-main: #ffffff; --bg-secondary: #f9f9f9; --text-main: #000000; --text-muted: #666666; --border-color: #e5e5e5; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 20px; background: var(--bg-main); display: flex; flex-direction: column; align-items: center; }
+        .app-container { width: 100%; max-width: 440px; }
+        .back-btn { color: var(--text-muted); cursor: pointer; margin-bottom: 24px; font-size: 13px; text-transform: uppercase; }
+        .screen { display: none; } .screen.active { display: block; }
+        .list-item { background: var(--bg-secondary); padding: 20px; border: 1px solid var(--border-color); border-radius: 20px; margin-bottom: 12px; cursor: pointer; }
+        .card-container { perspective: 1000px; width: 100%; height: 380px; margin-bottom: 24px; }
         .flashcard { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.5s; cursor: pointer; }
         .flashcard.flipped { transform: rotateY(180deg); }
-        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border: 1px solid #e5e5e5; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
-        .card-face.back { transform: rotateY(180deg); background: #f9f9f9; }
-        .card-hint { font-size: 11px; text-transform: uppercase; color: #666; position: absolute; bottom: 20px; }
-        .btn { padding: 15px 30px; border-radius: 16px; border: 1px solid #000; cursor: pointer; font-weight: bold; }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border: 1px solid var(--border-color); border-radius: 24px; padding: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #fff; }
+        .card-face.back { transform: rotateY(180deg); background: var(--bg-secondary); }
+        .controls { display: flex; gap: 12px; }
+        .btn { flex: 1; padding: 16px; border: 1px solid #000; border-radius: 16px; font-weight: 600; text-transform: uppercase; cursor: pointer; }
+        .btn.black { background: #000; color: #fff; }
     </style>
 </head>
 <body>
-
-    <div class="card-container">
-        <div id="flashcard" class="flashcard" onclick="this.classList.toggle('flipped')">
-            <div class="card-face front">
-                <div id="card-front-text" style="font-size: 20px; font-weight: 600;">Загрузка...</div>
-                <div class="card-hint">НАЖМИ, ЧТОБЫ ПЕРЕВЕРНУТЬ</div>
+    <div class="app-container">
+        <div id="screen-topics" class="screen active">
+            <div class="back-btn" onclick="window.location.href='index.html'">← Главное меню</div>
+            <h2>Квантовая физика</h2>
+            <div id="topics-list"></div>
+        </div>
+        <div id="screen-cards" class="screen">
+            <div class="back-btn" onclick="navigateTo('screen-topics')">← К темам</div>
+            <div class="card-container">
+                <div id="flashcard" class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="card-face front"><div id="card-front-text" style="font-weight: 600;"></div></div>
+                    <div class="card-face back"><div id="card-back-formula" style="font-size: 28px;"></div></div>
+                </div>
             </div>
-            <div class="card-face back">
-                <div id="card-back-formula" style="font-size: 28px;"></div>
-                <div class="card-hint">НАЖМИ, ЧТОБЫ ВЕРНУТЬ ОБРАТНО</div>
-            </div>
+            <div class="controls"><button class="btn" onclick="handleScore(false)">НЕ ПОМНЮ</button><button class="btn black" onclick="handleScore(true)">ПОМНЮ</button></div>
+        </div>
+        <div id="screen-results" class="screen">
+            <h2>Тема пройдена</h2>
+            <div id="xp-earned" style="text-align:center;margin:20px 0;"></div>
+            <button class="btn" onclick="navigateTo('screen-topics')">К темам</button>
         </div>
     </div>
 
-    <button class="btn" onclick="nextCard()">СЛЕДУЮЩАЯ КАРТОЧКА</button>
-
     <script>
-        const quantumData = [ 
-            { q: "Энергия фотона", f: "$$E = h\\nu = \\frac{hc}{\\lambda}$$" }, 
-            { q: "Уравнение Эйнштейна для фотоэффекта", f: "$$h\\nu = A_{вых} + E_{к,max}$$" }, 
-            { q: "Закон радиоактивного распада", f: "$$N = N_0 2^{-\\frac{t}{T}}$$" }, 
-            { q: "Энергия связи ядра", f: "$$E_{св} = \\Delta m c^2$$" }, 
-            { q: "Связь массы и энергии (СТО)", f: "$$E = mc^2$$" } 
+        const quantumData = [
+            { id: "quantum", title: "Кванты и Атом", cards: [
+                { q: "Энергия фотона", f: "$$E = h\\nu = \\frac{hc}{\\lambda}$$" },
+                { q: "Уравнение Эйнштейна для фотоэффекта", f: "$$h\\nu = A_{вых} + E_{к}$$" },
+                { q: "Энергия связи", f: "$$E_{св} = \\Delta m c^2$$" }
+            ]}
         ];
-
-        let index = 0;
-
-        function renderCard() {
-            document.getElementById('flashcard').classList.remove('flipped');
-            const card = quantumData[index];
-            document.getElementById('card-front-text').innerText = card.q;
-            document.getElementById('card-back-formula').innerText = card.f;
-
-            // Принудительный рендер формулы через MathJax
-            if (window.MathJax) {
-                MathJax.typesetClear();
-                MathJax.typesetPromise();
-            }
-        }
-
-        function nextCard() {
-            index = (index + 1) % quantumData.length;
-            renderCard();
-        }
-
-        renderCard();
+        // (Логика идентична Optics и Mechanics)
+        function initTopics() { const list = document.getElementById('topics-list'); quantumData.forEach(t => { const el = document.createElement('div'); el.className = 'list-item'; el.innerHTML = `<h3>${t.title}</h3>`; el.onclick = () => { start(t.cards); }; list.appendChild(el); }); }
+        function start(cards) { currentCards = [...cards].sort(() => Math.random() - 0.5); currentCardIndex = 0; correctAnswersCount = 0; render(); navigateTo('screen-cards'); }
+        function render() { document.getElementById('flashcard').classList.remove('flipped'); document.getElementById('card-front-text').innerText = currentCards[currentCardIndex].q; document.getElementById('card-back-formula').innerText = currentCards[currentCardIndex].f; if(window.MathJax) MathJax.typesetPromise(); }
+        function handleScore(r) { if(r) correctAnswersCount++; if(currentCardIndex < currentCards.length - 1) { currentCardIndex++; render(); } else navigateTo('screen-results'); }
+        function navigateTo(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        initTopics();
     </script>
 </body>
 </html>

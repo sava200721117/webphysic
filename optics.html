@@ -3,45 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Оптика</title>
+    <title>Раздел: Оптика</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .card { padding: 40px; border: 1px solid #eee; border-radius: 20px; text-align: center; width: 80%; max-width: 400px; }
-        #card-back-formula { font-size: 24px; margin-top: 20px; }
+        :root { --bg-main: #ffffff; --bg-secondary: #f9f9f9; --text-main: #000000; --text-muted: #666666; --border-color: #e5e5e5; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; margin: 0; padding: 20px; background-color: var(--bg-main); color: var(--text-main); display: flex; flex-direction: column; align-items: center; }
+        .app-container { width: 100%; max-width: 440px; margin: 0 auto; }
+        .back-btn { display: inline-flex; align-items: center; color: var(--text-muted); cursor: pointer; font-weight: 500; margin-bottom: 24px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+        .screen { display: none; }
+        .screen.active { display: block; }
+        .list-container { display: flex; flex-direction: column; gap: 12px; }
+        .list-item { background: var(--bg-secondary); padding: 20px; border: 1px solid var(--border-color); border-radius: 20px; cursor: pointer; }
+        .card-container { perspective: 1000px; width: 100%; height: 380px; margin-bottom: 24px; }
+        .flashcard { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .flashcard.flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border: 1px solid var(--border-color); border-radius: 24px; padding: 24px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: var(--bg-main); box-shadow: 0 4px 16px rgba(0,0,0,0.04); }
+        .card-face.back { transform: rotateY(180deg); background: var(--bg-secondary); }
+        .card-hint { font-size: 11px; text-transform: uppercase; color: var(--text-muted); position: absolute; bottom: 20px; }
+        .btn { flex: 1; background: var(--bg-main); border: 1px solid #000; border-radius: 16px; padding: 16px; font-weight: 600; text-transform: uppercase; cursor: pointer; }
+        .btn.black { background: #000; color: #fff; }
+        .controls { display: flex; gap: 12px; }
+        .progress-text { text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 14px; }
+        .result-block { flex: 1; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 24px; padding: 24px; text-align: center; }
+        .results-grid { display: flex; gap: 16px; margin-bottom: 24px; }
     </style>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+        const firebaseConfig = { apiKey: "AIzaSyDnWQw-EMU94XXjo02QyvFC6zmGj78Vi8I", authDomain: "physics-ege-rating.firebaseapp.com", databaseURL: "https://physics-ege-rating-default-rtdb.firebaseio.com", projectId: "physics-ege-rating", storageBucket: "physics-ege-rating.firebasestorage.app", messagingSenderId: "969771916707", appId: "1:969771916707:web:867ccfa3d8a7e20ba2ce16" };
+        const app = initializeApp(firebaseConfig);
+        window.db = getDatabase(app); window.fbRef = ref; window.fbSet = set; window.fbGet = get;
+    </script>
 </head>
 <body>
-
-    <div class="card">
-        <div id="card-front-text">Загрузка карточки...</div>
-        <div id="card-back-formula"></div>
-        <p style="color: #8e8e93; font-size: 12px; margin-top: 30px;">НАЖМИ, ЧТОБЫ ВЕРНУТЬ ОБРАТНО</p>
+    <div class="app-container">
+        <div id="screen-topics" class="screen active">
+            <div class="back-btn" onclick="window.location.href='index.html'">← Главное меню</div>
+            <h2>Оптика</h2>
+            <div id="topics-list" class="list-container"></div>
+        </div>
+        <div id="screen-cards" class="screen">
+            <div class="back-btn" onclick="navigateTo('screen-topics')">← К темам</div>
+            <div class="card-container">
+                <div id="flashcard" class="flashcard" onclick="this.classList.toggle('flipped')">
+                    <div class="card-face front"><div id="card-front-text" style="font-size: 20px; font-weight: 600;">Загрузка...</div><div class="card-hint">Нажми, чтобы перевернуть</div></div>
+                    <div class="card-face back"><div id="card-back-formula" style="font-size: 28px;"></div><div class="card-hint">Нажми, чтобы вернуть обратно</div></div>
+                </div>
+            </div>
+            <div class="controls"><button class="btn" onclick="handleScore(false)">НЕ ПОМНЮ</button><button class="btn black" onclick="handleScore(true)">ПОМНЮ</button></div>
+            <div id="progress" class="progress-text"></div>
+        </div>
+        <div id="screen-results" class="screen">
+            <h2>Тема пройдена</h2>
+            <div class="results-grid"><div class="result-block"><div id="res-percent" style="font-size:32px;font-weight:700;">0%</div>Точность</div><div class="result-block"><div id="res-count" style="font-size:32px;font-weight:700;">0/0</div>Вспомнил</div></div>
+            <div id="xp-earned" style="text-align:center;margin-bottom:20px;">Синхронизация...</div>
+            <div class="controls"><button class="btn" onclick="navigateTo('screen-topics')">К темам</button><button class="btn black" onclick="restartCurrentTopic()">Заново</button></div>
+        </div>
     </div>
 
     <script>
-        // ДАННЫЕ ВНУТРИ ТЕГА SCRIPT
-        const opticsData = [ 
-            { q: "Закон отражения света", f: "$$\\alpha = \\gamma$$" }, 
-            { q: "Закон преломления света", f: "$$n_1 \\sin\\alpha = n_2 \\sin\\beta$$" }, 
-            { q: "Формула тонкой линзы", f: "$$\\frac{1}{F} = \\frac{1}{d} + \\frac{1}{f}$$" }, 
-            { q: "Оптическая сила линзы", f: "$$D = \\frac{1}{F}$$" }, 
-            { q: "Линейное увеличение линзы", f: "$$\\Gamma = \\frac{f}{d}$$" } 
+        const opticsData = [
+            { id: "geom", title: "Геометрическая оптика", cards: [
+                { q: "Закон отражения света", f: "$$\\alpha = \\gamma$$" },
+                { q: "Закон преломления", f: "$$n_1 \\sin\\alpha = n_2 \\sin\\beta$$" },
+                { q: "Формула тонкой линзы", f: "$$\\frac{1}{F} = \\frac{1}{d} + \\frac{1}{f}$$" }
+            ]},
+            { id: "wave", title: "Волновая оптика", cards: [
+                { q: "Условие максимумов интерференции", f: "$$\\Delta d = k\\lambda$$" },
+                { q: "Условие минимумов интерференции", f: "$$\\Delta d = (2k+1)\\frac{\\lambda}{2}$$" }
+            ]}
         ];
-
-        let index = 0;
-        
-        function showCard() {
-            document.getElementById('card-front-text').innerText = opticsData[index].q;
-            document.getElementById('card-back-formula').innerText = opticsData[index].f;
-            
-            // Принудительный рендер MathJax
-            MathJax.typesetClear();
-            MathJax.typesetPromise();
-        }
-
-        // Запуск при загрузке
-        showCard();
+        // Логика функций (renderCard, handleScore и т.д.) идентична механике
+        let currentCards = []; let currentCardIndex = 0; let correctAnswersCount = 0; let rawActiveCardsClone = [];
+        function navigateTo(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        function initTopics() { const list = document.getElementById('topics-list'); opticsData.forEach(t => { const el = document.createElement('div'); el.className = 'list-item'; el.innerHTML = `<h3>${t.title}</h3>`; el.onclick = () => { rawActiveCardsClone = t.cards; start(t.cards); }; list.appendChild(el); }); }
+        function start(cards) { currentCards = [...cards].sort(() => Math.random() - 0.5); currentCardIndex = 0; correctAnswersCount = 0; render(); navigateTo('screen-cards'); }
+        function render() { document.getElementById('flashcard').classList.remove('flipped'); document.getElementById('card-front-text').innerText = currentCards[currentCardIndex].q; document.getElementById('card-back-formula').innerText = currentCards[currentCardIndex].f; document.getElementById('progress').innerText = `Карточка ${currentCardIndex+1} из ${currentCards.length}`; if(window.MathJax) MathJax.typesetPromise(); }
+        function handleScore(r) { if(r) correctAnswersCount++; if(currentCardIndex < currentCards.length - 1) { currentCardIndex++; render(); } else showResults(); }
+        function showResults() { navigateTo('screen-results'); document.getElementById('res-percent').innerText = Math.round(correctAnswersCount/currentCards.length*100) + "%"; document.getElementById('res-count').innerText = `${correctAnswersCount}/${currentCards.length}`; document.getElementById('xp-earned').innerText = `+${correctAnswersCount*10} XP`; }
+        function restartCurrentTopic() { start(rawActiveCardsClone); }
+        initTopics();
     </script>
 </body>
 </html>
