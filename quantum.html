@@ -1,13 +1,34 @@
-const quantumData = [
-    {
-        id: "quantum_physics",
-        title: "Кванты и Атом",
-        cards: [
-            { q: "Энергия фотона", f: "$$E = h\\nu = \\frac{hc}{\\lambda}$$" },
-            { q: "Уравнение Эйнштейна для фотоэффекта", f: "$$h\\nu = A_{вых} + E_{к,max}$$" },
-            { q: "Закон радиоактивного распада", f: "$$N = N_0 2^{-\\frac{t}{T}}$$" },
-            { q: "Энергия связи ядра", f: "$$E_{св} = \\Delta m c^2$$" },
-            { q: "Связь массы и энергии (СТО)", f: "$$E = mc^2$$" }
-        ]
-    }
-];
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Кванты</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+    <div id="flashcard">
+        <div id="card-front-text">Загрузка...</div>
+        <div id="card-back-formula"></div>
+    </div>
+
+    <script>
+        const quantumData = [ 
+            { 
+                id: "quantum_physics", 
+                title: "Кванты и Атом", 
+                cards: [ 
+                    { q: "Энергия фотона", f: "$$E = h\\nu = \\frac{hc}{\\lambda}$$" }, 
+                    { q: "Уравнение Эйнштейна для фотоэффекта", f: "$$h\\nu = A_{вых} + E_{к,max}$$" }, 
+                    { q: "Закон радиоактивного распада", f: "$$N = N_0 2^{-\\frac{t}{T}}$$" }, 
+                    { q: "Энергия связи ядра", f: "$$E_{св} = \\Delta m c^2$$" }, 
+                    { q: "Связь массы и энергии (СТО)", f: "$$E = mc^2$$" } 
+                ] 
+            } 
+        ];
+
+        // Дальше у тебя идет остальная логика (функции рендера и т.д.)
+        console.log("Данные загружены:", quantumData);
+    </script>
+</body>
+</html>
