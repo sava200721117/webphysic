@@ -138,7 +138,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
 
-        // Оригинальный рабочий конфиг из настроек твоего проекта
         const firebaseConfig = {
             apiKey: "AIzaSyDnWQw-EMU94XXjo02QyvFC6zmGj78Vi8I",
             authDomain: "physics-ege-rating.firebaseapp.com",
@@ -150,14 +149,13 @@
             measurementId: "G-J7SR7GH8NR"
         };
 
-        // Запуск базы данных и прокидывание методов в глобальное окно window
         const app = initializeApp(firebaseConfig);
         window.db = getDatabase(app);
         window.fbRef = ref;
         window.fbSet = set;
         window.fbOnValue = onValue;
 
-        // Как только база данных готова, выполняем первичную загрузку интерфейса
+        // Оповещаем систему, что база готова, и запускаем интерфейс
         window.dispatchEvent(new Event('firebaseReady'));
     </script>
 </head>
@@ -332,7 +330,6 @@
                 }
             }
 
-            // Автоматически шлём актуальные очки в общую базу данных Firebase
             saveUserToCloud();
         }
 
@@ -364,9 +361,8 @@
             }
         }
 
-        // Функция отправки данных в Firebase Realtime Database
         function saveUserToCloud() {
-            if (!window.db) return; // Ждём готовности базы данных
+            if (!window.db || !window.fbSet || !window.fbRef) return;
 
             let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
             let myName = localStorage.getItem('user_custom_name') || document.getElementById('user-name').innerText;
@@ -379,47 +375,48 @@
             });
         }
 
-        // Функция чтения и генерации таблицы из Firebase Realtime Database
         function syncAndRenderLeaderboard() {
             const container = document.getElementById('leaderboard-container');
-            if (!window.db) {
+            if (!window.db || !window.fbOnValue || !window.fbRef) {
                 container.innerHTML = `<div class="empty-hint">Инициализация базы данных...</div>`;
                 return;
             }
 
             let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
 
-            window.fbOnValue(window.fbRef(window.db, 'users/'), (snapshot) => {
+            window.fbOnValue(window.fbRef(window.db, 'users'), (snapshot) => {
                 const data = snapshot.val();
                 if (!data) {
-                    container.innerHTML = `<div class="empty-hint">Вы первый участник! Начните учить темы.</div>`;
+                    container.innerHTML = `<div class="empty-hint">Рейтинг пока пуст. Будьте первым!</div>`;
                     return;
                 }
 
-                // Переводим объект базы данных в чистый сортируемый массив
                 let players = Object.values(data);
-                players.sort((a, b) => b.xp - a.xp);
+                players.sort((a, b) => (b.xp || 0) - (a.xp || 0));
 
                 container.innerHTML = "";
                 players.forEach((player, index) => {
                     let rank = index + 1;
+                    let medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
                     let isTopThree = rank <= 3 ? "top-three" : "";
                     let isMe = player.id == myId ? `<span class="me-badge">Вы</span>` : "";
 
                     container.innerHTML += `
                         <div class="leaderboard-item">
                             <div class="user-rank-info">
-                                <span class="rank-number ${isTopThree}">${rank}</span>
-                                <span class="rank-name">${player.name} ${isMe}</span>
+                                <span class="rank-number ${isTopThree}">${medal}</span>
+                                <span class="rank-name">${player.name || 'Аноним'} ${isMe}</span>
                             </div>
-                            <span class="rank-xp">${player.xp} XP</span>
+                            <span class="rank-xp">${player.xp || 0} XP</span>
                         </div>
                     `;
                 });
+            }, (error) => {
+                console.error("Ошибка при чтении базы данных:", error);
+                container.innerHTML = `<div class="empty-hint" style="color: red;">Ошибка доступа к рейтингу</div>`;
             });
         }
 
-        // Ждем сигнала, что Firebase запущен, и только тогда обновляем UI
         window.addEventListener('firebaseReady', () => {
             updateUI();
         });
@@ -428,6 +425,10 @@
             if (tg) {
                 tg.ready();
                 tg.expand();
+            }
+            // Если Firebase загрузился быстрее, чем DOM
+            if (window.db) {
+                updateUI();
             }
         });
     </script>
