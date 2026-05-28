@@ -440,8 +440,9 @@
         if (tg) { 
             tg.ready(); 
             tg.expand(); 
-            let myId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : "local_user_id";
-            checkStreak(myId); // Вызов функции проверки огонька
+            let myId = (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+            console.log("Мой ID в базе:", myId); // ЭТА СТРОЧКА ВАЖНА
+            checkStreak(myId);
         }
     });
 </script>
