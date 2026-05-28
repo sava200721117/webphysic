@@ -2,16 +2,16 @@
 <html lang="ru">
 <head>
     <script>
-    // Если версия на сервере отличается, перезагрузить страницу
-    if (localStorage.getItem('app_version') !== '1.1') {
-        localStorage.clear(); // Очистит локальные данные
-        localStorage.setItem('app_version', '1.1');
-        location.reload(true); // Принудительная перезагрузка
-    }
-</script>
+        // Если версия на сервере отличается, перезагрузить страницу
+        if (localStorage.getItem('app_version') !== '1.1') {
+            localStorage.clear(); // Очистит локальные данные
+            localStorage.setItem('app_version', '1.1');
+            location.reload(true); // Принудительная перезагрузка
+        }
+    </script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Физика Карточки — Главная</title>
@@ -136,6 +136,7 @@
         }
         .tab-item.active { color: #000000; font-weight: 700; }
         .tab-icon { font-size: 22px; }
+        
         .theory-menu-item {
             display: flex;
             justify-content: space-between;
@@ -239,14 +240,15 @@
                 </div>
             </div>
         </div>
+
         <div id="screen-theory" class="screen">
             <div class="header">
                 <h1>Теория и Статьи</h1>
                 <p>База знаний и разбор формул по темам</p>
             </div>
 
-           <div class="menu-list">
-                <a href="mechanics_theory.html" style="text-decoration: none; color: inherit; display: block;">
+            <div class="menu-list">
+                <a href="mechanics_theory.html?v=3" style="text-decoration: none; color: inherit; display: block;">
                     <div class="theory-menu-item">
                         <div class="menu-item-info">
                             <h2>Теория: Механика</h2>
@@ -256,7 +258,7 @@
                     </div>
                 </a>
                 
-                <a href="thermo_theory.html" style="text-decoration: none; color: inherit; display: block;">
+                <a href="thermo_theory.html?v=3" style="text-decoration: none; color: inherit; display: block;">
                     <div class="theory-menu-item">
                         <div class="menu-item-info">
                             <h2>Теория: Молекулярная физика</h2>
@@ -295,6 +297,7 @@
                     <div class="arrow">📖</div>
                 </div>
             </div>
+        </div>
 
         <div id="screen-profile" class="screen">
             <div class="profile-header">
@@ -304,9 +307,9 @@
             </div>
 
             <div id="streak-container" style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 20px; font-weight: 700; color: #ff9500; font-size: 16px;">
-    <span>🔥 Серия:</span>
-    <span id="streak-count">0</span>
-</div>
+                <span>🔥 Серия:</span>
+                <span id="streak-count">0</span>
+            </div>
 
             <div id="edit-box" class="edit-fields">
                 <input type="text" id="input-name" class="edit-input" placeholder="Новое имя">
@@ -379,10 +382,11 @@
             if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+            
             document.getElementById(screenId).classList.add('active');
             
             if (screenId === 'screen-cards') document.getElementById('tab-cards').classList.add('active');
-            if (screenId === 'screen-theory') document.getElementById('tab-theory').classList.add('active'); // Наша новая строчка!
+            if (screenId === 'screen-theory') document.getElementById('tab-theory').classList.add('active');
             if (screenId === 'screen-leaderboard') {
                 document.getElementById('tab-leaderboard').classList.add('active');
                 syncAndRenderLeaderboard();
@@ -403,7 +407,6 @@
             document.getElementById('profile-cards').innerText = `${cardsViewed} шт.`;
             document.getElementById('profile-level').innerText = `${level} Уровень`;
 
-            // Логика отображения серии
             let streak = localStorage.getItem('user_streak') || 0;
             document.getElementById('streak-count').innerText = streak;
 
@@ -425,7 +428,6 @@
                             localStorage.setItem('global_physics_xp', cloudData.xp);
                             updateUI();
                         }
-                        // Обновляем серию из облака
                         if (cloudData.streak !== undefined) {
                             localStorage.setItem('user_streak', cloudData.streak);
                             document.getElementById('streak-count').innerText = cloudData.streak;
@@ -434,27 +436,6 @@
                 }, { onlyOnce: true });
             }
         }
-
-        async function checkStreak(myId) {
-    if (!window.db) return;
-    const userRef = window.fbRef(window.db, 'users/' + myId);
-    const today = new Date().toISOString().split('T')[0];
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
-    const snapshot = await window.fbGet(window.fbRef(window.db, 'users/' + myId));
-    let userData = snapshot.exists() ? snapshot.val() : { streak: 0, last_active: "" };
-
-    if (userData.last_active !== today) {
-        if (userData.last_active === yesterday) {
-            userData.streak = (userData.streak || 0) + 1;
-        } else {
-            userData.streak = 1;
-        }
-        userData.last_active = today;
-        await window.fbSet(userRef, userData);
-        document.getElementById('streak-count').innerText = userData.streak;
-    }
-}
 
         function toggleEdit() {
             if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
@@ -480,127 +461,119 @@
         }
 
         function checkStreak(myId) {
-    return new Promise((resolve, reject) => {
-        if (!window.db || !window.fbRef || !window.fbOnValue || !window.fbSet) {
-            return reject(new Error("Firebase функции не загружены"));
-        }
-        
-        const userRef = window.fbRef(window.db, 'users/' + myId);
-        const today = new Date().toISOString().split('T')[0];
-        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
-        window.fbOnValue(userRef, (snapshot) => {
-            console.log("=== ОТВЕТ ОТ FIREBASE ПОЛУЧЕН ===");
-            let userData = snapshot.exists() ? snapshot.val() : { 
-                id: myId, 
-                name: localStorage.getItem('user_custom_name') || "Пользователь", 
-                xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
-                streak: 0, 
-                last_active: "" 
-            };
-
-            console.log("Текущие данные из базы:", JSON.stringify(userData));
-
-            if (userData.last_active !== today) {
-                if (userData.last_active === yesterday) {
-                    userData.streak = (userData.streak || 0) + 1;
-                } else {
-                    userData.streak = 1;
+            return new Promise((resolve, reject) => {
+                if (!window.db || !window.fbRef || !window.fbOnValue || !window.fbSet) {
+                    return reject(new Error("Firebase функции не загружены"));
                 }
-                userData.last_active = today;
                 
-                console.log("Попытка записи новых данных в Firebase...", JSON.stringify(userData));
-                window.fbSet(userRef, userData);
-                console.log("Команда window.fbSet вызвана!");
-            } else {
-                console.log("Сегодня серия уже проверялась, запись пропущена.");
-            }
-            
-            if (document.getElementById('streak-count')) {
-                document.getElementById('streak-count').innerText = userData.streak;
-            }
-            localStorage.setItem('user_streak', userData.streak);
-            localStorage.setItem('user_last_active', userData.last_active);
-            
-            resolve();
-        }, { onlyOnce: true });
-    });
-}
-function updateUI_and_Push() {
-    if (typeof updateUI === 'function') updateUI();
-    if (window.db && window.fbSet && window.fbRef) {
-        let myId = (window.tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
-        
-        let currentStreak = parseInt(localStorage.getItem('user_streak')) || 0;
-        let lastActiveDay = localStorage.getItem('user_last_active') || "";
+                const userRef = window.fbRef(window.db, 'users/' + myId);
+                const today = new Date().toISOString().split('T')[0];
+                const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
-        window.fbSet(window.fbRef(window.db, 'users/' + myId), {
-            id: myId,
-            name: localStorage.getItem('user_custom_name') || "Пользователь",
-            xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
-            streak: currentStreak,
-            last_active: lastActiveDay
-        });
-    }
-}
+                window.fbOnValue(userRef, (snapshot) => {
+                    console.log("=== ОТВЕТ ОТ FIREBASE ПОЛУЧЕН ===");
+                    let userData = snapshot.exists() ? snapshot.val() : { 
+                        id: myId, 
+                        name: localStorage.getItem('user_custom_name') || "Пользователь", 
+                        xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
+                        streak: 0, 
+                        last_active: "" 
+                    };
+
+                    console.log("Текущие данные из базы:", JSON.stringify(userData));
+
+                    if (userData.last_active !== today) {
+                        if (userData.last_active === yesterday) {
+                            userData.streak = (userData.streak || 0) + 1;
+                        } else {
+                            userData.streak = 1;
+                        }
+                        userData.last_active = today;
+                        
+                        console.log("Попытка записи новых данных в Firebase...", JSON.stringify(userData));
+                        window.fbSet(userRef, userData);
+                        console.log("Команда window.fbSet вызвана!");
+                    } else {
+                        console.log("Сегодня серия уже проверялась, запись пропущена.");
+                    }
+                    
+                    if (document.getElementById('streak-count')) {
+                        document.getElementById('streak-count').innerText = userData.streak;
+                    }
+                    localStorage.setItem('user_streak', userData.streak);
+                    localStorage.setItem('user_last_active', userData.last_active);
+                    
+                    resolve();
+                }, { onlyOnce: true });
+            });
+        }
+
+        function updateUI_and_Push() {
+            if (typeof updateUI === 'function') updateUI();
+            if (window.db && window.fbSet && window.fbRef) {
+                let myId = (window.tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+                
+                let currentStreak = parseInt(localStorage.getItem('user_streak')) || 0;
+                let lastActiveDay = localStorage.getItem('user_last_active') || "";
+
+                window.fbSet(window.fbRef(window.db, 'users/' + myId), {
+                    id: myId,
+                    name: localStorage.getItem('user_custom_name') || "Пользователь",
+                    xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
+                    streak: currentStreak,
+                    last_active: lastActiveDay
+                });
+            }
+        }
 
         function syncAndRenderLeaderboard() {
-    const container = document.getElementById('leaderboard-container');
-    if (!window.db) return;
+            const container = document.getElementById('leaderboard-container');
+            if (!window.db) return;
 
-    window.fbOnValue(window.fbRef(window.db, 'users'), (snapshot) => {
-        const data = snapshot.val();
-        if (!data) return;
+            window.fbOnValue(window.fbRef(window.db, 'users'), (snapshot) => {
+                const data = snapshot.val();
+                if (!data) return;
 
-        let players = Object.values(data);
-        players.sort((a, b) => (b.xp || 0) - (a.xp || 0));
+                let players = Object.values(data);
+                players.sort((a, b) => (b.xp || 0) - (a.xp || 0));
 
-        container.innerHTML = "";
-        players.forEach((player, index) => {
-            // Получаем серию игрока, если её нет — ставим 0
-            let streakCount = player.streak || 0; 
+                container.innerHTML = "";
+                players.forEach((player, index) => {
+                    let streakCount = player.streak || 0; 
 
-            container.innerHTML += `
-                <div class="leaderboard-item" style="display: flex; justify-content: space-between; align-items: center;">
-                    <div class="user-rank-info" style="display: flex; align-items: center; gap: 10px;">
-                        <span class="rank-number ${index < 3 ? 'top-three' : ''}">${index + 1}</span>
-                        <span class="rank-name">${player.name || 'Аноним'}</span>
-                    </div>
-                    <div class="user-stats" style="display: flex; align-items: center; gap: 12px;">
-                        <span class="rank-streak" style="color: #ff9500; font-weight: bold;">${streakCount} 🔥</span>
-                        <span class="rank-xp" style="font-weight: bold;">${player.xp || 0} XP</span>
-                    </div>
-                </div>
-            `;
+                    container.innerHTML += `
+                        <div class="leaderboard-item" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="user-rank-info" style="display: flex; align-items: center; gap: 10px;">
+                                <span class="rank-number ${index < 3 ? 'top-three' : ''}">${index + 1}</span>
+                                <span class="rank-name">${player.name || 'Аноним'}</span>
+                            </div>
+                            <div class="user-stats" style="display: flex; align-items: center; gap: 12px;">
+                                <span class="rank-streak" style="color: #ff9500; font-weight: bold;">${streakCount} 🔥</span>
+                                <span class="rank-xp" style="font-weight: bold;">${player.xp || 0} XP</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (window.Telegram && window.Telegram.WebApp) {
+                window.tg = window.Telegram.WebApp;
+                if (typeof tg.ready === 'function') tg.ready();
+                if (typeof tg.expand === 'function') tg.expand();
+            }
+
+            let myId = "local_user_id";
+            if (window.tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+                myId = tg.initDataUnsafe.user.id;
+            }
+            
+            console.log("=== ЗАПУСК ПРОВЕРКИ СЕРИИ ===");
+            checkStreak(myId).catch(err => {
+                console.error("Ошибка внутри checkStreak:", err);
+            });
         });
-    });
-}
-
-        // ... (тут твои функции, например, updateUI, syncAndRenderLeaderboard и т.д.)
-
-    // Замени этот кусок в самом низу файла на вот этот:
-    document.addEventListener("DOMContentLoaded", () => {
-    // 1. Сначала подготавливаем Телеграм, если он есть
-    if (window.Telegram && window.Telegram.WebApp) {
-        window.tg = window.Telegram.WebApp;
-        if (typeof tg.ready === 'function') tg.ready();
-        if (typeof tg.expand === 'function') tg.expand();
-    }
-
-    // 2. ВСЕГДА определяем ID (для телефона — цифры, для ПК — local_user_id)
-    let myId = "local_user_id";
-    if (window.tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
-        myId = tg.initDataUnsafe.user.id;
-    }
-    
-    console.log("=== ЗАПУСК ПРОВЕРКИ СЕРИИ ===");
-    console.log("ID юзера в базе:", myId);
-
-    // 3. Запускаем проверку серии независимо от того, где открыли сайт
-    checkStreak(myId).catch(err => {
-        console.error("Ошибка внутри checkStreak:", err);
-    });
-});
-</script>
+    </script>
 </body>
 </html>
