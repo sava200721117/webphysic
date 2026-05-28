@@ -28,11 +28,10 @@
             color: var(--text-main);
             line-height: 1.5;
             padding: 20px;
-            padding-top: 70px; /* Отступ, чтобы фиксированная кнопка не закрывала заголовок */
+            padding-top: 70px;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Навигационный бар с кнопкой Назад в стиле приложения */
         .header-nav {
             position: fixed;
             top: 0;
@@ -65,7 +64,6 @@
             padding: 8px 0;
         }
 
-        /* Стилизация контента */
         h1 {
             font-size: 28px;
             font-weight: 700;
@@ -126,7 +124,6 @@
             font-size: 16px;
         }
 
-        /* Блоки формул один в один как карточки в меню */
         .formula-card {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -152,10 +149,9 @@
             line-height: 1.4;
         }
 
-        /* Выделение важных примечаний (ЗСИ, ЗСЭ) */
         .important-note {
             background-color: var(--bg-secondary);
-            border: 1px solid #ff9500; /* Красивый оранжевый акцент как у серии */
+            border: 1px solid #ff9500;
             padding: 16px;
             border-radius: 24px;
             font-size: 14px;
@@ -182,15 +178,15 @@
     <p><b>Кинематика</b> изучает движение тел, не вдаваясь в причины, которые это движение вызывают. Основная задача — определить положение тела в любой момент времени.</p>
     
     <h3>Равномерное прямолинейное движение (РПД)</h3>
-    <p>Движение с постоянной скоростью ($v = \text{const}$). Ускорение равно нулю.</p>
+    <p>Движение с постоянной скоростью (v = const). Ускорение равно нулю.</p>
     
     <div class="formula-card">
         <div class="formula-expression">x = x₀ + v_x · t</div>
-        <div class="formula-desc"><b>Уравнение движения:</b> где $x$ — конечная координата, $x_0$ — начальная координата, $v_x$ — проекция скорости, $t$ — время.</div>
+        <div class="formula-desc"><b>Уравнение движения:</b> где x — конечная координата, x₀ — начальная координата, v_x — проекция скорости, t — время.</div>
     </div>
 
     <h3>Равноускоренное прямолинейное движение (РУД)</h3>
-    <p>Движение, при котором скорость тела меняется на одинаковую величину за равные промежутки времени ($a = \text{const}$).</p>
+    <p>Движение, при котором скорость тела меняется на одинаковую величину за равные промежутки времени (a = const).</p>
 
     <div class="formula-card">
         <div class="formula-expression">v_x = v₀_x + a_x · t</div>
@@ -218,7 +214,7 @@
 
     <div class="formula-card">
         <div class="formula-expression">F = m · a</div>
-        <div class="formula-desc"><b>Второй закон Ньютона:</b> основное уравнение динамики. $F$ — равнодействующая сила (векторная сумма всех сил).</div>
+        <div class="formula-desc"><b>Второй закон Ньютона:</b> основное уравнение динамики. F — равнодействующая сила (векторная сумма всех сил).</div>
     </div>
 
     <h3>Основные силы в механике:</h3>
@@ -229,19 +225,19 @@
 
     <div class="formula-card">
         <div class="formula-expression">F_упр = k · |Δx|</div>
-        <div class="formula-desc"><b>Закон Гука:</b> сила упругости, возникающая при деформации. $k$ — жесткость (Н/м), $\Delta x$ — удлинение.</div>
+        <div class="formula-desc"><b>Закон Гука:</b> сила упругости, возникающая при деформации. k — жесткость (Н/м), Δx — удлинение.</div>
     </div>
 
     <div class="formula-card">
         <div class="formula-expression">F_тр.ск = μ · N</div>
-        <div class="formula-desc"><b>Сила трения скольжения:</b> $\mu$ — коэффициент трения, $N$ — сила нормальной реакции опоры.</div>
+        <div class="formula-desc"><b>Сила трения скольжения:</b> μ — коэффициент трения, N — сила нормальной реакции опоры.</div>
     </div>
 
     <h2>3. Законы сохранения</h2>
     <p>Законы сохранения — мощный инструмент для решения задач, где детальный характер движения и действующих сил неизвестен.</p>
 
     <h3>Импульс и ЗСИ</h3>
-    <p><b>Импульс тела ($p$)</b> — векторная величина, равная произведению массы тела на его скорость.</p>
+    <p><b>Импульс тела (p)</b> — векторная величина, равная произведению массы тела на его скорость.</p>
     
     <div class="formula-card">
         <div class="formula-expression">p = m · v</div>
@@ -256,7 +252,7 @@
     <h3>Работа и энергия (ЗСЭ)</h3>
     <div class="formula-card">
         <div class="formula-expression">A = F · s · cos(α)</div>
-        <div class="formula-desc"><b>Механическая работа:</b> $\alpha$ — угол между вектором силы и вектором перемещения.</div>
+        <div class="formula-desc"><b>Механическая работа:</b> α — угол между вектором силы и вектором перемещения.</div>
     </div>
 
     <div class="formula-card">
@@ -266,22 +262,21 @@
 
     <div class="formula-card">
         <div class="formula-expression">E_п = m · g · h</div>
-        <div class="formula-desc"><b>Потенциальная энергия:</b> энергия взаимодействия тела с Землей. Для сжатой пружины: $E_п = \frac{k\cdot\Delta x^2}{2}$.</div>
+        <div class="formula-desc"><b>Потенциальная энергия:</b> энергия взаимодействия тела с Землей. Для сжатой пружины: E_п = (k · Δx²) / 2</div>
     </div>
 
     <h2>4. Статика</h2>
     <p><b>Статика</b> изучает условия равновесия абсолютно твердых тел. Для равновесия необходимы два условия:</p>
 
-    <p style="margin-bottom: 6px;"><b>1-е условие:</b> Равнодействующая всех приложенных к телу сил должна быть равна нулю ($\sum F = 0$).</p>
+    <p style="margin-bottom: 6px;"><b>1-е условие:</b> Равнодействующая всех приложенных к телу сил должна быть равна нулю (ΣF = 0).</p>
     <p><b>2-е условие (Правило моментов):</b> Алгебраическая сумма моментов всех сил, действующих на тело относительно любой оси, равна нулю.</p>
 
     <div class="formula-card">
         <div class="formula-expression">M = F · d</div>
-        <div class="formula-desc"><b>Момент силы:</b> произведение модуля силы $F$ на её плечо $d$ (кратчайшее расстояние от оси вращения до линии действия силы).</div>
+        <div class="formula-desc"><b>Момент силы:</b> произведение модуля силы F на её плечо d (кратчайшее расстояние от оси вращения до линии действия силы).</div>
     </div>
 
     <script>
-        // Инициализируем Haptic Feedback для кнопки назад, если открыто в TG
         const tg = window.Telegram ? window.Telegram.WebApp : null;
         document.querySelector('.back-btn').addEventListener('click', () => {
             if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
