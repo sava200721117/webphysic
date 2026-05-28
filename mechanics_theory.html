@@ -407,9 +407,25 @@
 
     <script>
         const tg = window.Telegram ? window.Telegram.WebApp : null;
-        document.querySelector('.back-btn').addEventListener('click', () => {
+        
+        // Функция для жесткого возврата на главную
+        function goBack() {
             if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-        });
+            // Перенаправляем на главную и добавляем случайный хвостик, чтобы обнулить кэш состояния
+            window.location.replace('index.html?v=' + Date.now());
+        }
+
+        // Вешаем эту функцию на твою кнопку назад
+        document.querySelector('.back-btn').addEventListener('click', goBack);
+
+        // Если это Telegram, активируем его родную кнопку назад (если она у тебя используется)
+        if (tg) {
+            tg.ready();
+            if (tg.BackButton) {
+                tg.BackButton.show();
+                tg.BackButton.onClick(goBack);
+            }
+        }
     </script>
 </body>
 </html>
