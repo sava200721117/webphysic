@@ -426,16 +426,23 @@
     localStorage.setItem('user_streak', userData.streak);
 }
         function updateUI_and_Push() {
-            updateUI();
-            if (window.db && window.fbSet && window.fbRef) {
-                let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
-                window.fbSet(window.fbRef(window.db, 'users/' + myId), {
-                    id: myId,
-                    name: localStorage.getItem('user_custom_name') || "Пользователь",
-                    xp: parseInt(localStorage.getItem('global_physics_xp')) || 180
-                });
-            }
-        }
+    updateUI();
+    if (window.db && window.fbSet && window.fbRef) {
+        let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+        
+        // Берем серию из локального хранилища, чтобы не потерять её
+        let currentStreak = parseInt(localStorage.getItem('user_streak')) || 0;
+        let lastActiveDay = localStorage.getItem('user_last_active') || "";
+
+        window.fbSet(window.fbRef(window.db, 'users/' + myId), {
+            id: myId,
+            name: localStorage.getItem('user_custom_name') || "Пользователь",
+            xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
+            streak: currentStreak,        // ДОБАВИЛИ СЮДА
+            last_active: lastActiveDay    // ДОБАВИЛИ СЮДА
+        });
+    }
+}
 
         function syncAndRenderLeaderboard() {
             const container = document.getElementById('leaderboard-container');
