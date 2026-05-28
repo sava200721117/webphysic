@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Механика — Теория ЕГЭ</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    
+    <style>
+        :root {
+            --bg-main: #ffffff;
+            --bg-secondary: #fdfdfd;
+            --text-main: #000000;
+            --text-muted: #8e8e93;
+            --border-color: #e5e5e5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 20px;
+            padding-top: 70px; /* Отступ, чтобы фиксированная кнопка не закрывала заголовок */
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Навигационный бар с кнопкой Назад в стиле приложения */
+        .header-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 440px;
+            height: 55px;
+            background-color: rgba(255, 255, 255, 0.92);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 0;
+        }
+
+        /* Стилизация контента */
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 32px;
+            margin-bottom: 14px;
+            letter-spacing: -0.3px;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+        p {
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        ul {
+            list-style-type: none;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        li {
+            font-size: 14px;
+            margin-bottom: 2px;
+            position: relative;
+            padding-left: 20px;
+            color: var(--text-main);
+        }
+
+        li::before {
+            content: "•";
+            color: #000000;
+            font-weight: bold;
+            position: absolute;
+            left: 4px;
+            top: -1px;
+            font-size: 16px;
+        }
+
+        /* Блоки формул один в один как карточки в меню */
+        .formula-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 20px;
+            margin: 16px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+        }
+
+        .formula-expression {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 20px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .formula-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Выделение важных примечаний (ЗСИ, ЗСЭ) */
+        .important-note {
+            background-color: var(--bg-secondary);
+            border: 1px solid #ff9500; /* Красивый оранжевый акцент как у серии */
+            padding: 16px;
+            border-radius: 24px;
+            font-size: 14px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(255, 149, 0, 0.03);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-nav">
+        <button class="back-btn" onclick="window.history.back();">
+            <svg width="10" height="18" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-top: -2px;">
+                <path d="M10.5 1.5L1.5 10.5L10.5 19.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Назад
+        </button>
+    </div>
+
+    <h1>Механика</h1>
+    <div class="subtitle">Полный теоретический курс для подготовки к ЕГЭ</div>
+
+    <h2>1. Кинематика</h2>
+    <p><b>Кинематика</b> изучает движение тел, не вдаваясь в причины, которые это движение вызывают. Основная задача — определить положение тела в любой момент времени.</p>
+    
+    <h3>Равномерное прямолинейное движение (РПД)</h3>
+    <p>Движение с постоянной скоростью ($v = \text{const}$). Ускорение равно нулю.</p>
+    
+    <div class="formula-card">
+        <div class="formula-expression">x = x₀ + v_x · t</div>
+        <div class="formula-desc"><b>Уравнение движения:</b> где $x$ — конечная координата, $x_0$ — начальная координата, $v_x$ — проекция скорости, $t$ — время.</div>
+    </div>
+
+    <h3>Равноускоренное прямолинейное движение (РУД)</h3>
+    <p>Движение, при котором скорость тела меняется на одинаковую величину за равные промежутки времени ($a = \text{const}$).</p>
+
+    <div class="formula-card">
+        <div class="formula-expression">v_x = v₀_x + a_x · t</div>
+        <div class="formula-desc"><b>Скорость при РУД:</b> изменение скорости с течением времени.</div>
+    </div>
+
+    <div class="formula-card">
+        <div class="formula-expression">s_x = v₀_x · t + (a_x · t²) / 2</div>
+        <div class="formula-desc"><b>Перемещение при РУД:</b> базовая формула площади под графиком скорости.</div>
+    </div>
+
+    <div class="formula-card">
+        <div class="formula-expression">s_x = (v_x² - v₀_x²) / 2a_x</div>
+        <div class="formula-desc"><b>Безвременная формула перемещения:</b> крайне полезна, если в задаче не дано время.</div>
+    </div>
+
+    <h2>2. Динамика</h2>
+    <p><b>Динамика</b> объясняет, <i>почему</i> тела двигаются именно так, а не иначе. В основе лежат три закона Ньютона.</p>
+    
+    <ul>
+        <li><b>I закон Ньютона:</b> Существуют ИСО, в которых тело сохраняет состояние покоя или РПД, если на него не действуют силы или их действие скомпенсировано.</li>
+        <li><b>II закон Ньютона:</b> Ускорение тела прямо пропорционально равнодействующей всех сил и обратно пропорционально его массе.</li>
+        <li><b>III закон Ньютона:</b> Тела действуют друг на друга с силами, равными по модулю и противоположными по направлению.</li>
+    </ul>
+
+    <div class="formula-card">
+        <div class="formula-expression">F = m · a</div>
+        <div class="formula-desc"><b>Второй закон Ньютона:</b> основное уравнение динамики. $F$ — равнодействующая сила (векторная сумма всех сил).</div>
+    </div>
+
+    <h3>Основные силы в механике:</h3>
+    <div class="formula-card">
+        <div class="formula-expression">F_тяж = m · g</div>
+        <div class="formula-desc"><b>Сила тяжести:</b> направлена всегда вертикально вниз к центру Земли.</div>
+    </div>
+
+    <div class="formula-card">
+        <div class="formula-expression">F_упр = k · |Δx|</div>
+        <div class="formula-desc"><b>Закон Гука:</b> сила упругости, возникающая при деформации. $k$ — жесткость (Н/м), $\Delta x$ — удлинение.</div>
+    </div>
+
+    <div class="formula-card">
+        <div class="formula-expression">F_тр.ск = μ · N</div>
+        <div class="formula-desc"><b>Сила трения скольжения:</b> $\mu$ — коэффициент трения, $N$ — сила нормальной реакции опоры.</div>
+    </div>
+
+    <h2>3. Законы сохранения</h2>
+    <p>Законы сохранения — мощный инструмент для решения задач, где детальный характер движения и действующих сил неизвестен.</p>
+
+    <h3>Импульс и ЗСИ</h3>
+    <p><b>Импульс тела ($p$)</b> — векторная величина, равная произведению массы тела на его скорость.</p>
+    
+    <div class="formula-card">
+        <div class="formula-expression">p = m · v</div>
+        <div class="formula-desc"><b>Импульс тела:</b> измеряется в кг·м/с. Направлен так же, как и вектор скорости.</div>
+    </div>
+
+    <div class="important-note">
+        <b>Закон сохранения импульса (ЗСИ):</b> В замкнутой системе тел векторная сумма импульсов всех тел остается неизменной при любых взаимодействиях между ними: <br>
+        <span style="display: block; text-align: center; font-weight: 700; margin-top: 6px; font-size: 16px;">p₁ + p₂ = p₁' + p₂'</span>
+    </div>
+
+    <h3>Работа и энергия (ЗСЭ)</h3>
+    <div class="formula-card">
+        <div class="formula-expression">A = F · s · cos(α)</div>
+        <div class="formula-desc"><b>Механическая работа:</b> $\alpha$ — угол между вектором силы и вектором перемещения.</div>
+    </div>
+
+    <div class="formula-card">
+        <div class="formula-expression">E_к = (m · v²) / 2</div>
+        <div class="formula-desc"><b>Кинетическая энергия:</b> энергия движущегося тела.</div>
+    </div>
+
+    <div class="formula-card">
+        <div class="formula-expression">E_п = m · g · h</div>
+        <div class="formula-desc"><b>Потенциальная энергия:</b> энергия взаимодействия тела с Землей. Для сжатой пружины: $E_п = \frac{k\cdot\Delta x^2}{2}$.</div>
+    </div>
+
+    <h2>4. Статика</h2>
+    <p><b>Статика</b> изучает условия равновесия абсолютно твердых тел. Для равновесия необходимы два условия:</p>
+
+    <p style="margin-bottom: 6px;"><b>1-е условие:</b> Равнодействующая всех приложенных к телу сил должна быть равна нулю ($\sum F = 0$).</p>
+    <p><b>2-е условие (Правило моментов):</b> Алгебраическая сумма моментов всех сил, действующих на тело относительно любой оси, равна нулю.</p>
+
+    <div class="formula-card">
+        <div class="formula-expression">M = F · d</div>
+        <div class="formula-desc"><b>Момент силы:</b> произведение модуля силы $F$ на её плечо $d$ (кратчайшее расстояние от оси вращения до линии действия силы).</div>
+    </div>
+
+    <script>
+        // Инициализируем Haptic Feedback для кнопки назад, если открыто в TG
+        const tg = window.Telegram ? window.Telegram.WebApp : null;
+        document.querySelector('.back-btn').addEventListener('click', () => {
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        });
+    </script>
+</body>
+</html>
