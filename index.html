@@ -136,6 +136,29 @@
         }
         .tab-item.active { color: #000000; font-weight: 700; }
         .tab-icon { font-size: 22px; }
+        .theory-menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: #fdfdfd;
+            border: 1px solid #e5e5e5;
+            border-radius: 24px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+            transition: all 0.2s ease;
+        }
+        .theory-menu-item h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .theory-menu-item p {
+            font-size: 13px;
+            color: #8e8e93;
+            margin: 0;
+        }
     </style>
 
     <script type="module">
@@ -223,21 +246,25 @@
             </div>
 
            <div class="menu-list">
-                <div class="menu-item" onclick="window.location.href='mechanics_theory.html'">
-                    <div class="menu-item-info">
-                        <h2>Теория: Механика</h2>
-                        <p>Формулы и законы кинематики и динамики</p>
+                <a href="mechanics_theory.html" style="text-decoration: none; color: inherit; display: block;">
+                    <div class="theory-menu-item">
+                        <div class="menu-item-info">
+                            <h2>Теория: Механика</h2>
+                            <p>Формулы и законы кинематики и динамики</p>
+                        </div>
+                        <div class="arrow">📖</div>
                     </div>
-                    <div class="arrow">📖</div>
-                </div>
+                </a>
                 
-                <div class="menu-item" onclick="window.location.href='thermo_theory.html'">
-                    <div class="menu-item-info">
-                        <h2>Теория: Молекулярная физика</h2>
-                        <p>Изопроцессы, термодинамика, газы</p>
+                <a href="thermo_theory.html" style="text-decoration: none; color: inherit; display: block;">
+                    <div class="theory-menu-item">
+                        <div class="menu-item-info">
+                            <h2>Теория: Молекулярная физика</h2>
+                            <p>Изопроцессы, термодинамика, газы</p>
+                        </div>
+                        <div class="arrow">📖</div>
                     </div>
-                    <div class="arrow">📖</div>
-                </div>
+                </a>
 
                 <div class="menu-item" onclick="openSectionPage('electro')">
                     <div class="menu-item-info">
