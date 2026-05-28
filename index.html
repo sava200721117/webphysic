@@ -395,6 +395,36 @@
             }
         }
 
+        async function checkStreak(myId) {
+    if (!window.db) return;
+    const userRef = window.fbRef(window.db, 'users/' + myId);
+    const today = new Date().toISOString().split('T')[0];
+    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+    const snapshot = await window.fbGet(userRef); 
+    
+    let userData = snapshot.exists() ? snapshot.val() : { 
+        id: myId, 
+        name: localStorage.getItem('user_custom_name') || "Пользователь", 
+        xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
+        streak: 0, 
+        last_active: "" 
+    };
+
+    if (userData.last_active !== today) {
+        if (userData.last_active === yesterday) {
+            userData.streak = (userData.streak || 0) + 1;
+        } else {
+            userData.streak = 1;
+        }
+        userData.last_active = today;
+        
+        await window.fbSet(userRef, userData);
+    }
+    
+    document.getElementById('streak-count').innerText = userData.streak;
+    localStorage.setItem('user_streak', userData.streak);
+}
         function updateUI_and_Push() {
             updateUI();
             if (window.db && window.fbSet && window.fbRef) {
