@@ -406,6 +406,7 @@
         const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
         window.fbOnValue(userRef, (snapshot) => {
+            console.log("=== ОТВЕТ ОТ FIREBASE ПОЛУЧЕН ===");
             let userData = snapshot.exists() ? snapshot.val() : { 
                 id: myId, 
                 name: localStorage.getItem('user_custom_name') || "Пользователь", 
@@ -413,6 +414,8 @@
                 streak: 0, 
                 last_active: "" 
             };
+
+            console.log("Текущие данные из базы:", JSON.stringify(userData));
 
             if (userData.last_active !== today) {
                 if (userData.last_active === yesterday) {
@@ -422,7 +425,11 @@
                 }
                 userData.last_active = today;
                 
+                console.log("Попытка записи новых данных в Firebase...", JSON.stringify(userData));
                 window.fbSet(userRef, userData);
+                console.log("Команда window.fbSet вызвана!");
+            } else {
+                console.log("Сегодня серия уже проверялась, запись пропущена.");
             }
             
             if (document.getElementById('streak-count')) {
