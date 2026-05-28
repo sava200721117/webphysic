@@ -163,9 +163,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, get } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-database.js"; // <-- Добавили , get
 
-        const firebaseConfig = {
+const firebaseConfig = {
             apiKey: "AIzaSyDnWQw-EMU94XXjo02QyvFC6zmGj78Vi8I",
             authDomain: "physics-ege-rating.firebaseapp.com",
             databaseURL: "https://physics-ege-rating-default-rtdb.firebaseio.com",
@@ -177,11 +177,12 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        window.db = getDatabase(app);
-        window.fbRef = ref;
-        window.fbSet = set;
-        window.fbOnValue = onValue;
-        window.dispatchEvent(new Event('firebaseReady'));
+window.db = getDatabase(app);
+window.fbRef = ref;
+window.fbSet = set;
+window.fbOnValue = onValue;
+window.fbGet = get; // <-- ДОБАВЬ ЭТУ СТРОЧКУ СЮДА
+window.dispatchEvent(new Event('firebaseReady'));
     </script>
 </head>
 <body>
