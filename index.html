@@ -461,30 +461,36 @@ function updateUI_and_Push() {
 }
 
         function syncAndRenderLeaderboard() {
-            const container = document.getElementById('leaderboard-container');
-            if (!window.db) return;
+    const container = document.getElementById('leaderboard-container');
+    if (!window.db) return;
 
-            window.fbOnValue(window.fbRef(window.db, 'users'), (snapshot) => {
-                const data = snapshot.val();
-                if (!data) return;
+    window.fbOnValue(window.fbRef(window.db, 'users'), (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
 
-                let players = Object.values(data);
-                players.sort((a, b) => (b.xp || 0) - (a.xp || 0));
+        let players = Object.values(data);
+        players.sort((a, b) => (b.xp || 0) - (a.xp || 0));
 
-                container.innerHTML = "";
-                players.forEach((player, index) => {
-                    container.innerHTML += `
-                        <div class="leaderboard-item">
-                            <div class="user-rank-info">
-                                <span class="rank-number ${index < 3 ? 'top-three' : ''}">${index + 1}</span>
-                                <span class="rank-name">${player.name || 'Аноним'}</span>
-                            </div>
-                            <span class="rank-xp">${player.xp || 0} XP</span>
-                        </div>
-                    `;
-                });
-            });
-        }
+        container.innerHTML = "";
+        players.forEach((player, index) => {
+            // Получаем серию игрока, если её нет — ставим 0
+            let streakCount = player.streak || 0; 
+
+            container.innerHTML += `
+                <div class="leaderboard-item" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="user-rank-info" style="display: flex; align-items: center; gap: 10px;">
+                        <span class="rank-number ${index < 3 ? 'top-three' : ''}">${index + 1}</span>
+                        <span class="rank-name">${player.name || 'Аноним'}</span>
+                    </div>
+                    <div class="user-stats" style="display: flex; align-items: center; gap: 12px;">
+                        <span class="rank-streak" style="color: #ff9500; font-weight: bold;">${streakCount} 🔥</span>
+                        <span class="rank-xp" style="font-weight: bold;">${player.xp || 0} XP</span>
+                    </div>
+                </div>
+            `;
+        });
+    });
+}
 
         // ... (тут твои функции, например, updateUI, syncAndRenderLeaderboard и т.д.)
 
