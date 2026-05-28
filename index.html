@@ -353,23 +353,33 @@ window.dispatchEvent(new Event('firebaseReady'));
         }
 
         function navigateTo(screenId) {
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
-            
-            if (screenId === 'screen-cards') document.getElementById('tab-cards').classList.add('active');
-            if (screenId === 'screen-theory') document.getElementById('tab-theory').classList.add('active'); // Наша новая строчка!
-            if (screenId === 'screen-leaderboard') {
-                document.getElementById('tab-leaderboard').classList.add('active');
-                syncAndRenderLeaderboard();
-            }
-            if (screenId === 'screen-profile') {
-                document.getElementById('tab-profile').classList.add('active');
-                updateUI();
-            }
-            window.scrollTo(0, 0);
-        }
+    if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+    
+    // Скрываем вообще все экраны и убираем активный статус у всех кнопок меню
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+    
+    // Показываем только тот экран, на который нажали
+    const currentScreen = document.getElementById(screenId);
+    if (currentScreen) {
+        currentScreen.classList.add('active');
+    }
+    
+    // Включаем подсветку правильной иконки снизу и запускаем нужные функции
+    if (screenId === 'screen-cards') {
+        document.getElementById('tab-cards').classList.add('active');
+    } else if (screenId === 'screen-theory') {
+        document.getElementById('tab-theory').classList.add('active');
+    } else if (screenId === 'screen-leaderboard') {
+        document.getElementById('tab-leaderboard').classList.add('active');
+        syncAndRenderLeaderboard();
+    } else if (screenId === 'screen-profile') {
+        document.getElementById('tab-profile').classList.add('active');
+        updateUI();
+    }
+    
+    window.scrollTo(0, 0);
+}
 
         function updateUI() {
             let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
