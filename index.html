@@ -474,17 +474,26 @@
 
     // Замени этот кусок в самом низу файла на вот этот:
     document.addEventListener("DOMContentLoaded", () => {
-    if (tg) { 
-        tg.ready(); 
-        tg.expand(); 
-        
-        let myId = (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) ? tg.initDataUnsafe.user.id : "local_user_id";
-        
-        // ВЫЗЫВАЕМ ПРОВЕРКУ СЕРИИ И ОТЛАВЛИВАЕМ ОШИБКИ ПРЯМО НА ЭКРАН
-        checkStreak(myId).catch(err => {
-            alert("Ошибка в checkStreak: " + err.message);
-        });
+    // 1. Сначала подготавливаем Телеграм, если он есть
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.tg = window.Telegram.WebApp;
+        if (typeof tg.ready === 'function') tg.ready();
+        if (typeof tg.expand === 'function') tg.expand();
     }
+
+    // 2. ВСЕГДА определяем ID (для телефона — цифры, для ПК — local_user_id)
+    let myId = "local_user_id";
+    if (window.tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+        myId = tg.initDataUnsafe.user.id;
+    }
+    
+    console.log("=== ЗАПУСК ПРОВЕРКИ СЕРИИ ===");
+    console.log("ID юзера в базе:", myId);
+
+    // 3. Запускаем проверку серии независимо от того, где открыли сайт
+    checkStreak(myId).catch(err => {
+        console.error("Ошибка внутри checkStreak:", err);
+    });
 });
 </script>
 </body>
