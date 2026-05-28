@@ -446,10 +446,10 @@
         }
         userData.last_active = today;
         
-        await window.fbSet(userRef, userData);
+         window.fbSet(userRef, userData);
     }
     
-    
+
         function updateUI_and_Push() {
     updateUI();
     if (window.db && window.fbSet && window.fbRef) {
