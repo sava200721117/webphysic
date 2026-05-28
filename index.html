@@ -224,6 +224,11 @@
                 <p id="user-username">@physics_student</p>
             </div>
 
+            <div id="streak-container" style="display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 20px; font-weight: 700; color: #ff9500; font-size: 16px;">
+    <span>🔥 Серия:</span>
+    <span id="streak-count">0</span>
+</div>
+
             <div id="edit-box" class="edit-fields">
                 <input type="text" id="input-name" class="edit-input" placeholder="Новое имя">
                 <input type="text" id="input-username" class="edit-input" placeholder="Новый юзернейм (@...)">
@@ -314,6 +319,10 @@
             document.getElementById('profile-cards').innerText = `${cardsViewed} шт.`;
             document.getElementById('profile-level').innerText = `${level} Уровень`;
 
+            // Логика отображения серии
+            let streak = localStorage.getItem('user_streak') || 0;
+            document.getElementById('streak-count').innerText = streak;
+
             let savedName = localStorage.getItem('user_custom_name');
             let savedUsername = localStorage.getItem('user_custom_username');
 
@@ -327,9 +336,16 @@
                 let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
                 window.fbOnValue(window.fbRef(window.db, 'users/' + myId), (snapshot) => {
                     const cloudData = snapshot.val();
-                    if (cloudData && cloudData.xp !== undefined && cloudData.xp !== xp) {
-                        localStorage.setItem('global_physics_xp', cloudData.xp);
-                        updateUI();
+                    if (cloudData) {
+                        if (cloudData.xp !== undefined && cloudData.xp !== xp) {
+                            localStorage.setItem('global_physics_xp', cloudData.xp);
+                            updateUI();
+                        }
+                        // Обновляем серию из облака
+                        if (cloudData.streak !== undefined) {
+                            localStorage.setItem('user_streak', cloudData.streak);
+                            document.getElementById('streak-count').innerText = cloudData.streak;
+                        }
                     }
                 }, { onlyOnce: true });
             }
