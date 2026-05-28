@@ -240,34 +240,67 @@ window.dispatchEvent(new Event('firebaseReady'));
                 </div>
             </div>
         </div>
+        <div class="menu-item" onclick="openSectionPage('quantum.html')">
+            <div class="menu-item-info">
+                <h2>Квантовая физика</h2>
+                <p>Фотоэффект, атомная и ядерная физика</p>
+            </div>
+            <div class="arrow">→</div>
+        </div>
+
+    </div> <div id="screen-theory" class="screen">
+        <div class="menu-item" onclick="openSectionPage('mechanics_theory.html')">
+            <div class="menu-item-info">
+                <h2>Теория: Механика</h2>
+                <p>Кинематика, динамика, законы сохранения</p>
+            </div>
+            <div class="arrow">📖</div>
+        </div>
+        <div class="menu-item" onclick="openSectionPage('mkt_theory.html')">
+            <div class="menu-item-info">
+                <h2>Теория: МКТ и Термодинамика</h2>
+                <p>Молекулярная физика, изопроцессы, термодинамика</p>
+            </div>
+            <div class="arrow">📖</div>
+        </div>
         <div class="menu-item" onclick="openSectionPage('electro_theory.html')">
-    <div class="menu-item-info">
-        <h2>Теория: Электродинамика</h2>
-        <p>Электрическое поле, законы постоянного тока</p>
-    </div>
-    <div class="arrow">📖</div>
-</div>
-<div class="menu-item" onclick="openSectionPage('magnet_theory.html')">
-    <div class="menu-item-info">
-        <h2>Теория: Магнитные явления</h2>
-        <p>Магнитное поле, индукция, правила рук</p>
-    </div>
-    <div class="arrow">📖</div>
-</div>
-<div class="menu-item" onclick="openSectionPage('optics_theory.html')">
-    <div class="menu-item-info">
-        <h2>Теория: Оптика</h2>
-        <p>Геометрическая и волновая оптика, линзы</p>
-    </div>
-    <div class="arrow">📖</div>
-</div>
-<div class="menu-item" onclick="openSectionPage('quantum_theory.html')">
-    <div class="menu-item-info">
-        <h2>Теория: Кванты и Атомка</h2>
-        <p>Теория фотоэффекта и строение ядра</p>
-    </div>
-    <div class="arrow">📖</div>
-</div>
+            <div class="menu-item-info">
+                <h2>Теория: Электродинамика</h2>
+                <p>Электрическое поле, законы постоянного тока</p>
+            </div>
+            <div class="arrow">📖</div>
+        </div>
+        <div class="menu-item" onclick="openSectionPage('magnet_theory.html')">
+            <div class="menu-item-info">
+                <h2>Теория: Магнитные явления</h2>
+                <p>Магнитное поле, индукция, правила рук</p>
+            </div>
+            <div class="arrow">📖</div>
+        </div>
+        <div class="menu-item" onclick="openSectionPage('optics_theory.html')">
+            <div class="menu-item-info">
+                <h2>Теория: Оптика</h2>
+                <p>Геометрическая и волновая оптика, линзы</p>
+            </div>
+            <div class="arrow">📖</div>
+        </div>
+        <div class="menu-item" onclick="openSectionPage('quantum_theory.html')">
+            <div class="menu-item-info">
+                <h2>Теория: Кванты и Атомка</h2>
+                <p>Теория фотоэффекта и строение ядра</p>
+            </div>
+            <div class="arrow">📖</div>
+        </div>
+    </div> ```
+
+---
+
+Заменяй, сохраняй и отправляем в продакшен! Твои команды для терминала:
+
+```bash
+git add .
+git commit -m "fix: completely separated cards and theory screens layout"
+git push origin main
 
 </div> <div id="screen-profile" class="screen">
 
