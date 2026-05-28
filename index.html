@@ -266,35 +266,34 @@
                     </div>
                 </a>
 
-                <div class="menu-item" onclick="openSectionPage('electro')">
-                    <div class="menu-item-info">
-                        <h2>Теория: Электродинамика</h2>
-                        <p>Электрическое поле, законы постоянного тока</p>
-                    </div>
-                    <div class="arrow">📖</div>
-                </div>
-                <div class="menu-item" onclick="openSectionPage('magnet')">
-                    <div class="menu-item-info">
-                        <h2>Теория: Магнитные явления</h2>
-                        <p>Магнитное поле, индукция, правила рук</p>
-                    </div>
-                    <div class="arrow">📖</div>
-                </div>
-                <div class="menu-item" onclick="openSectionPage('optics')">
-                    <div class="menu-item-info">
-                        <h2>Теория: Оптика</h2>
-                        <p>Геометрическая и волновая оптика, линзы</p>
-                    </div>
-                    <div class="arrow">📖</div>
-                </div>
-                <div class="menu-item" onclick="openSectionPage('quantum')">
-                    <div class="menu-item-info">
-                        <h2>Теория: Кванты и Атомка</h2>
-                        <p>Теория фотоэффекта и строение ядра</p>
-                    </div>
-                    <div class="arrow">📖</div>
-                </div>
-            </div> </div> ```
+                <div class="menu-item" onclick="openSectionPage('electro.html')">
+    <div class="menu-item-info">
+        <h2>Теория: Электродинамика</h2>
+        <p>Электрическое поле, законы постоянного тока</p>
+    </div>
+    <div class="arrow">📖</div>
+</div>
+<div class="menu-item" onclick="openSectionPage('magnet.html')">
+    <div class="menu-item-info">
+        <h2>Теория: Магнитные явления</h2>
+        <p>Магнитное поле, индукция, правила рук</p>
+    </div>
+    <div class="arrow">📖</div>
+</div>
+<div class="menu-item" onclick="openSectionPage('optics.html')">
+    <div class="menu-item-info">
+        <h2>Теория: Оптика</h2>
+        <p>Геометрическая и волновая оптика, линзы</p>
+    </div>
+    <div class="arrow">📖</div>
+</div>
+<div class="menu-item" onclick="openSectionPage('quantum.html')">
+    <div class="menu-item-info">
+        <h2>Теория: Кванты и Атомка</h2>
+        <p>Теория фотоэффекта и строение ядра</p>
+    </div>
+    <div class="arrow">📖</div>
+</div>
 
 
 
@@ -493,13 +492,22 @@
 
         window.fbOnValue(userRef, (snapshot) => {
             console.log("=== ОТВЕТ ОТ FIREBASE ПОЛУЧЕН ===");
-            let userData = snapshot.exists() ? snapshot.val() : { 
-                id: myId, 
-                name: localStorage.getItem('user_custom_name') || "Пользователь", 
-                xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
-                streak: 0, 
-                last_active: "" 
-            };
+            
+            let userData;
+            if (snapshot.exists()) {
+                userData = snapshot.val();
+                // Если в базе чего-то не хватает, берем из локалки, чтобы не затереть старый XP
+                if (!userData.xp) userData.xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
+                if (!userData.name) userData.name = localStorage.getItem('user_custom_name') || "Пользователь";
+            } else {
+                userData = { 
+                    id: myId, 
+                    name: localStorage.getItem('user_custom_name') || "Пользователь", 
+                    xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
+                    streak: 0, 
+                    last_active: "" 
+                };
+            }
 
             console.log("Текущие данные из базы:", JSON.stringify(userData));
 
@@ -523,11 +531,13 @@
             }
             localStorage.setItem('user_streak', userData.streak);
             localStorage.setItem('user_last_active', userData.last_active);
+            if (userData.xp) localStorage.setItem('global_physics_xp', userData.xp);
             
             resolve();
         }, { onlyOnce: true });
     });
 }
+
 function updateUI_and_Push() {
     if (typeof updateUI === 'function') updateUI();
     if (window.db && window.fbSet && window.fbRef) {
@@ -546,20 +556,19 @@ function updateUI_and_Push() {
     }
 }
 
-        function syncAndRenderLeaderboard() {
+function syncAndRenderLeaderboard() {
     const container = document.getElementById('leaderboard-container');
-    if (!window.db) return;
+    if (!container || !window.db) return;
 
     window.fbOnValue(window.fbRef(window.db, 'users'), (snapshot) => {
         const data = snapshot.val();
         if (!data) return;
 
         let players = Object.values(data);
-        players.sort((a, b) => (b.xp || 0) - (a.xp || 0));
+        players.sort((a, b) => { return (b.xp || 0) - (a.xp || 0); });
 
-        container.innerHTML = "";
-        players.forEach((player, index) => {
-            // Получаем серию игрока, если её нет — ставим 0
+container.innerHTML = "";
+players.forEach((player, index) => {
             let streakCount = player.streak || 0; 
 
             container.innerHTML += `
@@ -578,18 +587,15 @@ function updateUI_and_Push() {
     });
 }
 
-        // ... (тут твои функции, например, updateUI, syncAndRenderLeaderboard и т.д.)
-
-    // Замени этот кусок в самом низу файла на вот этот:
-    document.addEventListener("DOMContentLoaded", () => {
-    // 1. Сначала подготавливаем Телеграм, если он есть
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Инициализируем Телеграм
     if (window.Telegram && window.Telegram.WebApp) {
         window.tg = window.Telegram.WebApp;
         if (typeof tg.ready === 'function') tg.ready();
         if (typeof tg.expand === 'function') tg.expand();
     }
 
-    // 2. ВСЕГДА определяем ID (для телефона — цифры, для ПК — local_user_id)
+    // 2. Получаем ID пользователя
     let myId = "local_user_id";
     if (window.tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
         myId = tg.initDataUnsafe.user.id;
@@ -597,12 +603,12 @@ function updateUI_and_Push() {
     
     console.log("=== ЗАПУСК ПРОВЕРКИ СЕРИИ ===");
     console.log("ID юзера в базе:", myId);
-
-    // 3. Запускаем проверку серии независимо от того, где открыли сайт
+    
+    // 3. Запускаем проверку серии дней
     checkStreak(myId).catch(err => {
         console.error("Ошибка внутри checkStreak:", err);
     });
-});
+}); // Вот теперь эта скобка корректно закрывает document.addEventListener в самом конце
 </script>
 </body>
 </html>
