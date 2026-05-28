@@ -216,6 +216,57 @@
                 </div>
             </div>
         </div>
+        <div id="screen-theory" class="screen">
+            <div class="header">
+                <h1>Теория и Статьи</h1>
+                <p>База знаний и разбор формул по темам</p>
+            </div>
+
+            <div class="menu-list">
+                <div class="menu-item" onclick="openSectionPage('mechanics.html')">
+                    <div class="menu-item-info">
+                        <h2>Теория: Механика</h2>
+                        <p>Формулы и законы кинематики и динамики</p>
+                    </div>
+                    <div class="arrow">📖</div>
+                </div>
+                <div class="menu-item" onclick="openSectionPage('thermo.html')">
+                    <div class="menu-item-info">
+                        <h2>Теория: Молекулярная физика</h2>
+                        <p>Изопроцессы, термодинамика, газы</p>
+                    </div>
+                    <div class="arrow">📖</div>
+                </div>
+                <div class="menu-item" onclick="openSectionPage('electro.html')">
+                    <div class="menu-item-info">
+                        <h2>Теория: Электродинамика</h2>
+                        <p>Электрическое поле, законы постоянного тока</p>
+                    </div>
+                    <div class="arrow">📖</div>
+                </div>
+                <div class="menu-item" onclick="openSectionPage('magnet.html')">
+                    <div class="menu-item-info">
+                        <h2>Теория: Магнитные явления</h2>
+                        <p>Магнитное поле, индукция, правила рук</p>
+                    </div>
+                    <div class="arrow">📖</div>
+                </div>
+                <div class="menu-item" onclick="openSectionPage('optics.html')">
+                    <div class="menu-item-info">
+                        <h2>Теория: Оптика</h2>
+                        <p>Геометрическая и волновая оптика, линзы</p>
+                    </div>
+                    <div class="arrow">📖</div>
+                </div>
+                <div class="menu-item" onclick="openSectionPage('quantum.html')">
+                    <div class="menu-item-info">
+                        <h2>Теория: Кванты и Атомка</h2>
+                        <p>Теория фотоэффекта и строение ядра</p>
+                    </div>
+                    <div class="arrow">📖</div>
+                </div>
+            </div>
+        </div>
 
         <div id="screen-profile" class="screen">
             <div class="profile-header">
@@ -273,6 +324,10 @@
             <span class="tab-icon">📚</span>
             <span>Карточки</span>
         </div>
+        <div id="tab-theory" class="tab-item" onclick="navigateTo('screen-theory')">
+            <span class="tab-icon">📖</span>
+            <span>Теория</span>
+        </div>
         <div id="tab-leaderboard" class="tab-item" onclick="navigateTo('screen-leaderboard')">
             <span class="tab-icon">🏆</span>
             <span>Рейтинг</span>
@@ -299,6 +354,7 @@
             document.getElementById(screenId).classList.add('active');
             
             if (screenId === 'screen-cards') document.getElementById('tab-cards').classList.add('active');
+            if (screenId === 'screen-theory') document.getElementById('tab-theory').classList.add('active'); // Наша новая строчка!
             if (screenId === 'screen-leaderboard') {
                 document.getElementById('tab-leaderboard').classList.add('active');
                 syncAndRenderLeaderboard();
