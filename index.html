@@ -435,24 +435,12 @@
         }, { onlyOnce: true });
     });
 }
-    if (userData.last_active !== today) {
-        if (userData.last_active === yesterday) {
-            userData.streak = (userData.streak || 0) + 1;
-        } else {
-            userData.streak = 1;
-        }
-        userData.last_active = today;
-        
-         window.fbSet(userRef, userData);
-    }
-    
 
-        function updateUI_and_Push() {
-    updateUI();
+function updateUI_and_Push() {
+    if (typeof updateUI === 'function') updateUI();
     if (window.db && window.fbSet && window.fbRef) {
-        let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+        let myId = (window.tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
         
-        // Берем серию из локального хранилища, чтобы не потерять её
         let currentStreak = parseInt(localStorage.getItem('user_streak')) || 0;
         let lastActiveDay = localStorage.getItem('user_last_active') || "";
 
@@ -460,8 +448,8 @@
             id: myId,
             name: localStorage.getItem('user_custom_name') || "Пользователь",
             xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
-            streak: currentStreak,        // ДОБАВИЛИ СЮДА
-            last_active: lastActiveDay    // ДОБАВИЛИ СЮДА
+            streak: currentStreak,
+            last_active: lastActiveDay
         });
     }
 }
