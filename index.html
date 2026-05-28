@@ -395,21 +395,48 @@
             }
         }
 
-        async function checkStreak(myId) {
-    if (!window.db) return;
-    const userRef = window.fbRef(window.db, 'users/' + myId);
-    const today = new Date().toISOString().split('T')[0];
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+        function checkStreak(myId) {
+    return new Promise((resolve, reject) => {
+        if (!window.db || !window.fbRef || !window.fbOnValue || !window.fbSet) {
+            return reject(new Error("Firebase функции не загружены"));
+        }
+        
+        const userRef = window.fbRef(window.db, 'users/' + myId);
+        const today = new Date().toISOString().split('T')[0];
+        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
-    const snapshot = await window.fbGet(userRef); 
-    
-    let userData = snapshot.exists() ? snapshot.val() : { 
-        id: myId, 
-        name: localStorage.getItem('user_custom_name') || "Пользователь", 
-        xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
-        streak: 0, 
-        last_active: "" 
-    };
+        // Используем fbOnValue вместо fbGet
+        window.fbOnValue(userRef, (snapshot) => {
+            let userData = snapshot.exists() ? snapshot.val() : { 
+                id: myId, 
+                name: localStorage.getItem('user_custom_name') || "Пользователь", 
+                xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
+                streak: 0, 
+                last_active: "" 
+            };
+
+            // Логика обновления серии
+            if (userData.last_active !== today) {
+                if (userData.last_active === yesterday) {
+                    userData.streak = (userData.streak || 0) + 1;
+                } else {
+                    userData.streak = 1;
+                }
+                userData.last_active = today;
+                
+                // Сохраняем обратно в Firebase
+                window.fbSet(userRef, userData);
+            }
+            
+            // Обновляем UI и локальное хранилище
+            document.getElementById('streak-count').innerText = userData.streak;
+            localStorage.setItem('user_streak', userData.streak);
+            localStorage.setItem('user_last_active', userData.last_active);
+            
+            resolve();
+        }, { onlyOnce: true }); // { onlyOnce: true } прочитает базу один раз, как нам и нужно
+    });
+}
 
     if (userData.last_active !== today) {
         if (userData.last_active === yesterday) {
@@ -422,9 +449,7 @@
         await window.fbSet(userRef, userData);
     }
     
-    document.getElementById('streak-count').innerText = userData.streak;
-    localStorage.setItem('user_streak', userData.streak);
-}
+    
         function updateUI_and_Push() {
     updateUI();
     if (window.db && window.fbSet && window.fbRef) {
