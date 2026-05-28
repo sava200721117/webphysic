@@ -474,14 +474,18 @@
 
     // Замени этот кусок в самом низу файла на вот этот:
     document.addEventListener("DOMContentLoaded", () => {
-        if (tg) { 
-            tg.ready(); 
-            tg.expand(); 
-            let myId = (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
-            console.log("Мой ID в базе:", myId); // ЭТА СТРОЧКА ВАЖНА
-            checkStreak(myId);
-        }
-    });
+    if (tg) { 
+        tg.ready(); 
+        tg.expand(); 
+        
+        let myId = (tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) ? tg.initDataUnsafe.user.id : "local_user_id";
+        
+        // ВЫЗЫВАЕМ ПРОВЕРКУ СЕРИИ И ОТЛАВЛИВАЕМ ОШИБКИ ПРЯМО НА ЭКРАН
+        checkStreak(myId).catch(err => {
+            alert("Ошибка в checkStreak: " + err.message);
+        });
+    }
+});
 </script>
 </body>
 </html>
