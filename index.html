@@ -176,7 +176,7 @@
                 <div class="menu-item" onclick="openSectionPage('mechanics.html')">
                     <div class="menu-item-info">
                         <h2>Механика</h2>
-                        <p>Кинематика, dynamicа, законы сохранения</p>
+                        <p>Кинематика, динамика, законы сохранения</p>
                     </div>
                     <div class="arrow">→</div>
                 </div>
@@ -211,7 +211,7 @@
                 <div class="menu-item" onclick="openSectionPage('quantum.html')">
                     <div class="menu-item-info">
                         <h2>Квантовая физика</h2>
-                        <p>Фотоэффект, атомная и ядерная физика</p>
+                        <p>Фотоэффект, atomная и ядерная физика</p>
                     </div>
                     <div class="arrow">→</div>
                 </div>
@@ -232,7 +232,7 @@
                     </div>
                     <div class="arrow">📖</div>
                 </div>
-                <div class="menu-item" onclick="openSectionPage('mkt_theory.html')">
+                <div class="menu-item" onclick="openSectionPage('thermo_theory.html')">
                     <div class="menu-item-info">
                         <h2>Теория: МКТ и Термодинамика</h2>
                         <p>Молекулярная физика, изопроцессы, термодинамика</p>
@@ -558,7 +558,6 @@
             console.log("=== ЗАПУСК ПРОВЕРКИ СЕРИИ ===");
             console.log("ID юзера в базе:", myId);
             
-            // Ждем готовности Firebase, затем проверяем серию
             window.addEventListener('firebaseReady', () => {
                 checkStreak(myId).catch(err => {
                     console.error("Ошибка внутри checkStreak:", err);
@@ -566,7 +565,6 @@
                 updateUI();
             });
             
-            // Если Firebase уже загрузился к этому моменту
             if (window.db) {
                 checkStreak(myId).catch(err => {
                     console.error("Ошибка внутри checkStreak:", err);
