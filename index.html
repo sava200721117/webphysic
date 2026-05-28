@@ -405,7 +405,6 @@
         const today = new Date().toISOString().split('T')[0];
         const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
-        // Используем fbOnValue вместо fbGet
         window.fbOnValue(userRef, (snapshot) => {
             let userData = snapshot.exists() ? snapshot.val() : { 
                 id: myId, 
@@ -415,7 +414,6 @@
                 last_active: "" 
             };
 
-            // Логика обновления серии
             if (userData.last_active !== today) {
                 if (userData.last_active === yesterday) {
                     userData.streak = (userData.streak || 0) + 1;
@@ -424,20 +422,19 @@
                 }
                 userData.last_active = today;
                 
-                // Сохраняем обратно в Firebase
                 window.fbSet(userRef, userData);
             }
             
-            // Обновляем UI и локальное хранилище
-            document.getElementById('streak-count').innerText = userData.streak;
+            if (document.getElementById('streak-count')) {
+                document.getElementById('streak-count').innerText = userData.streak;
+            }
             localStorage.setItem('user_streak', userData.streak);
             localStorage.setItem('user_last_active', userData.last_active);
             
             resolve();
-        }, { onlyOnce: true }); // { onlyOnce: true } прочитает базу один раз, как нам и нужно
+        }, { onlyOnce: true });
     });
 }
-
     if (userData.last_active !== today) {
         if (userData.last_active === yesterday) {
             userData.streak = (userData.streak || 0) + 1;
