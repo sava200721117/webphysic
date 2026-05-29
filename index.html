@@ -497,86 +497,76 @@
             }
             
             if (screenId === 'screen-cards') {
-    document.getElementById('tab-cards').classList.add('active');
-} else if (screenId === 'screen-theory') {
-    document.getElementById('tab-theory').classList.add('active');
-} else if (screenId === 'screen-tasks') {
-    document.getElementById('tab-tasks').classList.add('active');
-} else if (screenId === 'screen-leaderboard') {
-    document.getElementById('tab-leaderboard').classList.add('active');
-    syncAndRenderLeaderboard();
-} else if (screenId === 'screen-profile') {
-    document.getElementById('tab-profile').classList.add('active');
-    updateUI();
-}
-function checkTask1() {
-    try {
-        // 1. Безопасный вызов вибрации Telegram (исправили возможный баг)
-        const tgApp = window.Telegram ? window.Telegram.WebApp : null;
-        if (tgApp && tgApp.HapticFeedback) {
-            tgApp.HapticFeedback.impactOccurred('medium');
-        }
-        
-        // 2. Получаем элементы страницы
-        const input = document.getElementById('task-1-input');
-        const feedback = document.getElementById('task-1-feedback');
-        const solution = document.getElementById('task-1-solution');
-        
-        // Проверка: нашли ли мы элементы вообще
-        if (!input || !feedback || !solution) {
-            alert("Ошибка: Элементы задачи не найдены в HTML!");
-            return;
-        }
-        
-        const userAnswer = input.value.trim();
-        
-        // 3. Проверка на пустой ввод
-        if (userAnswer === "") {
-            feedback.style.display = "block";
-            feedback.style.color = "#ff3b30";
-            feedback.innerText = "Введите ответ!";
-            return;
-        }
-        
-        // Показываем блоки фидбека и решения
-        feedback.style.display = "block";
-        solution.style.display = "block"; 
-        
-        // 4. Проверяем ответ (50)
-        if (userAnswer === "50") {
-            feedback.style.color = "#34c759";
-            feedback.innerText = "🎉 Правильно! +20 XP";
-            
-            let currentXp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
-            
-            // Защита от повторного начисления
-            if (!localStorage.getItem('task_1_solved')) {
-                currentXp += 20;
-                localStorage.setItem('global_physics_xp', currentXp);
-                localStorage.setItem('task_1_solved', 'true');
-                
-                // Безопасно вызываем твои функции обновления UI
-                if (typeof updateUI_and_Push === 'function') {
-                    updateUI_and_Push();
-                } else if (typeof updateUI === 'function') {
-                    updateUI();
-                }
+                document.getElementById('tab-cards').classList.add('active');
+            } else if (screenId === 'screen-theory') {
+                document.getElementById('tab-theory').classList.add('active');
+            } else if (screenId === 'screen-tasks') {
+                document.getElementById('tab-tasks').classList.add('active');
+            } else if (screenId === 'screen-leaderboard') {
+                document.getElementById('tab-leaderboard').classList.add('active');
+                syncAndRenderLeaderboard();
+            } else if (screenId === 'screen-profile') {
+                document.getElementById('tab-profile').classList.add('active');
+                updateUI();
             }
-        } else {
-            feedback.style.color = "#ff3b30";
-            feedback.innerText = "❌ Неверно. Изучи решение ниже.";
-        }
-    } catch (error) {
-        // Если код споткнется, он не замолчит, а покажет ошибку на экране
-        alert("Критическая ошибка в скрипте: " + error.message);
-    }
-}
             
-           
-
             localStorage.setItem('current_screen', screenId);
-            
             window.scrollTo(0, 0);
+        } // <-- Закрыли navigateTo здесь!
+
+        // ТЕПЕРЬ checkTask1 СТОИТ ОТДЕЛЬНО И РАБОТАЕТ ГЛОБАЛЬНО
+        function checkTask1() {
+            try {
+                const tgApp = window.Telegram ? window.Telegram.WebApp : null;
+                if (tgApp && tgApp.HapticFeedback) {
+                    tgApp.HapticFeedback.impactOccurred('medium');
+                }
+                
+                const input = document.getElementById('task-1-input');
+                const feedback = document.getElementById('task-1-feedback');
+                const solution = document.getElementById('task-1-solution');
+                
+                if (!input || !feedback || !solution) {
+                    alert("Ошибка: Элементы задачи не найдены в HTML!");
+                    return;
+                }
+                
+                const userAnswer = input.value.trim();
+                
+                if (userAnswer === "") {
+                    feedback.style.display = "block";
+                    feedback.style.color = "#ff3b30";
+                    feedback.innerText = "Введите ответ!";
+                    return;
+                }
+                
+                feedback.style.display = "block";
+                solution.style.display = "block"; 
+                
+                if (userAnswer === "50") {
+                    feedback.style.color = "#34c759";
+                    feedback.innerText = "🎉 Правильно! +20 XP";
+                    
+                    let currentXp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
+                    
+                    if (!localStorage.getItem('task_1_solved')) {
+                        currentXp += 20;
+                        localStorage.setItem('global_physics_xp', currentXp);
+                        localStorage.setItem('task_1_solved', 'true');
+                        
+                        if (typeof updateUI_and_Push === 'function') {
+                            updateUI_and_Push();
+                        } else if (typeof updateUI === 'function') {
+                            updateUI();
+                        }
+                    }
+                } else {
+                    feedback.style.color = "#ff3b30";
+                    feedback.innerText = "❌ Неверно. Изучи решение ниже.";
+                }
+            } catch (error) {
+                alert("Критическая ошибка в скрипте: " + error.message);
+            }
         }
 
         function updateUI() {
