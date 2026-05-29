@@ -510,47 +510,65 @@
     updateUI();
 }
 function checkTask1() {
-    if (window.tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-    
-    const input = document.getElementById('task-1-input');
-    const feedback = document.getElementById('task-1-feedback');
-    const solution = document.getElementById('task-1-solution');
-    
-    const userAnswer = input.value.trim();
-    
-    if (userAnswer === "") {
-        feedback.style.display = "block";
-        feedback.style.color = "#ff3b30";
-        feedback.innerText = "Введите ответ!";
-        return;
-    }
-    
-    feedback.style.display = "block";
-    solution.style.display = "block"; // Показываем разбор в любом случае
-    
-    if (userAnswer === "50") { // Теперь правильный ответ 50
-        feedback.style.color = "#34c759";
-        feedback.innerText = "🎉 Правильно! +20 XP";
-        
-        // Логика начисления XP в твоем стиле
-        let currentXp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
-        
-        // Проверяем, решал ли уже, чтобы не абузили бесконечным вводом
-        if (!localStorage.getItem('task_1_solved')) {
-            currentXp += 20;
-            localStorage.setItem('global_physics_xp', currentXp);
-            localStorage.setItem('task_1_solved', 'true');
-            
-            // Отправляем обновленный опыт в UI и Firebase через твои готовые функции
-            if (typeof updateUI_and_Push === 'function') {
-                updateUI_and_Push();
-            } else if (typeof updateUI === 'function') {
-                updateUI();
-            }
+    try {
+        // 1. Безопасный вызов вибрации Telegram (исправили возможный баг)
+        const tgApp = window.Telegram ? window.Telegram.WebApp : null;
+        if (tgApp && tgApp.HapticFeedback) {
+            tgApp.HapticFeedback.impactOccurred('medium');
         }
-    } else {
-        feedback.style.color = "#ff3b30";
-        feedback.innerText = "❌ Неверно. Изучи решение ниже.";
+        
+        // 2. Получаем элементы страницы
+        const input = document.getElementById('task-1-input');
+        const feedback = document.getElementById('task-1-feedback');
+        const solution = document.getElementById('task-1-solution');
+        
+        // Проверка: нашли ли мы элементы вообще
+        if (!input || !feedback || !solution) {
+            alert("Ошибка: Элементы задачи не найдены в HTML!");
+            return;
+        }
+        
+        const userAnswer = input.value.trim();
+        
+        // 3. Проверка на пустой ввод
+        if (userAnswer === "") {
+            feedback.style.display = "block";
+            feedback.style.color = "#ff3b30";
+            feedback.innerText = "Введите ответ!";
+            return;
+        }
+        
+        // Показываем блоки фидбека и решения
+        feedback.style.display = "block";
+        solution.style.display = "block"; 
+        
+        // 4. Проверяем ответ (50)
+        if (userAnswer === "50") {
+            feedback.style.color = "#34c759";
+            feedback.innerText = "🎉 Правильно! +20 XP";
+            
+            let currentXp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
+            
+            // Защита от повторного начисления
+            if (!localStorage.getItem('task_1_solved')) {
+                currentXp += 20;
+                localStorage.setItem('global_physics_xp', currentXp);
+                localStorage.setItem('task_1_solved', 'true');
+                
+                // Безопасно вызываем твои функции обновления UI
+                if (typeof updateUI_and_Push === 'function') {
+                    updateUI_and_Push();
+                } else if (typeof updateUI === 'function') {
+                    updateUI();
+                }
+            }
+        } else {
+            feedback.style.color = "#ff3b30";
+            feedback.innerText = "❌ Неверно. Изучи решение ниже.";
+        }
+    } catch (error) {
+        // Если код споткнется, он не замолчит, а покажет ошибку на экране
+        alert("Критическая ошибка в скрипте: " + error.message);
     }
 }
             
