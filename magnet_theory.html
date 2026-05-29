@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Магнитные явления — Теория ЕГЭ</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    
+    <style>
+        :root {
+            --bg-main: #ffffff;
+            --bg-secondary: #fdfdfd;
+            --text-main: #000000;
+            --text-muted: #8e8e93;
+            --border-color: #e5e5e5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+            padding-top: 75px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 440px;
+            height: 55px;
+            background-color: rgba(255, 255, 255, 0.92);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 0;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 36px;
+            margin-bottom: 14px;
+            letter-spacing: -0.3px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 10px;
+            color: #1c1c1e;
+        }
+
+        p {
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .formula-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 20px;
+            margin: 16px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+        }
+
+        .formula-expression {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .variables-list {
+            font-size: 13px;
+            color: #3a3a3c;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .variables-list div {
+            margin-bottom: 4px;
+        }
+
+        .example-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007aff;
+            padding: 12px 16px;
+            border-radius: 4px 16px 16px 4px;
+            font-size: 14px;
+            margin-top: 12px;
+            color: #2c2c2e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            color: #007aff;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .important-note {
+            background-color: var(--bg-secondary);
+            border: 1px solid #ff9500;
+            padding: 16px;
+            border-radius: 24px;
+            font-size: 14px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-nav">
+        <button class="back-btn">
+            <svg width="10" height="18" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-top: -2px;">
+                <path d="M10.5 1.5L1.5 10.5L10.5 19.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Назад
+        </button>
+    </div>
+
+    <h1>Магнитные явления</h1>
+    <div class="subtitle">Изучаем магнитный поток, индукцию и катушки</div>
+
+    <h2>1. Магнитный поток</h2>
+    <p><b>Магнитный поток</b> — это величина, показывающая, сколько линий магнитной индукции пронизывает определенную площадь контура.</p>
+    
+    <div class="formula-card">
+        <div class="formula-expression">Ф = B · S · cos(α)</div>
+        <div class="variables-list">
+            <div>• <b>Ф</b> — магнитный поток (Вебер, Вб)</div>
+            <div>• <b>B</b> — индукция магнитного поля (Тесла, Тл)</div>
+            <div>• <b>S</b> — площадь контура (м²)</div>
+            <div>• <b>α</b> — угол МЕЖДУ вектором B и нормалью (перпендикуляром) к плоскости контура</div>
+        </div>
+        <div class="example-box">
+            <div class="example-title">Главная ловушка ЕГЭ!</div>
+            В задачах часто дают угол между вектором поля и <b>самой плоскостью</b> рамки (пусть это будет β). Тогда в формулу нужно подставлять угол <b>α = 90° - β</b>. Не попадись на этом!
+        </div>
+    </div>
+
+    <h2>2. Электромагнитная индукция</h2>
+    <p>Явление возникновения электрического тока в замкнутом контуре при изменении магнитного потока, проходящего через него.</p>
+
+    <div class="formula-card">
+        <div class="formula-expression">ℰᵢ = |ΔФ / Δt|</div>
+        <p><b>Закон Фарадея:</b> ЭДС индукции в замкнутом контуре равна скорости изменения магнитного потока через этот контур.</p>
+        <div class="variables-list">
+            <div>• <b>ℰᵢ</b> — ЭДС индукции (Вольты, В)</div>
+            <div>• <b>ΔФ</b> — изменение магнитного потока (Вб)</div>
+            <div>• <b>Δt</b> — промежуток времени (секунды, с)</div>
+        </div>
+    </div>
+
+    <div class="important-note">
+        <b>Правило Ленца:</b> Возникающий в замкнутом контуре индукционный ток своим магнитным полем направлен так, что всегда ПРОТИВОДЕЙСТВУЕТ изменению магнитного потока, которым он вызван.
+    </div>
+
+    <h2>3. Самоиндукция и индуктивность</h2>
+    <p><b>Самоиндукция</b> — это частный случай электромагнитной индукции, когда меняющийся ток в катушке создает меняющееся магнитное поле, которое бьет по этой же самой катушке.</p>
+
+    <div class="formula-card">
+        <div class="formula-expression">Ф = L · I</div>
+        <p><b>Собственный магнитный поток:</b> ток, текущий через катушку, пропорционален магнитному потоку, который он создает.</p>
+        <div class="variables-list">
+            <div>• <b>Ф</b> — собственный магнитный поток (Вб)</div>
+            <div>• <b>L</b> — индуктивность катушки (Генри, Гн)</div>
+            <div>• <b>I</b> — сила тока в катушке (А)</div>
+        </div>
+    </div>
+
+    <div class="formula-card">
+        <div class="formula-expression">Wₘ = (L · I²) / 2</div>
+        <p><b>Энергия магнитного поля катушки:</b> когда по катушке течет ток, вокруг нее запасается чистая энергия.</p>
+        <div class="variables-list">
+            <div>• <b>Wₘ</b> — энергия магнитного поля (Джоули, Дж)</div>
+            <div>• <b>L</b> — индуктивность (Гн)</div>
+            <div>• <b>I</b> — сила тока (А)</div>
+        </div>
+        <div class="example-box">
+            <div class="example-title">Жизненный пример</div>
+            Когда ты резко выдергиваешь вилку мощного обогревателя из розетки, иногда проскакивает искра. Это работает самоиндукция: катушка (проводка) за счет накопленной энергии магнитного поля $W_m$ пытается удержать исчезающий ток.
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram ? window.Telegram.WebApp : null;
+        
+        document.querySelector('.back-btn').addEventListener('click', () => {
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            window.location.href = 'index.html'; 
+        });
+    </script>
+</body>
+</html>
