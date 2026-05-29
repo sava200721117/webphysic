@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Электродинамика — Теория ЕГЭ</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    
+    <style>
+        :root {
+            --bg-main: #ffffff;
+            --bg-secondary: #fdfdfd;
+            --text-main: #000000;
+            --text-muted: #8e8e93;
+            --border-color: #e5e5e5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+            padding-top: 75px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 440px;
+            height: 55px;
+            background-color: rgba(255, 255, 255, 0.92);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 0;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 36px;
+            margin-bottom: 14px;
+            letter-spacing: -0.3px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 10px;
+            color: #1c1c1e;
+        }
+
+        p {
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .formula-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 20px;
+            margin: 16px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+        }
+
+        .formula-expression {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .variables-list {
+            font-size: 13px;
+            color: #3a3a3c;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .variables-list div {
+            margin-bottom: 4px;
+        }
+
+        .example-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007aff;
+            padding: 12px 16px;
+            border-radius: 4px 16px 16px 4px;
+            font-size: 14px;
+            margin-top: 12px;
+            color: #2c2c2e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            color: #007aff;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .important-note {
+            background-color: var(--bg-secondary);
+            border: 1px solid #ff9500;
+            padding: 16px;
+            border-radius: 24px;
+            font-size: 14px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-nav">
+        <button class="back-btn">
+            <svg width="10" height="18" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-top: -2px;">
+                <path d="M10.5 1.5L1.5 10.5L10.5 19.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Назад
+        </button>
+    </div>
+
+    <h1>Электродинамика</h1>
+    <div class="subtitle">Изучаем заряды, электрические цепи и магнитные поля</div>
+
+    <h2>1. Электростатика</h2>
+    <p><b>Электростатика</b> изучает свойства и взаимодействия неподвижных электрических зарядов в пространстве.</p>
+    
+    <div class="formula-card">
+        <div class="formula-expression">F = k · (|q₁| · |q₂|) / r²</div>
+        <p><b>Закон Кулона:</b> определяет силу взаимодействия двух неподвижных точечных зарядов в вакууме.</p>
+        <div class="variables-list">
+            <div>• <b>F</b> — сила Кулона (Ньютоны, Н)</div>
+            <div>• <b>q₁, q₂</b> — модули величин зарядов (Кулоны, Кл)</div>
+            <div>• <b>r</b> — расстояние между зарядами (метры, м)</div>
+            <div>• <b>k</b> — коэффициент пропорциональности (9 · 10⁹ Н·м²/Кл²)</div>
+        </div>
+        <div class="example-box">
+            <div class="example-title">Жизненный пример</div>
+            Если потереть пластиковую линейку о шерстяной свитер, она зарядится электронами и начнет притягивать к себе мелкие кусочки бумаги. Это и есть проявление силы Кулона.
+        </div>
+    </div>
+
+    <h3>Напряженность поля</h3>
+    <p>Силовая характеристика электрического поля. Показывает, с какой силой поле действует на внесенный в него заряд.</p>
+
+    <div class="formula-card">
+        <div class="formula-expression">E = F / q</div>
+        <div class="variables-list">
+            <div>• <b>E</b> — напряженность электрического поля (В/м или Н/Кл)</div>
+            <div>• <b>F</b> — кулоновская сила (Н)</div>
+            <div>• <b>q</b> — величина пробного заряда (Кл)</div>
+        </div>
+        <div class="example-box">
+            <div class="example-title">Ловушка ЕГЭ</div>
+            Направление вектора <b>E</b> всегда совпадает с силой, действующей на ПОЛОЖИТЕЛЬНЫЙ заряд. Если заряд отрицательный (например, электрон), сила будет направлена противоположно вектору поля!
+        </div>
+    </div>
+
+    <h2>2. Постоянный ток</h2>
+    <p>Электрическим током называется упорядоченное (направленное) движение заряженных частиц.</p>
+    
+    <div class="formula-card">
+        <div class="formula-expression">I = U / R</div>
+        <p><b>Закон Ома для участка цепи:</b> сила тока в участке цепи прямо пропорциональна напряжению на его концах и обратно пропорциональна сопротивлению.</p>
+        <div class="variables-list">
+            <div>• <b>I</b> — сила тока (Амперы, А)</div>
+            <div>• <b>U</b> — электрическое напряжение (Вольты, В)</div>
+            <div>• <b>R</b> — электрическое сопротивление (Омы, Ом)</div>
+        </div>
+    </div>
+
+    <div class="important-note">
+        <b>Закон Джоуля-Ленца:</b> Количество теплоты, выделяемое проводником с током, прямо пропорционально квадрату силы тока, сопротивлению проводника и времени протекания тока.<br>
+        <span style="display: block; text-align: center; font-weight: 700; margin-top: 6px; font-size: 18px;">Q = I² · R · t</span>
+    </div>
+
+    <h2>3. Магнитное поле</h2>
+    <p>Особая форма материи, которая создается движущимися электрическими зарядами или переменным электрическим полем.</p>
+
+    <div class="formula-card">
+        <div class="formula-expression">F = B · I · L · sin(α)</div>
+        <p><b>Сила Ампера:</b> сила, с которой магнитное поле действует на проводник с током, помещенный в это поле.</p>
+        <div class="variables-list">
+            <div>• <b>F</b> — сила Ампера (Н)</div>
+            <div>• <b>B</b> — модуль вектора магнитной индукции (Тесла, Тл)</div>
+            <div>• <b>I</b> — сила тока в проводнике (А)</div>
+            <div>• <b>L</b> — длина активной части проводника (м)</div>
+            <div>• <b>α</b> — угол между направлением тока и вектором индукции B</div>
+        </div>
+        <div class="example-box">
+            <div class="example-title">Правило левой руки</div>
+            Направление силы Ампера ищут по левой руке: линии индукции B входят в ладонь, 4 пальца направляем по току проводника, тогда отогнутый на 90° большой палец укажет силу.
+        </div>
+    </div>
+
+    <div class="formula-card">
+        <div class="formula-expression">F = q · v · B · sin(α)</div>
+        <p><b>Сила Лоренца:</b> сила, действующая со стороны магнитного поля на отдельную движущуюся заряженную частицу.</p>
+        <div class="variables-list">
+            <div>• <b>F</b> — сила Лоренца (Н)</div>
+            <div>• <b>q</b> — электрический заряд частицы (Кл)</div>
+            <div>• <b>v</b> — скорость движения частицы (м/с)</div>
+            <div>• <b>B</b> — магнитная индукция (Тл)</div>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram ? window.Telegram.WebApp : null;
+        
+        document.querySelector('.back-btn').addEventListener('click', () => {
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            window.location.href = 'index.html'; 
+        });
+    </script>
+</body>
+</html>
