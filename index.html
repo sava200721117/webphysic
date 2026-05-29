@@ -372,6 +372,9 @@
                 updateUI();
             }
             
+            // Вставляешь ровно сюда:
+            localStorage.setItem('current_screen', screenId);
+            
             window.scrollTo(0, 0);
         }
 
@@ -544,11 +547,17 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.tg = window.Telegram.WebApp;
-                if (typeof tg.ready === 'function') tg.ready();
-                if (typeof tg.expand === 'function') tg.expand();
-            }
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.tg = window.Telegram.WebApp;
+        if (typeof tg.ready === 'function') tg.ready();
+        if (typeof tg.expand === 'function') tg.expand();
+    }
+
+    // Вставляешь ровно сюда:
+    let savedScreen = localStorage.getItem('current_screen') || 'screen-cards';
+    navigateTo(savedScreen);
+
+    
 
             let myId = "local_user_id";
             if (window.tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
