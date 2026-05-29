@@ -136,6 +136,81 @@
         }
         .tab-item.active { color: #000000; font-weight: 700; }
         .tab-icon { font-size: 22px; }
+        /* Стили для экрана задач */
+        .task-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+        }
+        .task-tag {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .task-text {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+        .task-input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .task-input {
+            flex: 1;
+            height: 46px;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0 16px;
+            font-size: 16px;
+            outline: none;
+            font-family: inherit;
+            background: #ffffff;
+        }
+        .task-input:focus {
+            border-color: #000000;
+        }
+        .task-btn {
+            height: 46px;
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            padding: 0 24px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        .task-btn:active {
+            transform: scale(0.96);
+        }
+        .task-feedback {
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 10px;
+            display: none;
+        }
+        .task-solution {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 14px;
+            line-height: 1.4;
+            display: none;
+        }
+        .task-solution-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
     </style>
 
     <script type="module">
@@ -217,6 +292,39 @@
                 </div>
             </div>
         </div>
+
+        <div id="screen-tasks" class="screen">
+    <div class="header">
+        <h1>Задачи</h1>
+        <p>Практикуйся и зарабатывай XP</p>
+    </div>
+    
+    <div class="task-card" id="task-1">
+        <div class="task-tag">Механика | Задание 1</div>
+        <div class="task-text">
+            На рисунке представлен график зависимости модуля скорости $\upsilon$ тела от времени $t$. Определите путь, пройденный телом в интервале времени от 0 до 4 с.
+            <br><br>
+            <i>(Представь, что тут график, где скорость равномерно растет от 0 до 10 м/с за 4 секунды. Путь — площадь треугольника).</i>
+        </div>
+        
+        <div class="task-input-group">
+            <input type="number" class="task-input" id="task-1-input" placeholder="Ответ (число)">
+            <button class="task-btn" onclick="checkTask1()">Ответить</button>
+        </div>
+        
+        <div class="task-feedback" id="task-1-feedback"></div>
+        
+        <div class="task-solution" id="task-1-solution">
+            <div class="task-solution-title">📖 Решение:</div>
+            В интервале времени от 0 до 4 с скорость тела линейно увеличивается от 0 до 10 м/с. 
+            Путь численно равен площади фигуры под графиком. В данном случае это прямоугольный треугольник с катетами 4 с и 10 м/с.
+            <br>
+            $$S = \frac{1}{2} \cdot a \cdot b = \frac{1}{2} \cdot 4 \cdot 10 = 20\text{ м}.$$
+            <br>
+            <strong>Правильный ответ: 20</strong>
+        </div>
+    </div>
+</div>
 
         <div id="screen-theory" class="screen">
             <div class="header">
@@ -322,23 +430,27 @@
     </div>
 
     <div class="tab-bar">
-        <div id="tab-cards" class="tab-item active" onclick="navigateTo('screen-cards')">
-            <span class="tab-icon">📚</span>
-            <span>Карточки</span>
-        </div>
-        <div id="tab-theory" class="tab-item" onclick="navigateTo('screen-theory')">
-            <span class="tab-icon">📖</span>
-            <span>Теория</span>
-        </div>
-        <div id="tab-leaderboard" class="tab-item" onclick="navigateTo('screen-leaderboard')">
-            <span class="tab-icon">🏆</span>
-            <span>Рейтинг</span>
-        </div>
-        <div id="tab-profile" class="tab-item" onclick="navigateTo('screen-profile')">
-            <span class="tab-icon">👤</span>
-            <span>Профиль</span>
-        </div>
+    <div id="tab-cards" class="tab-item active" onclick="navigateTo('screen-cards')">
+        <span class="tab-icon">📚</span>
+        <span>Карточки</span>
     </div>
+    <div id="tab-theory" class="tab-item" onclick="navigateTo('screen-theory')">
+        <span class="tab-icon">📖</span>
+        <span>Теория</span>
+    </div>
+    <div id="tab-tasks" class="tab-item" onclick="navigateTo('screen-tasks')">
+        <span class="tab-icon">🎯</span>
+        <span>Задачи</span>
+    </div>
+    <div id="tab-leaderboard" class="tab-item" onclick="navigateTo('screen-leaderboard')">
+        <span class="tab-icon">🏆</span>
+        <span>Рейтинг</span>
+    </div>
+    <div id="tab-profile" class="tab-item" onclick="navigateTo('screen-profile')">
+        <span class="tab-icon">👤</span>
+        <span>Профиль</span>
+    </div>
+</div>
 
     <script>
         const tg = window.Telegram ? window.Telegram.WebApp : null;
@@ -361,18 +473,65 @@
             }
             
             if (screenId === 'screen-cards') {
-                document.getElementById('tab-cards').classList.add('active');
-            } else if (screenId === 'screen-theory') {
-                document.getElementById('tab-theory').classList.add('active');
-            } else if (screenId === 'screen-leaderboard') {
-                document.getElementById('tab-leaderboard').classList.add('active');
-                syncAndRenderLeaderboard();
-            } else if (screenId === 'screen-profile') {
-                document.getElementById('tab-profile').classList.add('active');
+    document.getElementById('tab-cards').classList.add('active');
+} else if (screenId === 'screen-theory') {
+    document.getElementById('tab-theory').classList.add('active');
+} else if (screenId === 'screen-tasks') {
+    document.getElementById('tab-tasks').classList.add('active');
+} else if (screenId === 'screen-leaderboard') {
+    document.getElementById('tab-leaderboard').classList.add('active');
+    syncAndRenderLeaderboard();
+} else if (screenId === 'screen-profile') {
+    document.getElementById('tab-profile').classList.add('active');
+    updateUI();
+}
+function checkTask1() {
+    if (window.tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+    
+    const input = document.getElementById('task-1-input');
+    const feedback = document.getElementById('task-1-feedback');
+    const solution = document.getElementById('task-1-solution');
+    
+    const userAnswer = input.value.trim();
+    
+    if (userAnswer === "") {
+        feedback.style.display = "block";
+        feedback.style.color = "#ff3b30";
+        feedback.innerText = "Введите ответ!";
+        return;
+    }
+    
+    feedback.style.display = "block";
+    solution.style.display = "block"; // Показываем разбор в любом случае
+    
+    if (userAnswer === "20") {
+        feedback.style.color = "#34c759";
+        feedback.innerText = "🎉 Правильно! +20 XP";
+        
+        // Логика начисления XP в твоем стиле
+        let currentXp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
+        
+        // Проверяем, решал ли уже, чтобы не абузили бесконечным вводом
+        if (!localStorage.getItem('task_1_solved')) {
+            currentXp += 20;
+            localStorage.setItem('global_physics_xp', currentXp);
+            localStorage.setItem('task_1_solved', 'true');
+            
+            // Отправляем обновленный опыт в UI и Firebase через твои готовые функции
+            if (typeof updateUI_and_Push === 'function') {
+                updateUI_and_Push();
+            } else if (typeof updateUI === 'function') {
                 updateUI();
             }
+        }
+    } else {
+        feedback.style.color = "#ff3b30";
+        feedback.innerText = "❌ Неверно. Изучи решение ниже.";
+    }
+}
             
-            // Вставляешь ровно сюда:
+           
+
             localStorage.setItem('current_screen', screenId);
             
             window.scrollTo(0, 0);
