@@ -163,9 +163,11 @@
             display: flex;
             gap: 12px;
             margin-bottom: 14px;
+            width: 100%;
         }
         .task-input {
             flex: 1;
+            min-width: 0; /* Не дает инпуту раздувать флекс-контейнер */
             height: 46px;
             border: 1px solid var(--border-color);
             border-radius: 14px;
@@ -184,10 +186,11 @@
             color: #ffffff;
             border: none;
             border-radius: 14px;
-            padding: 0 24px;
+            padding: 0 16px; /* Уменьшили с 24px до 16px, чтобы кнопка была компактнее */
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
+            flex-shrink: 0; /* Запрещает кнопке сжиматься и ломать текст */
             transition: transform 0.1s ease;
         }
         .task-btn:active {
@@ -322,11 +325,7 @@
     <div class="task-card" id="task-1">
         <div class="task-tag">Механика | Задание 1</div>
         <div class="task-text">
-            На рисунке представлен график зависимости модуля скорости <var>v</var> тела от времени <var>t</var>. Определите путь, пройденный телом в интервале времени от 0 до 4 с.
-            <br><br>
-            <span style="color: var(--text-muted); font-size: 14px;">
-                <i>(Представь, что тут график, где скорость равномерно растет от 0 до 10 м/с за 4 секунды. Путь — площадь треугольника).</i>
-            </span>
+            Автомобиль, двигаясь со скоростью <var>v</var><sub>0</sub> = 20 м/с, начинает тормозить с постоянным ускорением и полностью останавливается через время <var>t</var> = 5 с. Определите тормозной путь автомобиля (в метрах).
         </div>
         
         <div class="task-input-group">
@@ -338,12 +337,15 @@
         
         <div class="task-solution" id="task-1-solution">
             <div class="task-solution-title">📖 Решение:</div>
-            В интервале времени от 0 до 4 с скорость тела линейно увеличивается от 0 до 10 м/с. 
-            Путь численно равен площади фигуры под графиком. В данном случае это прямоугольный треугольник с катетами 4 с и 10 м/с.
+            При равнозамедленном движении до полной остановки пройденный путь удобнее всего найти через среднюю скорость:
             <div class="formula-block">
-                <var>S</var> = <sup>1</sup>&frasl;<sub>2</sub> &middot; <var>a</var> &middot; <var>b</var> = <sup>1</sup>&frasl;<sub>2</sub> &middot; 4 &middot; 10 = 20 м
+                <var>S</var> = <var>v</var><sub>ср</sub> &middot; <var>t</var> = <sup>(<var>v</var><sub>0</sub> + <var>v</var>)</sup>&frasl;<sub>2</sub> &middot; <var>t</var>
             </div>
-            <strong>Правильный ответ: 20</strong>
+            Так как автомобиль полностью остановился, конечная скорость <var>v</var> = 0 м/с. Подставим числа:
+            <div class="formula-block">
+                <var>S</var> = <sup>(20 + 0)</sup>&frasl;<sub>2</sub> &middot; 5 = 10 &middot; 5 = 50 м
+            </div>
+            <strong>Правильный ответ: 50</strong>
         </div>
     </div>
 </div>
@@ -526,7 +528,7 @@ function checkTask1() {
     feedback.style.display = "block";
     solution.style.display = "block"; // Показываем разбор в любом случае
     
-    if (userAnswer === "20") {
+    if (userAnswer === "50") { // Теперь правильный ответ 50
         feedback.style.color = "#34c759";
         feedback.innerText = "🎉 Правильно! +20 XP";
         
