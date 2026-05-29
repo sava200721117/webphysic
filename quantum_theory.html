@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Квантовая физика — Теория ЕГЭ</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    
+    <style>
+        :root {
+            --bg-main: #ffffff;
+            --bg-secondary: #fdfdfd;
+            --text-main: #000000;
+            --text-muted: #8e8e93;
+            --border-color: #e5e5e5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+            padding-top: 75px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 440px;
+            height: 55px;
+            background-color: rgba(255, 255, 255, 0.92);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 0;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 36px;
+            margin-bottom: 14px;
+            letter-spacing: -0.3px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        p {
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .formula-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 20px;
+            margin: 16px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+        }
+
+        .formula-expression {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .variables-list {
+            font-size: 13px;
+            color: #3a3a3c;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .variables-list div {
+            margin-bottom: 4px;
+        }
+
+        .example-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007aff;
+            padding: 12px 16px;
+            border-radius: 4px 16px 16px 4px;
+            font-size: 14px;
+            margin-top: 12px;
+            color: #2c2c2e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            color: #007aff;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .important-note {
+            background-color: var(--bg-secondary);
+            border: 1px solid #ff9500;
+            padding: 16px;
+            border-radius: 24px;
+            font-size: 14px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-nav">
+        <button class="back-btn">
+            <svg width="10" height="18" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-top: -2px;">
+                <path d="M10.5 1.5L1.5 10.5L10.5 19.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Назад
+        </button>
+    </div>
+
+    <h1>Квантовая физика</h1>
+    <div class="subtitle">Изучаем кванты света, фотоэффект и физику атомного ядра</div>
+
+    <h2>1. Свойства фотона</h2>
+    <p><b>Фотон</b> — это элементарная частица, квант электромагнитного излучения. У него нет массы покоя, но есть энергия и импульс.</p>
+    
+    <div class="formula-card">
+        <div class="formula-expression">E = h · ν = (h · c) / λ</div>
+        <p><b>Энергия фотона:</b> прямо пропорциональна частоте света и обратно пропорциональна длине волны.</p>
+        <div class="variables-list">
+            <div>• <b>E</b> — энергия фотона (Джоули, Дж)</div>
+            <div>• <b>h</b> — постоянная Планка (справочная величина)</div>
+            <div>• <b>ν</b> (ню) — частота света (Герц, Гц)</div>
+            <div>• <b>c</b> — скорость света в вакууме (3 · 10⁸ м/с)</div>
+            <div>• <b>λ</b> (лямбда) — длина волны (метры, м)</div>
+        </div>
+    </div>
+
+    <div class="formula-card">
+        <div class="formula-expression">p = E / c = h / λ</div>
+        <p><b>Импульс фотона:</b> несмотря на отсутствие массы, фотон обладает импульсом и может оказывать давление на препятствия.</p>
+        <div class="variables-list">
+            <div>• <b>p</b> — импульс фотона (кг · м/с)</div>
+        </div>
+    </div>
+
+    <h2>2. Фотоэффект</h2>
+    <p>Явление испускания электронов веществом под действием падающего на него света.</p>
+
+    <div class="formula-card">
+        <div class="formula-expression">Eф = Aвых + Eк_max</div>
+        <p><b>Уравнение Эйнштейна для фотоэффекта:</b> энергия падающего фотона тратится на совершение работы выхода электрона из металла и на его последующее движение (кинетическую энергию).</p>
+        <div class="variables-list">
+            <div>• <b>Eф</b> — энергия падающего фотона (Дж)</div>
+            <div>• <b>Aвых</b> — работа выхода электрона (зависит ТОЛЬКО от материала металла)</div>
+            <div>• <b>Eк_max</b> — максимальная кинетическая энергия вылетевшего электрона</div>
+        </div>
+        <div class="example-box">
+            <div class="example-title">Связь с напряжением</div>
+            Максимальную кинетическую энергию часто находят через запирающее напряжение: <b>Eк_max = e · Uз</b>, где <b>e</b> — заряд электрона, а <b>Uз</b> — запирающее напряжение.
+        </div>
+    </div>
+
+    <div class="important-note">
+        <b>Красная граница фотоэффекта:</b> минимальная частота ν₀ (или максимальная длина волны λ₀), при которой фотоэффект вообще ещё возможен. В этот момент кинетическая энергия равна нулю:<br>
+        <span style="display: block; text-align: center; font-weight: 700; margin-top: 6px; font-size: 18px;">Aвых = h · ν₀ = (h · c) / λ₀</span>
+    </div>
+
+    <h2>3. Физика ядра и распад</h2>
+    <p>Радиоактивность — это самопроизвольное превращение нестабильных атомных ядер в другие ядра с испусканием частиц.</p>
+
+    <div class="formula-card">
+        <div class="formula-expression">N = N₀ · 2^(-t / T)</div>
+        <p><b>Закон радиоактивного распада:</b> показывает, сколько ядер останется нераспавшимися через определенное время.</p>
+        <div class="variables-list">
+            <div>• <b>N</b> — число нераспавшихся ядер в момент времени t</div>
+            <div>• <b>N₀</b> — начальное число ядер (при t = 0)</div>
+            <div>• <b>t</b> — прошедшее время (секунды, дни, годы)</div>
+            <div>• <b>T</b> — период полураспада (время, за которое распадается ровно половина ядер)</div>
+        </div>
+        <div class="example-box">
+            <div class="example-title">Ловушка формулировки!</div>
+            Внимательно читай вопрос задачи. Тебя могут спросить: «Сколько ядер <b>осталось</b>?» (это N) или «Сколько ядер <b>распалось</b>?» (это N₀ - N). Не потеряй баллы из-за невнимательности!
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram ? window.Telegram.WebApp : null;
+        
+        document.querySelector('.back-btn').addEventListener('click', () => {
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            window.location.href = 'index.html'; 
+        });
+    </script>
+</body>
+</html>
