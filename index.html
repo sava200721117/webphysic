@@ -316,11 +316,14 @@
             </div>
         </div>
 
-        <div id="screen-tasks" class="screen">
+        <div id="screen-tasks" class="screen" style="display: none;">
     <div class="header">
         <h1>Задачи</h1>
         <p>Практикуйся и зарабатывай XP</p>
     </div>
+    
+    <div id="dynamic-task-container"></div>
+</div>
     
     <div class="task-card" id="task-1">
         <div class="task-tag">Механика | Задание 1</div>
@@ -516,58 +519,118 @@
 
         // ТЕПЕРЬ checkTask1 СТОИТ ОТДЕЛЬНО И РАБОТАЕТ ГЛОБАЛЬНО
         function checkTask1() {
-            try {
-                const tgApp = window.Telegram ? window.Telegram.WebApp : null;
-                if (tgApp && tgApp.HapticFeedback) {
-                    tgApp.HapticFeedback.impactOccurred('medium');
-                }
-                
-                const input = document.getElementById('task-1-input');
-                const feedback = document.getElementById('task-1-feedback');
-                const solution = document.getElementById('task-1-solution');
-                
-                if (!input || !feedback || !solution) {
-                    alert("Ошибка: Элементы задачи не найдены в HTML!");
-                    return;
-                }
-                
-                const userAnswer = input.value.trim();
-                
-                if (userAnswer === "") {
-                    feedback.style.display = "block";
-                    feedback.style.color = "#ff3b30";
-                    feedback.innerText = "Введите ответ!";
-                    return;
-                }
-                
-                feedback.style.display = "block";
-                solution.style.display = "block"; 
-                
-                if (userAnswer === "50") {
-                    feedback.style.color = "#34c759";
-                    feedback.innerText = "🎉 Правильно! +20 XP";
-                    
-                    let currentXp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
-                    
-                    if (!localStorage.getItem('task_1_solved')) {
-                        currentXp += 20;
-                        localStorage.setItem('global_physics_xp', currentXp);
-                        localStorage.setItem('task_1_solved', 'true');
-                        
-                        if (typeof updateUI_and_Push === 'function') {
-                            updateUI_and_Push();
-                        } else if (typeof updateUI === 'function') {
-                            updateUI();
-                        }
-                    }
-                } else {
-                    feedback.style.color = "#ff3b30";
-                    feedback.innerText = "❌ Неверно. Изучи решение ниже.";
-                }
-            } catch (error) {
-                alert("Критическая ошибка в скрипте: " + error.message);
-            }
+    try {
+        const tgApp = window.Telegram ? window.Telegram.WebApp : null;
+        if (tgApp && tgApp.HapticFeedback) {
+            tgApp.HapticFeedback.impactOccurred('medium');
         }
+        
+        const input = document.getElementById('task-1-input');
+        const feedback = document.getElementById('task-1-feedback');
+        const solution = document.getElementById('task-1-solution');
+        
+        if (!input || !feedback || !solution) {
+            alert("Ошибка: Элементы задачи не найдены в HTML!");
+            return;
+        }
+        
+        const userAnswer = input.value.trim();
+        
+        if (userAnswer === "") {
+            feedback.style.display = "block";
+            feedback.style.color = "#ff3b30";
+            feedback.innerText = "Введите ответ!";
+            return;
+        }
+        
+        feedback.style.display = "block";
+        solution.style.display = "block"; 
+        
+        if (userAnswer === "50") {
+            feedback.style.color = "#34c759";
+            feedback.innerText = "🎉 Правильно! +20 XP";
+            
+            let currentXp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
+            
+            if (!localStorage.getItem('task_1_solved')) {
+                currentXp += 20;
+                localStorage.setItem('global_physics_xp', currentXp);
+                localStorage.setItem('task_1_solved', 'true');
+                
+                if (typeof updateUI_and_Push === 'function') {
+                    updateUI_and_Push();
+                } else if (typeof updateUI === 'function') {
+                    updateUI();
+                }
+            }
+        } else {
+            feedback.style.color = "#ff3b30";
+            feedback.innerText = "❌ Неверно. Изучи решение ниже.";
+        }
+
+        // ========================================================
+        // ДОБАВЛЕНИЕ КНОПКИ "ДАЛЕЕ" ПОСЛЕ ОТВЕТА
+        // ========================================================
+        // Проверяем, чтобы кнопка не плодилась, если пользователь нажмет "Ответить" несколько раз
+        if (!document.getElementById('task-1-next-btn')) {
+            const nextBtn = document.createElement('button');
+            nextBtn.id = 'task-1-next-btn';
+            nextBtn.className = 'task-btn'; // Используем твой CSS-класс для кнопок
+            nextBtn.style.marginTop = '20px';
+            nextBtn.style.width = '100%';
+            nextBtn.style.background = '#34c759'; // Красивый зеленый цвет для перехода
+            nextBtn.style.color = '#fff';
+            nextBtn.innerText = 'Далее ➡️';
+            
+            // Навешиваем на кнопку функцию переключения задачи
+            nextBtn.onclick = function() {
+                goToNextTask();
+            };
+            
+            // Вставляем кнопку в самый конец блока с решением
+            solution.appendChild(nextBtn);
+        }
+        // ========================================================
+
+    } catch (error) {
+        alert("Критическая ошибка в скрипте: " + error.message);
+    }
+}
+function goToNextTask() {
+    // 1. Находим все элементы на странице, ID которых начинается с "task-"
+    const allTasks = document.querySelectorAll('[id^="task-"]');
+    let currentTaskNum = null;
+
+    // 2. Ищем, какая задача сейчас видна пользователю (у которой display не равен 'none')
+    for (let taskCard of allTasks) {
+        if (taskCard.style.display !== 'none') {
+            // Извлекаем чистый номер из ID (например, из "task-1" получаем число 1)
+            currentTaskNum = parseInt(taskCard.id.replace('task-', ''));
+            break;
+        }
+    }
+
+    // 3. Если открытая задача найдена, переключаем на следующую по порядку
+    if (currentTaskNum !== null) {
+        const currentTaskEl = document.getElementById(`task-${currentTaskNum}`);
+        const nextTaskEl = document.getElementById(`task-${currentTaskNum + 1}`);
+
+        if (nextTaskEl) {
+            currentTaskEl.style.display = 'none';  // Прячем текущую задачу
+            nextTaskEl.style.display = 'block';   // Показываем следующую (task-2, task-3 и т.д.)
+            
+            // Важная правка: скроллим экран в самый верх, чтобы юзер видел начало новой задачи
+            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+        } else {
+            // Если следующей задачи в HTML нет (например, прошли последнюю)
+            alert("🎉 Отличная работа! Ты прошёл все доступные на сегодня задачи.");
+        }
+    } else {
+        // Страховка: если вдруг все задачи оказались скрыты, покажем хотя бы первую
+        const firstTask = document.getElementById('task-1');
+        if (firstTask) firstTask.style.display = 'block';
+    }
+}
 
         function updateUI() {
             let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
