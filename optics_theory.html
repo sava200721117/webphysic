@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Оптика — Теория ЕГЭ</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    
+    <style>
+        :root {
+            --bg-main: #ffffff;
+            --bg-secondary: #fdfdfd;
+            --text-main: #000000;
+            --text-muted: #8e8e93;
+            --border-color: #e5e5e5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+            padding-top: 75px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .header-nav {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 440px;
+            height: 55px;
+            background-color: rgba(255, 255, 255, 0.92);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 0;
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-top: 36px;
+            margin-bottom: 14px;
+            letter-spacing: -0.3px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        h3 {
+            font-size: 17px;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 10px;
+            color: #1c1c1e;
+        }
+
+        p {
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .formula-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 20px;
+            margin: 16px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+        }
+
+        .formula-expression {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .variables-list {
+            font-size: 13px;
+            color: #3a3a3c;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .variables-list div {
+            margin-bottom: 4px;
+        }
+
+        .example-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007aff;
+            padding: 12px 16px;
+            border-radius: 4px 16px 16px 4px;
+            font-size: 14px;
+            margin-top: 12px;
+            color: #2c2c2e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            color: #007aff;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        .important-note {
+            background-color: var(--bg-secondary);
+            border: 1px solid #ff9500;
+            padding: 16px;
+            border-radius: 24px;
+            font-size: 14px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-nav">
+        <button class="back-btn">
+            <svg width="10" height="18" viewBox="0 0 12 21" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-top: -2px;">
+                <path d="M10.5 1.5L1.5 10.5L10.5 19.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Назад
+        </button>
+    </div>
+
+    <h1>Оптика</h1>
+    <div class="subtitle">Изучаем законы распространения света, линзы и волны</div>
+
+    <h2>1. Геометрическая оптика</h2>
+    <p>Базируется на понятии <b>светового луча</b> — линии, вдоль которой распространяется энергия световых волн.</p>
+    
+    <div class="formula-card">
+        <div class="formula-expression">sin(α) / sin(β) = n₂ / n₁</div>
+        <p><b>Закон Снеллиуса (преломление света):</b> описывает, как меняется направление луча при переходе из одной прозрачной среды в другую.</p>
+        <div class="variables-list">
+            <div>• <b>α</b> — угол падения луча (градусы)</div>
+            <div>• <b>β</b> — угол преломления луча (градусы)</div>
+            <div>• <b>n₁, n₂</b> — абсолютные показатели преломления первой и второй сред</div>
+        </div>
+        <div class="example-box">
+            <div class="example-title">Ловушка ЕГЭ</div>
+            Все углы в оптике (падения, отражения, преломления) всегда отсчитываются <b>от перпендикуляра</b> к поверхности в точке падения луча, а не от самой поверхности зеркала или стекла!
+        </div>
+    </div>
+
+    <div class="important-note">
+        <b>Полное внутреннее отражение:</b> наблюдается при переходе луча из более плотной среды в менее плотную (например, из воды в воздух), когда угол преломления достигает 90°. Формула предельного угла:<br>
+        <span style="display: block; text-align: center; font-weight: 700; margin-top: 6px; font-size: 18px;">sin(α₀) = n₂ / n₁</span>
+    </div>
+
+    <h2>2. Тонкие линзы</h2>
+    <p>Линза называется тонкой, если её толщина пренебрежимо мала по сравнению с радиусами кривизны её поверхностей.</p>
+
+    <div class="formula-card">
+        <div class="formula-expression">± D = 1/F = 1/d ± 1/f</div>
+        <p><b>Формула тонкой линзы:</b> связывает фокусное расстояние, расстояние до предмета и расстояние до изображения.</p>
+        <div class="variables-list">
+            <div>• <b>D</b> — оптическая сила линзы (Диоптрии, дптр)</div>
+            <div>• <b>F</b> — фокусное расстояние линзы (метры, м)</div>
+            <div>• <b>d</b> — расстояние от предмета до линзы (м)</div>
+            <div>• <b>f</b> — расстояние от линзы до изображения (м)</div>
+        </div>
+        <div class="example-box">
+            <div class="example-title">Правило знаков для задач</div>
+            • Перед <b>1/F</b> ставим <b>«+»</b> для собирающей линзы и <b>«-»</b> для рассеивающей.<br>
+            • Перед <b>1/f</b> ставим <b>«+»</b>, если изображение действительное, и <b>«-»</b>, если оно мнимое.
+        </div>
+    </div>
+
+    <div class="formula-card">
+        <div class="formula-expression">Γ = H / h = f / d</div>
+        <p><b>Линейное увеличение линзы:</b> отношение размеров изображения к истинным размерам предмета.</p>
+        <div class="variables-list">
+            <div>• <b>Γ</b> (Гамма) — увеличение линзы (безразмерная величина)</div>
+            <div>• <b>H</b> — высота изображения (м)</div>
+            <div>• <b>h</b> — высота самого предмета (м)</div>
+        </div>
+    </div>
+
+    <h2>3. Волновая оптика</h2>
+    <p>Рассматривает свет как электромагнитную волну, объясняя такие явления, как интерференция и дифракция.</p>
+
+    <div class="formula-card">
+        <div class="formula-expression">d · sin(φ) = k · λ</div>
+        <p><b>Формула дифракционной решетки:</b> определяет положение главных максимумов освещенности на экране при прохождении света через решетку.</p>
+        <div class="variables-list">
+            <div>• <b>d</b> — период (шаг) дифракционной решетки (м)</div>
+            <div>• <b>φ</b> — угол дифракции (под которым наблюдается максимум)</div>
+            <div>• <b>k</b> — порядок максимума (целое число: 0, 1, 2...)</div>
+            <div>• <b>λ</b> (Лямбда) — длина световой волны (м)</div>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram ? window.Telegram.WebApp : null;
+        
+        document.querySelector('.back-btn').addEventListener('click', () => {
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            window.location.href = 'index.html'; 
+        });
+    </script>
+</body>
+</html>
