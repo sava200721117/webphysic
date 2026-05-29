@@ -211,6 +211,26 @@
             font-weight: 700;
             margin-bottom: 6px;
         }
+        /* Стиль для физических переменных и формул */
+        var {
+            font-family: "Times New Roman", Times, serif;
+            font-style: italic;
+            font-weight: 600;
+            font-size: 18px;
+            padding: 0 2px;
+        }
+        .formula-block {
+            background: #f2f2f7;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 14px 0;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .formula-block sub, .formula-block sup {
+            font-size: 12px;
+        }
     </style>
 
     <script type="module">
@@ -302,9 +322,11 @@
     <div class="task-card" id="task-1">
         <div class="task-tag">Механика | Задание 1</div>
         <div class="task-text">
-            На рисунке представлен график зависимости модуля скорости $\upsilon$ тела от времени $t$. Определите путь, пройденный телом в интервале времени от 0 до 4 с.
+            На рисунке представлен график зависимости модуля скорости <var>v</var> тела от времени <var>t</var>. Определите путь, пройденный телом в интервале времени от 0 до 4 с.
             <br><br>
-            <i>(Представь, что тут график, где скорость равномерно растет от 0 до 10 м/с за 4 секунды. Путь — площадь треугольника).</i>
+            <span style="color: var(--text-muted); font-size: 14px;">
+                <i>(Представь, что тут график, где скорость равномерно растет от 0 до 10 м/с за 4 секунды. Путь — площадь треугольника).</i>
+            </span>
         </div>
         
         <div class="task-input-group">
@@ -318,9 +340,9 @@
             <div class="task-solution-title">📖 Решение:</div>
             В интервале времени от 0 до 4 с скорость тела линейно увеличивается от 0 до 10 м/с. 
             Путь численно равен площади фигуры под графиком. В данном случае это прямоугольный треугольник с катетами 4 с и 10 м/с.
-            <br>
-            $$S = \frac{1}{2} \cdot a \cdot b = \frac{1}{2} \cdot 4 \cdot 10 = 20\text{ м}.$$
-            <br>
+            <div class="formula-block">
+                <var>S</var> = <sup>1</sup>&frasl;<sub>2</sub> &middot; <var>a</var> &middot; <var>b</var> = <sup>1</sup>&frasl;<sub>2</sub> &middot; 4 &middot; 10 = 20 м
+            </div>
             <strong>Правильный ответ: 20</strong>
         </div>
     </div>
