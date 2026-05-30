@@ -136,7 +136,7 @@
         }
         .tab-item.active { color: #000000; font-weight: 700; }
         .tab-icon { font-size: 22px; }
-        /* Стили для экрана задач */
+        
         .task-card {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -167,7 +167,7 @@
         }
         .task-input {
             flex: 1;
-            min-width: 0; /* Не дает инпуту раздувать флекс-контейнер */
+            min-width: 0;
             height: 46px;
             border: 1px solid var(--border-color);
             border-radius: 14px;
@@ -186,11 +186,11 @@
             color: #ffffff;
             border: none;
             border-radius: 14px;
-            padding: 0 16px; /* Уменьшили с 24px до 16px, чтобы кнопка была компактнее */
+            padding: 0 16px;
             font-size: 15px;
             font-weight: 600;
             cursor: pointer;
-            flex-shrink: 0; /* Запрещает кнопке сжиматься и ломать текст */
+            flex-shrink: 0;
             transition: transform 0.1s ease;
         }
         .task-btn:active {
@@ -214,7 +214,6 @@
             font-weight: 700;
             margin-bottom: 6px;
         }
-        /* Стиль для физических переменных и формул */
         var {
             font-family: "Times New Roman", Times, serif;
             font-style: italic;
@@ -309,7 +308,7 @@
                 <div class="menu-item" onclick="openSectionPage('quantum.html')">
                     <div class="menu-item-info">
                         <h2>Квантовая физика</h2>
-                        <p>Фотоэффект, atomная и ядерная физика</p>
+                        <p>Фотоэффект, атомная и ядерная физика</p>
                     </div>
                     <div class="arrow">→</div>
                 </div>
@@ -317,69 +316,69 @@
         </div>
 
         <div id="screen-tasks" class="screen">
-    <div class="header">
-        <h1>Задачи</h1>
-        <p>Практикуйся и зарабатывай XP</p>
-    </div>
-    
-    <div id="dynamic-task-container"></div>
-    
-    <div class="task-card" id="task-1">
-        <div class="task-tag">Механика | Задание 1</div>
-        <div class="task-text">
-            Автомобиль, двигаясь со скоростью <var>v</var><sub>0</sub> = 20 м/с, начинает тормозить с постоянным ускорением и полностью останавливается через время <var>t</var> = 5 с. Определите тормозной путь автомобиля (в метрах).
-        </div>
-        
-        <div class="task-input-group">
-            <input type="number" class="task-input" id="task-1-input" placeholder="Ответ (число)">
-            <button class="task-btn" onclick="checkTask1()">Ответить</button>
-        </div>
-        
-        <div class="task-feedback" id="task-1-feedback"></div>
-        
-        <div class="task-solution" id="task-1-solution" style="display: none;">
-            <div class="task-solution-title">📖 Решение:</div>
-            При равнозамедленном движении до полной остановки пройденный путь удобнее всего найти через среднюю скорость:
-            <div class="formula-block">
-                <var>S</var> = <var>v</var><sub>ср</sub> &middot; <var>t</var> = <sup>(<var>v</var><sub>0</sub> + <var>v</var>)</sup>&frasl;<sub>2</sub> &middot; <var>t</var>
+            <div class="header">
+                <h1>Задачи</h1>
+                <p>Практикуйся и зарабатывай XP</p>
             </div>
-            Так как автомобиль полностью остановился, конечная скорость <var>v</var> = 0 м/с. Подставим числа:
-            <div class="formula-block">
-                <var>S</var> = <sup>(20 + 0)</sup>&frasl;<sub>2</sub> &middot; 5 = 10 &middot; 5 = 50 м
+            
+            <div id="dynamic-task-container"></div>
+            
+            <div class="task-card" id="task-1">
+                <div class="task-tag">Механика | Задание 1</div>
+                <div class="task-text">
+                    Автомобиль, двигаясь со скоростью <var>v</var><sub>0</sub> = 20 м/с, начинает тормозить с постоянным ускорением и полностью останавливается через время <var>t</var> = 5 с. Определите тормозной путь автомобиля (в метрах).
+                </div>
+                
+                <div class="task-input-group">
+                    <input type="number" class="task-input" id="task-1-input" placeholder="Ответ (число)">
+                    <button class="task-btn" onclick="checkTask1()">Ответить</button>
+                </div>
+                
+                <div class="task-feedback" id="task-1-feedback"></div>
+                
+                <div class="task-solution" id="task-1-solution">
+                    <div class="task-solution-title">📖 Решение:</div>
+                    При равнозамедленном движении до полной остановки пройденный путь удобнее всего найти через среднюю скорость:
+                    <div class="formula-block">
+                        <var>S</var> = <var>v</var><sub>ср</sub> &middot; <var>t</var> = <sup>(<var>v</var><sub>0</sub> + <var>v</var>)</sup>&frasl;<sub>2</sub> &middot; <var>t</var>
+                    </div>
+                    Так как автомобиль полностью остановился, конечная скорость <var>v</var> = 0 м/с. Подставим числа:
+                    <div class="formula-block">
+                        <var>S</var> = <sup>(20 + 0)</sup>&frasl;<sub>2</sub> &middot; 5 = 10 &middot; 5 = 50 м
+                    </div>
+                    <strong>Правильный ответ: 50</strong>
+                    <button class="task-btn" onclick="goToNextTask()" style="background: #1e5e3a; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 15px;">Далее ➔</button>
+                </div>
             </div>
-            <strong>Правильный ответ: 50</strong>
-            <button class="task-btn" onclick="goToNextTask()" style="background: #1e5e3a; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 15px;">Далее ➔</button>
-        </div>
-    </div>
 
-    <div class="task-card" id="task-2" style="display: none;">
-        <div class="task-tag">Динамика | Задание 2</div>
-        <div class="task-text">
-            Определите модуль силы тяжести (в Ньютонах), действующей на кирпич массой <var>m</var> = 4 кг на поверхности Земли. Ускорение свободного падения примите равным <var>g</var> = 10 м/с².
-        </div>
-        
-        <div class="task-input-group">
-            <input type="number" class="task-input" id="task-2-input" placeholder="Ответ (число)">
-            <button class="task-btn" onclick="checkTask2()">Ответить</button>
-        </div>
-        
-        <div class="task-feedback" id="task-2-feedback"></div>
-        
-        <div class="task-solution" id="task-2-solution">
-            <div class="task-solution-title">📖 Решение:</div>
-            Сила тяжести, действующая на тело у поверхности Земли, определяется по закону всемирного тяготения и вычисляется по формуле:
-            <div class="formula-block">
-                <var>F</var><sub>тяг</sub> = <var>m</var> &middot; <var>g</var>
+            <div class="task-card" id="task-2" style="display: none;">
+                <div class="task-tag">Динамика | Задание 2</div>
+                <div class="task-text">
+                    Определите модуль силы тяжести (в Ньютонах), действующей на кирпич массой <var>m</var> = 4 кг на поверхности Земли. Ускорение свободного падения примите равным <var>g</var> = 10 м/с².
+                </div>
+                
+                <div class="task-input-group">
+                    <input type="number" class="task-input" id="task-2-input" placeholder="Ответ (число)">
+                    <button class="task-btn" onclick="checkTask2()">Ответить</button>
+                </div>
+                
+                <div class="task-feedback" id="task-2-feedback"></div>
+                
+                <div class="task-solution" id="task-2-solution">
+                    <div class="task-solution-title">📖 Решение:</div>
+                    Сила тяжести, действующая на тело у поверхности Земли, определяется по закону всемирного тяготения и вычисляется по формуле:
+                    <div class="formula-block">
+                        <var>F</var><sub>тяг</sub> = <var>m</var> &middot; <var>g</var>
+                    </div>
+                    Подставим известные значения массы и ускорения свободного падения:
+                    <div class="formula-block">
+                        <var>F</var><sub>тяг</sub> = 4 &middot; 10 = 40 Н
+                    </div>
+                    <strong>Правильный ответ: 40</strong>
+                    <button class="task-btn" onclick="goToNextTask()" style="background: #1e5e3a; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 15px;">Далее ➔</button>
+                </div>
             </div>
-            Подставим известные значения массы и ускорения свободного падения:
-            <div class="formula-block">
-                <var>F</var><sub>тяг</sub> = 4 &middot; 10 = 40 Н
-            </div>
-            <strong>Правильный ответ: 40</strong>
-            <button class="task-btn" onclick="goToNextTask()" style="background: #1e5e3a; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 15px;">Далее ➔</button>
         </div>
-    </div>
-</div>
 
         <div id="screen-theory" class="screen">
             <div class="header">
@@ -485,31 +484,36 @@
     </div>
 
     <div class="tab-bar">
-    <div id="tab-cards" class="tab-item active" onclick="navigateTo('screen-cards')">
-        <span class="tab-icon">📚</span>
-        <span>Карточки</span>
+        <div id="tab-cards" class="tab-item active" onclick="navigateTo('screen-cards')">
+            <span class="tab-icon">📚</span>
+            <span>Карточки</span>
+        </div>
+        <div id="tab-theory" class="tab-item" onclick="navigateTo('screen-theory')">
+            <span class="tab-icon">📖</span>
+            <span>Теория</span>
+        </div>
+        <div id="tab-tasks" class="tab-item" onclick="navigateTo('screen-tasks')">
+            <span class="tab-icon">🎯</span>
+            <span>Задачи</span>
+        </div>
+        <div id="tab-leaderboard" class="tab-item" onclick="navigateTo('screen-leaderboard')">
+            <span class="tab-icon">🏆</span>
+            <span>Рейтинг</span>
+        </div>
+        <div id="tab-profile" class="tab-item" onclick="navigateTo('screen-profile')">
+            <span class="tab-icon">👤</span>
+            <span>Профиль</span>
+        </div>
     </div>
-    <div id="tab-theory" class="tab-item" onclick="navigateTo('screen-theory')">
-        <span class="tab-icon">📖</span>
-        <span>Теория</span>
-    </div>
-    <div id="tab-tasks" class="tab-item" onclick="navigateTo('screen-tasks')">
-        <span class="tab-icon">🎯</span>
-        <span>Задачи</span>
-    </div>
-    <div id="tab-leaderboard" class="tab-item" onclick="navigateTo('screen-leaderboard')">
-        <span class="tab-icon">🏆</span>
-        <span>Рейтинг</span>
-    </div>
-    <div id="tab-profile" class="tab-item" onclick="navigateTo('screen-profile')">
-        <span class="tab-icon">👤</span>
-        <span>Профиль</span>
-    </div>
-</div>
 
     <script>
         const tg = window.Telegram ? window.Telegram.WebApp : null;
         let isEditing = false;
+
+        if (tg) {
+            tg.expand();
+            tg.ready();
+        }
 
         function openSectionPage(pageName) {
             if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
@@ -543,140 +547,95 @@
             
             localStorage.setItem('current_screen', screenId);
             window.scrollTo(0, 0);
-        } // <-- Закрыли navigateTo здесь!
-
-        // ТЕПЕРЬ checkTask1 СТОИТ ОТДЕЛЬНО И РАБОТАЕТ ГЛОБАЛЬНО
-        <div id="screen-tasks" class="screen">
-    <div class="header">
-        <h1>Задачи</h1>
-        <p>Практикуйся и зарабатывай XP</p>
-    </div>
-    
-    <div id="dynamic-task-container"></div>
-    
-    <div class="task-card" id="task-1">
-        <div class="task-tag">Механика | Задание 1</div>
-        <div class="task-text">
-            Автомобиль, двигаясь со скоростью <var>v</var><sub>0</sub> = 20 м/с, начинает тормозить с постоянным ускорением и полностью останавливается через время <var>t</var> = 5 с. Определите тормозной путь автомобиля (в метрах).
-        </div>
-        
-        <div class="task-input-group">
-            <input type="number" class="task-input" id="task-1-input" placeholder="Ответ (число)">
-            <button class="task-btn" onclick="checkTask1()">Ответить</button>
-        </div>
-        
-        <div class="task-feedback" id="task-1-feedback"></div>
-        
-        <div class="task-solution" id="task-1-solution">
-            <div class="task-solution-title">📖 Решение:</div>
-            При равнозамедленном движении до полной остановки пройденный путь удобнее всего найти через среднюю скорость:
-            <div class="formula-block">
-                <var>S</var> = <var>v</var><sub>ср</sub> &middot; <var>t</var> = <sup>(<var>v</var><sub>0</sub> + <var>v</var>)</sup>&frasl;<sub>2</sub> &middot; <var>t</var>
-            </div>
-            Так как автомобиль полностью остановился, конечная скорость <var>v</var> = 0 м/с. Подставим числа:
-            <div class="formula-block">
-                <var>S</var> = <sup>(20 + 0)</sup>&frasl;<sub>2</sub> &middot; 5 = 10 &middot; 5 = 50 м
-            </div>
-            <strong>Правильный ответ: 50</strong>
-            <button class="task-btn" onclick="nextTask()" style="background: #1e5e3a; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 15px;">Далее ➔</button>
-        </div>
-    </div>
-
-    <div class="task-card" id="task-2" style="display: none;">
-        <div class="task-tag">Динамика | Задание 2</div>
-        <div class="task-text">
-            Определите модуль силы тяжести (в Ньютонах), действующей на кирпич массой <var>m</var> = 4 кг на поверхности Земли. Ускорение свободного падения примите равным <var>g</var> = 10 м/с².
-        </div>
-        
-        <div class="task-input-group">
-            <input type="number" class="task-input" id="task-2-input" placeholder="Ответ (число)">
-            <button class="task-btn" onclick="checkTask2()">Ответить</button>
-        </div>
-        
-        <div class="task-feedback" id="task-2-feedback"></div>
-        
-        <div class="task-solution" id="task-2-solution">
-            <div class="task-solution-title">📖 Решение:</div>
-            Сила тяжести, действующая на тело у поверхности Земли, определяется по закону всемирного тяготения и вычисляется по формуле:
-            <div class="formula-block">
-                <var>F</var><sub>тяг</sub> = <var>m</var> &middot; <var>g</var>
-            </div>
-            Подставим известные значения массы и ускорения свободного падения:
-            <div class="formula-block">
-                <var>F</var><sub>тяг</sub> = 4 &middot; 10 = 40 Н
-            </div>
-            <strong>Правильный ответ: 40</strong>
-            <button class="task-btn" onclick="nextTask()" style="background: #1e5e3a; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 15px;">Далее ➔</button>
-        </div>
-    </div>
-</div>
-
-        // ========================================================
-        // ДОБАВЛЕНИЕ КНОПКИ "ДАЛЕЕ" ПОСЛЕ ОТВЕТА
-        // ========================================================
-        // Проверяем, чтобы кнопка не плодилась, если пользователь нажмет "Ответить" несколько раз
-        if (!document.getElementById('task-1-next-btn')) {
-        const nextBtn = document.createElement('button');
-        nextBtn.id = 'task-1-next-btn';
-        nextBtn.className = 'task-btn'; // Используем твой CSS-класс для кнопок
-        nextBtn.style.marginTop = '20px';
-        nextBtn.style.width = '100%';
-        nextBtn.style.background = '#34c759'; // Красивый зеленый цвет для перехода
-        nextBtn.style.color = '#fff';
-        nextBtn.innerText = 'Далее ➡️';
-        
-        // Навешиваем на кнопку функцию переключения задачи
-        nextBtn.onclick = function() {
-            goToNextTask();
-        };
-        
-        // Вставляем кнопку в самый конец блока с решением
-        // Вставляем кнопку в самый конец блока с решением
-            solution.appendChild(nextBtn);
         }
-        // ========================================================
-    } catch (error) {
-        alert("Критическая ошибка в скрипте: " + error.message);
-    }
 
-function goToNextTask() {
-    const allTasks = document.querySelectorAll('[id^="task-"]');
-    let currentTaskNum = null;
-
-    allTasks.forEach(task => {
-        if (task.style.display !== 'none' && task.style.display !== '') {
-            const idMatch = task.id.match(/task-(\d+)/);
-            if (idMatch) {
-                currentTaskNum = parseInt(idMatch[1]);
+        // ПРОВЕРКА ЗАДАЧ
+        function checkTask1() {
+            const val = document.getElementById('task-1-input').value.trim();
+            const feedback = document.getElementById('task-1-feedback');
+            const solution = document.getElementById('task-1-solution');
+            
+            if (val === '50') {
+                feedback.style.color = '#34c759';
+                feedback.innerText = '🎉 Правильно! +10 XP';
+                feedback.style.display = 'block';
+                solution.style.display = 'block';
+                addXp(10);
+            } else {
+                feedback.style.color = '#ff3b30';
+                feedback.innerText = '❌ Неверно. Попробуй ещё раз!';
+                feedback.style.display = 'block';
             }
         }
-    });
 
-    if (currentTaskNum !== null) {
-        const currentTaskEl = document.getElementById(`task-${currentTaskNum}`);
-        const nextTaskEl = document.getElementById(`task-${currentTaskNum + 1}`);
+        function checkTask2() {
+            const val = document.getElementById('task-2-input').value.trim();
+            const feedback = document.getElementById('task-2-feedback');
+            const solution = document.getElementById('task-2-solution');
+            
+            if (val === '40') {
+                feedback.style.color = '#34c759';
+                feedback.innerText = '🎉 Правильно! +10 XP';
+                feedback.style.display = 'block';
+                solution.style.display = 'block';
+                addXp(10);
+            } else {
+                feedback.style.color = '#ff3b30';
+                feedback.innerText = '❌ Неверно. Попробуй ещё раз!';
+                feedback.style.display = 'block';
+            }
+        }
 
-        if (nextTaskEl) {
-            currentTaskEl.style.display = 'none';
-            nextTaskEl.style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
-        } else {
-            if (currentTaskEl) {
-                currentTaskEl.innerHTML = `
-                    <div style="text-align: center; padding: 30px 15px;">
+        function addXp(amount) {
+            let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
+            localStorage.setItem('global_physics_xp', xp + amount);
+            updateUI();
+        }
+
+        function goToNextTask() {
+            const task1 = document.getElementById('task-1');
+            const task2 = document.getElementById('task-2');
+            
+            if (task1.style.display !== 'none') {
+                task1.style.display = 'none';
+                task2.style.display = 'block';
+            } else {
+                // Конец задач
+                document.getElementById('screen-tasks').innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px;">
                         <div style="font-size: 50px; margin-bottom: 15px;">🎉</div>
-                        <h3 style="margin-bottom: 10px; color: #1a202c; font-size: 20px;">Отличная работа!</h3>
-                        <p style="color: #718096; margin-bottom: 20px; font-size: 14px; line-height: 1.4;">Ты прошёл все доступные на сегодня задачи.</p>
-                        <button onclick="location.reload()" style="background: #2b6cb0; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%;">Пройти заново</button>
+                        <h3>Все задачи решены!</h3>
+                        <p style="color: var(--text-muted);">Ты прошёл все доступные на сегодня задачи.</p>
+                        <button class="edit-btn" onclick="location.reload()">Пройти заново</button>
                     </div>
                 `;
             }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-    } else {
-        const firstTask = document.getElementById('task-1');
-        if (firstTask) firstTask.style.display = 'block';
-    }
-}
+
+        function toggleEdit() {
+            const editBox = document.getElementById('edit-box');
+            const btn = document.getElementById('btn-edit-toggle');
+            
+            if (!isEditing) {
+                editBox.style.display = 'flex';
+                btn.innerText = 'Сохранить профиль';
+                document.getElementById('input-name').value = localStorage.getItem('user_custom_name') || "";
+                document.getElementById('input-username').value = localStorage.getItem('user_custom_username') || "";
+                isEditing = true;
+            } else {
+                const newName = document.getElementById('input-name').value.trim();
+                const newUsername = document.getElementById('input-username').value.trim();
+                
+                if (newName) localStorage.setItem('user_custom_name', newName);
+                if (newUsername) localStorage.setItem('user_custom_username', newUsername);
+                
+                editBox.style.display = 'none';
+                btn.innerText = 'Редактировать профиль';
+                isEditing = false;
+                updateUI();
+            }
+        }
 
         function updateUI() {
             let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
@@ -690,195 +649,83 @@ function goToNextTask() {
             let streak = localStorage.getItem('user_streak') || 0;
             document.getElementById('streak-count').innerText = streak;
 
-            let savedName = localStorage.getItem('user_custom_name');
-            let savedUsername = localStorage.getItem('user_custom_username');
+            // Telegram данные по дефолту
+            let defaultName = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.first_name : "Пользователь";
+            let defaultUsername = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.username) ? "@" + tg.initDataUnsafe.user.username : "@physics_student";
 
-            if (savedName) {
-                document.getElementById('user-name').innerText = savedName;
-                document.getElementById('user-avatar').innerText = savedName.charAt(0).toUpperCase();
-            }
-            if (savedUsername) document.getElementById('user-username').innerText = savedUsername;
+            let savedName = localStorage.getItem('user_custom_name') || defaultName;
+            let savedUsername = localStorage.getItem('user_custom_username') || defaultUsername;
 
-            if (window.db && window.fbOnValue && window.fbRef) {
-                let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
-                window.fbOnValue(window.fbRef(window.db, 'users/' + myId), (snapshot) => {
-                    const cloudData = snapshot.val();
-                    if (cloudData) {
-                        if (cloudData.xp !== undefined && cloudData.xp !== xp) {
-                            localStorage.setItem('global_physics_xp', cloudData.xp);
-                            updateUI();
-                        }
-                        if (cloudData.streak !== undefined) {
-                            localStorage.setItem('user_streak', cloudData.streak);
-                            document.getElementById('streak-count').innerText = cloudData.streak;
-                        }
-                    }
-                }, { onlyOnce: true });
-            }
-        }
+            document.getElementById('user-name').innerText = savedName;
+            document.getElementById('user-avatar').innerText = savedName.charAt(0).toUpperCase();
+            document.getElementById('user-username').innerText = savedUsername;
 
-        function toggleEdit() {
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-            const editBox = document.getElementById('edit-box');
-            const btn = document.getElementById('btn-edit-toggle');
-
-            if (!isEditing) {
-                editBox.style.display = 'flex';
-                document.getElementById('input-name').value = document.getElementById('user-name').innerText;
-                document.getElementById('input-username').value = document.getElementById('user-username').innerText;
-                btn.innerText = "Сохранить изменения";
-                isEditing = true;
-            } else {
-                let newName = document.getElementById('input-name').value.trim();
-                let newUsername = document.getElementById('input-username').value.trim();
-                if (newName) localStorage.setItem('user_custom_name', newName);
-                if (newUsername) localStorage.setItem('user_custom_username', newUsername);
-                editBox.style.display = 'none';
-                btn.innerText = "Редактировать профиль";
-                isEditing = false;
-                updateUI_and_Push();
-            }
-        }
-
-        function checkStreak(myId) {
-            return new Promise((resolve, reject) => {
-                if (!window.db || !window.fbRef || !window.fbOnValue || !window.fbSet || !window.fbGet) {
-                    return reject(new Error("Firebase функции не загружены"));
-                }
-                
-                const userRef = window.fbRef(window.db, 'users/' + myId);
-                const today = new Date().toISOString().split('T')[0];
-                const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-
-                window.fbGet(userRef).then((snapshot) => {
-                    console.log("=== ОТВЕТ ОТ FIREBASE ПОЛУЧЕН ===");
-                    
-                    let userData;
-                    if (snapshot.exists()) {
-                        userData = snapshot.val();
-                        if (!userData.xp) userData.xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
-                        if (!userData.name) userData.name = localStorage.getItem('user_custom_name') || "Пользователь";
-                    } else {
-                        userData = { 
-                            id: myId, 
-                            name: localStorage.getItem('user_custom_name') || "Пользователь", 
-                            xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
-                            streak: 0, 
-                            last_active: "" 
-                        };
-                    }
-
-                    console.log("Текущие данные из базы:", JSON.stringify(userData));
-
-                    if (userData.last_active !== today) {
-                        if (userData.last_active === yesterday) {
-                            userData.streak = (userData.streak || 0) + 1;
-                        } else {
-                            userData.streak = 1;
-                        }
-                        userData.last_active = today;
-                        
-                        console.log("Попытка записи новых данных в Firebase...", JSON.stringify(userData));
-                        window.fbSet(userRef, userData);
-                        console.log("Команда window.fbSet вызвана!");
-                    } else {
-                        console.log("Сегодня серия уже проверялась, запись пропущена.");
-                    }
-                    
-                    if (document.getElementById('streak-count')) {
-                        document.getElementById('streak-count').innerText = userData.streak;
-                    }
-                    localStorage.setItem('user_streak', userData.streak);
-                    localStorage.setItem('user_last_active', userData.last_active);
-                    if (userData.xp) localStorage.setItem('global_physics_xp', userData.xp);
-                    
-                    resolve();
-                }).catch(reject);
-            });
-        }
-
-        function updateUI_and_Push() {
-            if (typeof updateUI === 'function') updateUI();
-            if (window.db && window.fbSet && window.fbRef) {
-                let myId = (window.tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
-                
-                let currentStreak = parseInt(localStorage.getItem('user_streak')) || 0;
-                let lastActiveDay = localStorage.getItem('user_last_active') || "";
-
+            // Синхронизация данных в Firebase
+            if (window.db && window.fbRef && window.fbSet) {
+                let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? String(tg.initDataUnsafe.user.id) : "local_user";
                 window.fbSet(window.fbRef(window.db, 'users/' + myId), {
                     id: myId,
-                    name: localStorage.getItem('user_custom_name') || "Пользователь",
-                    xp: parseInt(localStorage.getItem('global_physics_xp')) || 180,
-                    streak: currentStreak,
-                    last_active: lastActiveDay
+                    name: savedName,
+                    username: savedUsername,
+                    xp: xp,
+                    streak: parseInt(streak) || 0
                 });
             }
         }
 
         function syncAndRenderLeaderboard() {
-            const container = document.getElementById('leaderboard-container');
-            if (!container || !window.db || !window.fbOnValue || !window.fbRef) return;
+            if (window.db && window.fbRef && window.fbOnValue) {
+                const usersRef = window.fbRef(window.db, 'users');
+                window.fbOnValue(usersRef, (snapshot) => {
+                    const data = snapshot.val();
+                    const container = document.getElementById('leaderboard-container');
+                    if (!container) return;
+                    
+                    if (!data) {
+                        container.innerHTML = '<div class="empty-hint">Рейтинг пока пуст. Будь первым!</div>';
+                        return;
+                    }
 
-            window.fbOnValue(window.fbRef(window.db, 'users'), (snapshot) => {
-                const data = snapshot.val();
-                if (!data) return;
+                    let usersArray = Object.keys(data).map(key => data[key]);
+                    // Сортировка по убыванию опыта
+                    usersArray.sort((a, b) => (b.xp || 0) - (a.xp || 0));
 
-                let players = Object.values(data);
-                players.sort((a, b) => (b.xp || 0) - (a.xp || 0));
+                    container.innerHTML = '';
+                    let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? String(tg.initDataUnsafe.user.id) : "local_user";
 
-                container.innerHTML = "";
-                players.forEach((player, index) => {
-                    let streakCount = player.streak || 0; 
+                    usersArray.forEach((user, index) => {
+                        const isMe = String(user.id) === myId;
+                        const rankClass = (index < 3) ? 'rank-number top-three' : 'rank-number';
+                        
+                        // ЛОГИКА ОТОБРАЖЕНИЯ ОГОНЬКА (СТРИКА)
+                        const streakIcon = (user.streak && user.streak > 0) ? ` 🔥 ${user.streak}` : '';
 
-                    container.innerHTML += `
-                        <div class="leaderboard-item" style="display: flex; justify-content: space-between; align-items: center;">
-                            <div class="user-rank-info" style="display: flex; align-items: center; gap: 10px;">
-                                <span class="rank-number ${index < 3 ? 'top-three' : ''}">${index + 1}</span>
-                                <span class="rank-name">${player.name || 'Аноним'}</span>
+                        const item = document.createElement('div');
+                        item.className = 'leaderboard-item';
+                        item.innerHTML = `
+                            <div class="user-rank-info">
+                                <span class="${rankClass}">${index + 1}</span>
+                                <span class="rank-name">${user.name || 'Игрок'}${isMe ? ' <span class="me-badge">Вы</span>' : ''}${streakIcon}</span>
                             </div>
-                            <div class="user-stats" style="display: flex; align-items: center; gap: 12px;">
-                                <span class="rank-streak" style="color: #ff9500; font-weight: bold;">${streakCount} 🔥</span>
-                                <span class="rank-xp" style="font-weight: bold;">${player.xp || 0} XP</span>
-                            </div>
-                        </div>
-                    `;
+                            <span class="rank-xp">${user.xp || 0} XP</span>
+                        `;
+                        container.appendChild(item);
+                    });
                 });
-            });
+            }
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-    if (window.Telegram && window.Telegram.WebApp) {
-        window.tg = window.Telegram.WebApp;
-        if (typeof tg.ready === 'function') tg.ready();
-        if (typeof tg.expand === 'function') tg.expand();
-    }
+        // Запуск при загрузке
+        window.addEventListener('DOMContentLoaded', () => {
+            let savedScreen = localStorage.getItem('current_screen') || 'screen-cards';
+            navigateTo(savedScreen);
+            updateUI();
+        });
 
-    // Вставляешь ровно сюда:
-    let savedScreen = localStorage.getItem('current_screen') || 'screen-cards';
-    navigateTo(savedScreen);
-
-    
-
-            let myId = "local_user_id";
-            if (window.tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
-                myId = tg.initDataUnsafe.user.id;
-            }
-            
-            console.log("=== ЗАПУСК ПРОВЕРКИ СЕРИИ ===");
-            console.log("ID юзера в базе:", myId);
-            
-            window.addEventListener('firebaseReady', () => {
-                checkStreak(myId).catch(err => {
-                    console.error("Ошибка внутри checkStreak:", err);
-                });
-                updateUI();
-            });
-            
-            if (window.db) {
-                checkStreak(myId).catch(err => {
-                    console.error("Ошибка внутри checkStreak:", err);
-                });
-                updateUI();
+        window.addEventListener('firebaseReady', () => {
+            updateUI();
+            if (document.getElementById('screen-leaderboard').classList.contains('active')) {
+                syncAndRenderLeaderboard();
             }
         });
     </script>
