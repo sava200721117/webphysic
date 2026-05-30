@@ -114,7 +114,7 @@
         .user-rank-info { display: flex; align-items: center; gap: 12px; }
         .rank-number { font-size: 16px; font-weight: 700; color: var(--text-muted); width: 24px; }
         .rank-number.top-three { color: #000000; }
-        .rank-name { font-size: 15px; font-weight: 600; }
+        .rank-name { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
         .rank-xp { font-size: 15px; font-weight: 700; color: #000000; }
         .me-badge {
             background: #e5e5ea; font-size: 11px; padding: 2px 6px;
@@ -137,6 +137,7 @@
         .tab-item.active { color: #000000; font-weight: 700; }
         .tab-icon { font-size: 22px; }
 
+        /* Стили для экрана задач */
         .task-card {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -347,6 +348,7 @@
                         <var>S</var> = <sup>(20 + 0)</sup>&frasl;<sub>2</sub> &middot; 5 = 10 &middot; 5 = 50 м
                     </div>
                     <strong>Правильный ответ: 50</strong>
+                    <button class="task-btn" onclick="goToNextTask()" style="background: #1e5e3a; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 15px;">Далее ➔</button>
                 </div>
             </div>
 
@@ -374,6 +376,7 @@
                         <var>F</var><sub>тяг</sub> = 4 &middot; 10 = 40 Н
                     </div>
                     <strong>Правильный ответ: 40</strong>
+                    <button class="task-btn" onclick="goToNextTask()" style="background: #1e5e3a; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 15px;">Далее ➔</button>
                 </div>
             </div>
         </div>
@@ -508,6 +511,17 @@
         const tg = window.Telegram ? window.Telegram.WebApp : null;
         let isEditing = false;
 
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedScreen = localStorage.getItem('current_screen') || 'screen-cards';
+            navigateTo(savedScreen);
+            updateUI();
+        });
+
         function openSectionPage(pageName) {
             if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
             window.location.href = pageName;
@@ -542,100 +556,55 @@
             window.scrollTo(0, 0);
         }
 
-        // --- ФУНКЦИИ ПРОВЕРКИ ЗАДАЧ ---
+        // КНОПКИ ПРОВЕРКИ ЗАДАЧ
         function checkTask1() {
-            try {
-                const input = document.getElementById('task-1-input');
-                const feedback = document.getElementById('task-1-feedback');
-                const solution = document.getElementById('task-1-solution');
-                
-                if (!input || !feedback || !solution) return;
-                
-                const userAnswer = parseFloat(input.value);
-                feedback.style.display = 'block';
-                
-                if (userAnswer === 50) {
-                    feedback.style.color = '#34c759';
-                    feedback.innerText = '🎉 Правильно! +10 XP';
-                    addXP(10);
-                } else {
-                    feedback.style.color = '#ff3b30';
-                    feedback.innerText = '❌ Неправильно. Попробуй ещё раз.';
-                }
-                
-                solution.style.display = 'block';
-                
-                // Создаем кнопку далее, если её ещё нет
-                if (!document.getElementById('task-1-next-btn')) {
-                    const nextBtn = document.createElement('button');
-                    nextBtn.id = 'task-1-next-btn';
-                    nextBtn.className = 'task-btn';
-                    nextBtn.style.marginTop = '20px';
-                    nextBtn.style.width = '100%';
-                    nextBtn.style.background = '#34c759';
-                    nextBtn.style.color = '#fff';
-                    nextBtn.innerText = 'Далее ➡️';
-                    nextBtn.onclick = function() {
-                        goToNextTask();
-                    };
-                    solution.appendChild(nextBtn);
-                }
-            } catch (error) {
-                alert("Ошибка в задаче 1: " + error.message);
+            const input = document.getElementById('task-1-input');
+            const feedback = document.getElementById('task-1-feedback');
+            const solution = document.getElementById('task-1-solution');
+            if (!input || !feedback || !solution) return;
+
+            if (input.value.trim() === '50') {
+                feedback.innerHTML = '<span style="color: #34c759;">🎉 Правильно! +20 XP</span>';
+                addXP(20);
+            } else {
+                feedback.innerHTML = '<span style="color: #ff3b30;">❌ Неверно. Попробуй еще раз или изучи решение.</span>';
             }
+            feedback.style.display = 'block';
+            solution.style.display = 'block';
         }
 
         function checkTask2() {
-            try {
-                const input = document.getElementById('task-2-input');
-                const feedback = document.getElementById('task-2-feedback');
-                const solution = document.getElementById('task-2-solution');
-                
-                if (!input || !feedback || !solution) return;
-                
-                const userAnswer = parseFloat(input.value);
-                feedback.style.display = 'block';
-                
-                if (userAnswer === 40) {
-                    feedback.style.color = '#34c759';
-                    feedback.innerText = '🎉 Правильно! +10 XP';
-                    addXP(10);
-                } else {
-                    feedback.style.color = '#ff3b30';
-                    feedback.innerText = '❌ Неправильно. Попробуй ещё раз.';
-                }
-                
-                solution.style.display = 'block';
-                
-                if (!document.getElementById('task-2-next-btn')) {
-                    const nextBtn = document.createElement('button');
-                    nextBtn.id = 'task-2-next-btn';
-                    nextBtn.className = 'task-btn';
-                    nextBtn.style.marginTop = '20px';
-                    nextBtn.style.width = '100%';
-                    nextBtn.style.background = '#34c759';
-                    nextBtn.style.color = '#fff';
-                    nextBtn.innerText = 'Далее ➡️';
-                    nextBtn.onclick = function() {
-                        goToNextTask();
-                    };
-                    solution.appendChild(nextBtn);
-                }
-            } catch (error) {
-                alert("Ошибка в задаче 2: " + error.message);
+            const input = document.getElementById('task-2-input');
+            const feedback = document.getElementById('task-2-feedback');
+            const solution = document.getElementById('task-2-solution');
+            if (!input || !feedback || !solution) return;
+
+            if (input.value.trim() === '40') {
+                feedback.innerHTML = '<span style="color: #34c759;">🎉 Правильно! +20 XP</span>';
+                addXP(20);
+            } else {
+                feedback.innerHTML = '<span style="color: #ff3b30;">❌ Неверно. Попробуй еще раз или изучи решение.</span>';
             }
+            feedback.style.display = 'block';
+            solution.style.display = 'block';
+        }
+
+        function addXP(amount) {
+            let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
+            xp += amount;
+            localStorage.setItem('global_physics_xp', xp);
+            updateUI();
+            syncWithFirebase();
         }
 
         function goToNextTask() {
-            const allTasks = document.querySelectorAll('.task-card');
+            const allTasks = document.querySelectorAll('[id^="task-"]');
             let currentTaskNum = null;
 
             allTasks.forEach(task => {
-                if (task.style.display !== 'none' && task.id.startsWith('task-')) {
+                if (task.style.display !== 'none' && task.style.display !== '') {
                     const idMatch = task.id.match(/task-(\d+)/);
-                    if (idMatch) {
-                        currentTaskNum = parseInt(idMatch[1]);
-                    }
+                    if (idMatch) currentTaskNum = parseInt(idMatch[1]);
                 }
             });
 
@@ -659,20 +628,16 @@
                         `;
                     }
                 }
+            } else {
+                const firstTask = document.getElementById('task-1');
+                if (firstTask) firstTask.style.display = 'block';
             }
         }
         
-        // Алиас для вызовов из старой верстки
-        window.nextTask = goToNextTask;
+        // Алиас для вызовов nextTask из старой структуры
+        function nextTask() { goToNextTask(); }
 
-        function addXP(amount) {
-            let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
-            xp += amount;
-            localStorage.setItem('global_physics_xp', xp);
-            updateUI();
-            saveToFirebase();
-        }
-
+        // ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ПРОФИЛЯ
         function updateUI() {
             let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
             let cardsViewed = parseInt(localStorage.getItem('global_cards_viewed')) || 0;
@@ -685,114 +650,134 @@
             let streak = localStorage.getItem('user_streak') || 0;
             document.getElementById('streak-count').innerText = streak;
 
-            let savedName = localStorage.getItem('user_custom_name') || "Пользователь";
-            let savedUsername = localStorage.getItem('user_custom_username') || "@physics_student";
+            let savedName = localStorage.getItem('user_custom_name') || (tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Пользователь");
+            let savedUsername = localStorage.getItem('user_custom_username') || (tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? "@" + tg.initDataUnsafe.user.username : "@physics_student");
 
             document.getElementById('user-name').innerText = savedName;
             document.getElementById('user-avatar').innerText = savedName.charAt(0).toUpperCase();
             document.getElementById('user-username').innerText = savedUsername;
         }
 
+        // РЕДАКТИРОВАНИЕ ПРОФИЛЯ
         function toggleEdit() {
             const editBox = document.getElementById('edit-box');
             const btn = document.getElementById('btn-edit-toggle');
-            
+            const inputName = document.getElementById('input-name');
+            const inputUsername = document.getElementById('input-username');
+            if (!editBox || !btn) return;
+
             if (!isEditing) {
-                editBox.style.display = 'flex';
-                btn.innerText = 'Сохранить изменения';
-                document.getElementById('input-name').value = localStorage.getItem('user_custom_name') || '';
-                document.getElementById('input-username').value = localStorage.getItem('user_custom_username') || '';
                 isEditing = true;
+                editBox.style.display = 'flex';
+                btn.innerText = 'Сохранить профиль';
+                btn.style.background = '#34c759';
+                inputName.value = document.getElementById('user-name').innerText;
+                inputUsername.value = document.getElementById('user-username').innerText;
             } else {
-                const newName = document.getElementById('input-name').value.trim();
-                let newUsername = document.getElementById('input-username').value.trim();
-                
-                if (newName) localStorage.setItem('user_custom_name', newName);
-                if (newUsername) {
-                    if (!newUsername.startsWith('@')) newUsername = '@' + newUsername;
-                    localStorage.setItem('user_custom_username', newUsername);
-                }
-                
+                isEditing = false;
                 editBox.style.display = 'none';
                 btn.innerText = 'Редактировать профиль';
-                isEditing = false;
+                btn.style.background = '#000000';
+
+                if (inputName.value.trim()) localStorage.setItem('user_custom_name', inputName.value.trim());
+                if (inputUsername.value.trim()) localStorage.setItem('user_custom_username', inputUsername.value.trim());
+
                 updateUI();
-                saveToFirebase();
+                syncWithFirebase();
             }
         }
 
-        function saveToFirebase() {
-            if (window.db && window.fbSet && window.fbRef) {
-                let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
-                let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
-                let name = localStorage.getItem('user_custom_name') || "Пользователь";
-                let username = localStorage.getItem('user_custom_username') || "@physics_student";
-                
-                window.fbSet(window.fbRef(window.db, 'users/' + myId), {
-                    id: myId,
-                    name: name,
-                    username: username,
-                    xp: xp
-                });
-            }
+        // СИНХРОНИЗАЦИЯ С FIREBASE
+        function syncWithFirebase() {
+            if (!window.db || !window.fbSet || !window.fbRef) return;
+            let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+            
+            let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
+            let streak = parseInt(localStorage.getItem('user_streak')) || 0;
+            let name = localStorage.getItem('user_custom_name') || "Пользователь";
+            let username = localStorage.getItem('user_custom_username') || "@physics_student";
+
+            window.fbSet(window.fbRef(window.db, 'users/' + myId), {
+                name: name,
+                username: username,
+                xp: xp,
+                streak: streak
+            });
         }
 
+        // ТАБЛИЦА ЛИДЕРОВ С ОГОНЬКАМИ 🔥
         function syncAndRenderLeaderboard() {
             const container = document.getElementById('leaderboard-container');
             if (!container) return;
-            
-            if (window.db && window.fbGet && window.fbRef) {
-                window.fbGet(window.fbRef(window.db, 'users')).then((snapshot) => {
-                    const users = snapshot.val();
-                    if (!users) {
-                        container.innerHTML = '<div class="empty-hint">Рейтинг пока пуст</div>';
-                        return;
-                    }
-                    
-                    let listHtml = '';
-                    const sortedUsers = Object.values(users).sort((a, b) => (b.xp || 0) - (a.xp || 0));
-                    
-                    sortedUsers.forEach((user, index) => {
-                        let isMe = user.id === ((tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id");
-                        listHtml += `
-                            <div class="leaderboard-item">
-                                <div class="user-rank-info">
-                                    <span class="rank-number ${index < 3 ? 'top-three' : ''}">${index + 1}</span>
-                                    <span class="rank-name">${user.name || 'Аноним'}${isMe ? '<span class="me-badge">Вы</span>' : ''}</span>
-                                </div>
-                                <span class="rank-xp">${user.xp || 0} XP</span>
-                            </div>
-                        `;
-                    });
-                    container.innerHTML = listHtml;
-                }).catch(() => {
-                    container.innerHTML = '<div class="empty-hint">Ошибка загрузки рейтинга</div>';
-                });
-            } else {
-                container.innerHTML = '<div class="empty-hint">Локальный режим: Firebase недоступен</div>';
+
+            if (!window.db || !window.fbGet || !window.fbRef) {
+                container.innerHTML = '<div class="empty-hint">Ошибка подключения к базе данных...</div>';
+                return;
             }
+
+            window.fbGet(window.fbRef(window.db, 'users')).then((snapshot) => {
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<div class="empty-hint">Рейтинг пока пуст.</div>';
+                    return;
+                }
+
+                const usersData = snapshot.val();
+                let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+                
+                let usersArray = [];
+                for (let id in usersData) {
+                    usersArray.push({ id: id, ...usersData[id] });
+                }
+                
+                // Сортировка топа по XP
+                usersArray.sort((a, b) => (b.xp || 0) - (a.xp || 0));
+
+                container.innerHTML = '';
+
+                usersArray.forEach((user, index) => {
+                    const rank = index + 1;
+                    const isMe = user.id == myId;
+                    const name = user.name || "Пользователь";
+                    const xp = user.xp || 0;
+                    const streak = parseInt(user.streak) || 0;
+
+                    const rankClass = rank <= 3 ? 'rank-number top-three' : 'rank-number';
+                    
+                    // ЕСЛИ У ИГРОКА ЕСТЬ СЕРИЯ ДНЕЙ, ДОБАВЛЯЕМ ОГОНЁК 🔥
+                    const streakIndicator = streak > 0 ? `<span style="color: #ff9500; font-weight: bold; margin-left: 4px;">🔥 ${streak}</span>` : '';
+                    const meBadge = isMe ? `<span class="me-badge">Вы</span>` : '';
+
+                    const itemHtml = `
+                        <div class="leaderboard-item">
+                            <div class="user-rank-info">
+                                <span class="${rankClass}">${rank}</span>
+                                <span class="rank-name">${name}${streakIndicator}${meBadge}</span>
+                            </div>
+                            <span class="rank-xp">${xp} XP</span>
+                        </div>
+                    `;
+                    container.innerHTML += itemHtml;
+                });
+            }).catch(err => {
+                container.innerHTML = `<div class="empty-hint">Ошибка загрузки: ${err.message}</div>`;
+            });
         }
 
-        // Слушатели инициализации
+        // Инициализация при готовности базы Firebase
         window.addEventListener('firebaseReady', () => {
-            if (window.db && window.fbOnValue && window.fbRef) {
-                let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
-                window.fbOnValue(window.fbRef(window.db, 'users/' + myId), (snapshot) => {
+            let myId = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : "local_user_id";
+            window.fbGet(window.fbRef(window.db, 'users/' + myId)).then((snapshot) => {
+                if (snapshot.exists()) {
                     const cloudData = snapshot.val();
-                    if (cloudData) {
-                        if (cloudData.xp !== undefined) localStorage.setItem('global_physics_xp', cloudData.xp);
-                        if (cloudData.name !== undefined) localStorage.setItem('user_custom_name', cloudData.name);
-                        if (cloudData.username !== undefined) localStorage.setItem('user_custom_username', cloudData.username);
-                        updateUI();
-                    }
-                });
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const lastScreen = localStorage.getItem('current_screen') || 'screen-cards';
-            navigateTo(lastScreen);
-            updateUI();
+                    if (cloudData.xp !== undefined) localStorage.setItem('global_physics_xp', cloudData.xp);
+                    if (cloudData.streak !== undefined) localStorage.setItem('user_streak', cloudData.streak);
+                    if (cloudData.name) localStorage.setItem('user_custom_name', cloudData.name);
+                    if (cloudData.username) localStorage.setItem('user_custom_username', cloudData.username);
+                    updateUI();
+                } else {
+                    syncWithFirebase();
+                }
+            });
         });
     </script>
 </body>
