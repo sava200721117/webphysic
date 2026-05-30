@@ -327,7 +327,7 @@
     <div class="task-card" id="task-1">
         <div class="task-tag">Механика | Задание 1</div>
         <div class="task-text">
-            Автомобиль, двигаясь со скоростью <var>v</var><sub>0</sub> = 20 м/с, начинает тормозить с постоянным ускорением и полностью останавливается через время <var>t</var> = 5 с. Определите тормозной путь автомобиля (в метрах).
+            Автомобиль, двигаясь со скоростью <var>v</var><sub>0</sub> = 20 м/с, начинает тормозить с Appalachian постоянным ускорением и полностью останавливается через время <var>t</var> = 5 с. Определите тормозной путь автомобиля (в метрах).
         </div>
         
         <div class="task-input-group">
@@ -348,6 +348,33 @@
                 <var>S</var> = <sup>(20 + 0)</sup>&frasl;<sub>2</sub> &middot; 5 = 10 &middot; 5 = 50 м
             </div>
             <strong>Правильный ответ: 50</strong>
+        </div>
+    </div>
+
+    <div class="task-card" id="task-2" style="display: none;">
+        <div class="task-tag">Динамика | Задание 2</div>
+        <div class="task-text">
+            Определите модуль силы тяжести (в Ньютонах), действующей на кирпич массой <var>m</var> = 4 кг на поверхности Земли. Ускорение свободного падения примите равным <var>g</var> = 10 м/с².
+        </div>
+        
+        <div class="task-input-group">
+            <input type="number" class="task-input" id="task-2-input" placeholder="Ответ (число)">
+            <button class="task-btn" onclick="checkTask2()">Ответить</button>
+        </div>
+        
+        <div class="task-feedback" id="task-2-feedback"></div>
+        
+        <div class="task-solution" id="task-2-solution">
+            <div class="task-solution-title">📖 Решение:</div>
+            Сила тяжести, действующая на тело у поверхности Земли, определяется по закону всемирного тяготения и вычисляется по формуле:
+            <div class="formula-block">
+                <var>F</var><sub>тяг</sub> = <var>m</var> &middot; <var>g</var>
+            </div>
+            Подставим известные значения массы и ускорения свободного падения:
+            <div class="formula-block">
+                <var>F</var><sub>тяг</sub> = 4 &middot; 10 = 40 Н
+            </div>
+            <strong>Правильный ответ: 40</strong>
         </div>
     </div>
 </div>
@@ -517,55 +544,70 @@
         } // <-- Закрыли navigateTo здесь!
 
         // ТЕПЕРЬ checkTask1 СТОИТ ОТДЕЛЬНО И РАБОТАЕТ ГЛОБАЛЬНО
-        function checkTask1() {
-    try {
-        const tgApp = window.Telegram ? window.Telegram.WebApp : null;
-        if (tgApp && tgApp.HapticFeedback) {
-            tgApp.HapticFeedback.impactOccurred('medium');
-        }
+        <div id="screen-tasks" class="screen">
+    <div class="header">
+        <h1>Задачи</h1>
+        <p>Практикуйся и зарабатывай XP</p>
+    </div>
+    
+    <div id="dynamic-task-container"></div>
+    
+    <div class="task-card" id="task-1">
+        <div class="task-tag">Механика | Задание 1</div>
+        <div class="task-text">
+            Автомобиль, двигаясь со скоростью <var>v</var><sub>0</sub> = 20 м/с, начинает тормозить с постоянным ускорением и полностью останавливается через время <var>t</var> = 5 с. Определите тормозной путь автомобиля (в метрах).
+        </div>
         
-        const input = document.getElementById('task-1-input');
-        const feedback = document.getElementById('task-1-feedback');
-        const solution = document.getElementById('task-1-solution');
+        <div class="task-input-group">
+            <input type="number" class="task-input" id="task-1-input" placeholder="Ответ (число)">
+            <button class="task-btn" onclick="checkTask1()">Ответить</button>
+        </div>
         
-        if (!input || !feedback || !solution) {
-            alert("Ошибка: Элементы задачи не найдены в HTML!");
-            return;
-        }
+        <div class="task-feedback" id="task-1-feedback"></div>
         
-        const userAnswer = input.value.trim();
+        <div class="task-solution" id="task-1-solution">
+            <div class="task-solution-title">📖 Решение:</div>
+            При равнозамедленном движении до полной остановки пройденный путь удобнее всего найти через среднюю скорость:
+            <div class="formula-block">
+                <var>S</var> = <var>v</var><sub>ср</sub> &middot; <var>t</var> = <sup>(<var>v</var><sub>0</sub> + <var>v</var>)</sup>&frasl;<sub>2</sub> &middot; <var>t</var>
+            </div>
+            Так как автомобиль полностью остановился, конечная скорость <var>v</var> = 0 м/с. Подставим числа:
+            <div class="formula-block">
+                <var>S</var> = <sup>(20 + 0)</sup>&frasl;<sub>2</sub> &middot; 5 = 10 &middot; 5 = 50 м
+            </div>
+            <strong>Правильный ответ: 50</strong>
+            <button class="task-btn" onclick="nextTask()" style="background: #1e5e3a; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 15px;">Далее ➔</button>
+        </div>
+    </div>
+
+    <div class="task-card" id="task-2" style="display: none;">
+        <div class="task-tag">Динамика | Задание 2</div>
+        <div class="task-text">
+            Определите модуль силы тяжести (в Ньютонах), действующей на кирпич массой <var>m</var> = 4 кг на поверхности Земли. Ускорение свободного падения примите равным <var>g</var> = 10 м/с².
+        </div>
         
-        if (userAnswer === "") {
-            feedback.style.display = "block";
-            feedback.style.color = "#ff3b30";
-            feedback.innerText = "Введите ответ!";
-            return;
-        }
+        <div class="task-input-group">
+            <input type="number" class="task-input" id="task-2-input" placeholder="Ответ (число)">
+            <button class="task-btn" onclick="checkTask2()">Ответить</button>
+        </div>
         
-        feedback.style.display = "block";
-        solution.style.display = "block"; 
+        <div class="task-feedback" id="task-2-feedback"></div>
         
-        if (userAnswer === "50") {
-            feedback.style.color = "#34c759";
-            feedback.innerText = "🎉 Правильно! +20 XP";
-            
-            let currentXp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
-            
-            if (!localStorage.getItem('task_1_solved')) {
-                currentXp += 20;
-                localStorage.setItem('global_physics_xp', currentXp);
-                localStorage.setItem('task_1_solved', 'true');
-                
-                if (typeof updateUI_and_Push === 'function') {
-                    updateUI_and_Push();
-                } else if (typeof updateUI === 'function') {
-                    updateUI();
-                }
-            }
-        } else {
-            feedback.style.color = "#ff3b30";
-            feedback.innerText = "❌ Неверно. Изучи решение ниже.";
-        }
+        <div class="task-solution" id="task-2-solution">
+            <div class="task-solution-title">📖 Решение:</div>
+            Сила тяжести, действующая на тело у поверхности Земли, определяется по закону всемирного тяготения и вычисляется по формуле:
+            <div class="formula-block">
+                <var>F</var><sub>тяг</sub> = <var>m</var> &middot; <var>g</var>
+            </div>
+            Подставим известные значения массы и ускорения свободного падения:
+            <div class="formula-block">
+                <var>F</var><sub>тяг</sub> = 4 &middot; 10 = 40 Н
+            </div>
+            <strong>Правильный ответ: 40</strong>
+            <button class="task-btn" onclick="nextTask()" style="background: #1e5e3a; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 15px;">Далее ➔</button>
+        </div>
+    </div>
+</div>
 
         // ========================================================
         // ДОБАВЛЕНИЕ КНОПКИ "ДАЛЕЕ" ПОСЛЕ ОТВЕТА
