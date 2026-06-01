@@ -587,8 +587,36 @@
         }
 
         function addXp(amount) {
+            // 1. Добавляем XP
             let xp = parseInt(localStorage.getItem('global_physics_xp')) || 180;
             localStorage.setItem('global_physics_xp', xp + amount);
+            
+            // 2. ЛОГИКА ОБНОВЛЕНИЯ СТРИКА (СЕРИИ ДНЕЙ)
+            const today = new Date().toDateString(); // Сегодняшняя дата строкой
+            const lastActiveDate = localStorage.getItem('last_active_date');
+            let currentStreak = parseInt(localStorage.getItem('user_streak')) || 0;
+
+            if (!lastActiveDate) {
+                // Если пользователь зашел первый раз
+                currentStreak = 1;
+                localStorage.setItem('last_active_date', today);
+            } else if (lastActiveDate !== today) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                
+                if (lastActiveDate === yesterday.toDateString()) {
+                    // Если последний раз решал вчера — серия продолжается!
+                    currentStreak += 1;
+                } else {
+                    // Если пропустил день или больше — серия сбросилась
+                    currentStreak = 1;
+                }
+                localStorage.setItem('last_active_date', today);
+            }
+            // Сохраняем обновленный стрик в память
+            localStorage.setItem('user_streak', currentStreak);
+
+            // 3. Обновляем интерфейс и отправляем данные в Firebase
             updateUI();
         }
 
